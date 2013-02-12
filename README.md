@@ -8,9 +8,9 @@ Contact : mjacquem@unc.edu
 Measure cortical thickness of rodent brain
 
 These softwares need to be installed before executing the tool :
-    ImageMath
-    measureThicknessFilter
-    GenParaMeshCLP
+    - ImageMath
+    - measureThicknessFilter
+    - GenParaMeshCLP
     ParaToSPHARMMeshCLP
     ShapeWorksRun
     ShapeWorksGroom
@@ -19,6 +19,6 @@ These softwares need to be installed before executing the tool :
     MeshPointsIntensitysampling
 
 The programs use:
-    Python2.6 or Python 2.7 with vtk installed
-    Rscript
+   - Python2.6 or Python 2.7 with vtk installed
+   - Rscript
 
