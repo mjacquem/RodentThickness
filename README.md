@@ -1,7 +1,7 @@
 RodentThickness
 ===============
 Find the tool on NITRC :
- And Github
+And Github
 
 Contact : mjacquem@unc.edu
 
