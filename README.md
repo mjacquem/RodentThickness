@@ -6,7 +6,7 @@ Find the tool on
 
 Contact : mjacquem@unc.edu
 
-Measure cortical thickness of rodent brain
+tool to measure cortical thickness of rodent brain
 
 These softwares need to be installed before executing the tool :
   - ImageMath
