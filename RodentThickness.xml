@@ -24,7 +24,7 @@
 		<default></default>
 	</file>
 	
-	<file fileExtensions="txt">
+	<file fileExtensions="bms">
 		<name>configfile</name>
 		<description>config file with the path of executables</description>
 		<label>configfile</label>
