@@ -1,0 +1,44 @@
+
+# include(${configfile})
+
+MakeDirectory(${WorkDir}/RodentThickness/Output/MeasurementandSPHARM)
+Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/RodentThickness/Output/MeasurementandSPHARM)
+
+Set (cmdline ${measureThicknessFilterPath} --mr --sbt --workdir ${OutDirectoryMeasurementandSPHARM} --ids 3 --idl 4 --idh 1 --idn 5 --ttrns 100 ${labelMapInput} ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd)
+Run(output ${cmdline})
+
+
+Set (cmdline ${ImageMathPath} ${labelMapInput} -extractLabel 3 -outfile ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd)
+Run(output ${cmdline})
+
+Set(cmdline ${SegPostprocessPath} ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentationSegPostProcess.nrrd)
+Run(output ${cmdline})
+
+
+
+FileExists(ParaFileExists ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk)
+Echo (${ParaFileExists})
+
+ If (${ParaFileExists} == 0)
+	Set (cmdline ${GenParaMeshCLPPath} ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentationSegPostProcess.nrrd --label 1 ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_surf.vtk)
+	Run(output ${cmdline})
+EndIf (${ParaFileExists})
+
+FileExists(SPHARMFileExists ${OutDirectoryMeasurementandSPHARM}/${case1}.ip.SPHARM.vtk)
+Echo (${SPHARMFileExists})
+ If (${SPHARMFileExists} == 0)
+	
+	Set (cmdline ${ParaToSPHARMMeshCLPPath} ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_surf.vtk --subdivLevel 10 --spharmDegree 20  ${OutDirectoryMeasurementandSPHARM}/${case1}.ip.)
+	Run(output ${cmdline})
+EndIf (${SPHARMFileExists})
+
+FileExists(SPHARMFileExists2 ${OutDirectoryMeasurementandSPHARM}/${case1}.subj.SPHARM.vtk)
+Echo (${SPHARMFileExists2})
+ If (${SPHARMFileExists2} == 0)
+	Set (cmdline ${ParaToSPHARMMeshCLPPath} ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_surf.vtk --subdivLevel 50 --spharmDegree 20  ${OutDirectoryMeasurementandSPHARM}/${case1}.subj.)
+	Run(output ${cmdline})
+EndIf (${SPHARMFileExists2})
+
+
+
+

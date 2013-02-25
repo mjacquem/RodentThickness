@@ -1,0 +1,17 @@
+Set(measureThicknessFilterPath /work/joohwi/MeasureThicknessFilter-build/measureThicknessFilter)
+Set(GenParaMeshCLPPath /tools/bin_linux64/GenParaMeshCLP)
+Set(ParaToSPHARMMeshCLPPath /tools/bin_linux64/ParaToSPHARMMeshCLP)
+Set(MeshPointIntensitySamplingPath /work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/MeshPointsintensitysampling/MarinaTools-build/MeshPointsIntensitySampling)
+Set(ShapeWorksRunPath /NIRAL/tools/bin_linux64/ShapeWorksRun)
+Set(ShapeWorksGroomPath /NIRAL/tools/bin_linux64/ShapeWorksGroom)
+Set(ImageMathPath /NIRAL/tools/bin_linux64/ImageMath)
+Set(SegPostprocessPath /work/mjacquem/SegPostProcess/SegPostProcessCLP)
+Set(ShapeWorksPythonScriptPath ${TestDataFolder}/shapeworks.py)
+Set(PythonPath /tools/Python/Python-2.7.3/bin/bmmpython)
+Set(BinaryToDistanceMapPath /tools/bin_linux64/BinaryToDistanceMap)
+Set(concatToColumnsPythonScriptPath ${TestDataFolder}/concatToColumns.py)
+Set(vtkPointAttributesPythonScriptPath ${TestDataFolder}/vtkPointAttributes.py)
+Set(RScriptRodentThicknessPath ${TestDataFolder}/rodentThicknessStats.r)
+Set(RScriptPath /NIRAL/devel/linux/Rscript/R-2.15.2-build/bin/Rscript)
+
+

@@ -10,9 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
-
 #include "ScriptRunner.h"
 
 void ScriptRunner :: readFileCSV(std::string line, std::string &variable1, std::string &variable2,std::string &variable3)
@@ -119,45 +116,30 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 					
 					readFileCSV(line, column1,column2,column3);
 	
-					if(column1.compare("subjId") != 0 && column1.compare("labelMapInput") != 0 && column1.compare("group") != 0 ) 
-					{	std :: cout << " Name of the Column 1 is not good : group , sudjId, labelMapInput" << std :: endl ;
+					if(column1.compare("subjId") != 0 && column2.compare("labelMapInput") != 0 && column3.compare("group") != 0 ) 
+					{	std :: cout << " Name of the Columns is not good : group , sudjId, labelMapInput" << std :: endl ;
 						return -1;	}
 					
 				}
 				if (i>0)
 				{	
 					readFileCSV(line, value1,value2,value3);
-
-					
 						
-							file <<"set (group "<< value3<<")"<<std::endl;
-							file <<"set (case1 "<< value1<<")"<<std::endl;
-							file <<"set (labelMapInput "<< value2<<")"<<std::endl;
-						
-				// else std::cout<< " Le fichier d entree n est pas correcte , la premiere ligne doit etre remplie par group , subjId, labelMapInput)" << std :: endl;
-					
+					file <<"set (group "<< value3<<")"<<std::endl;
+					file <<"set (case1 "<< value1<<")"<<std::endl;
+					file <<"set (labelMapInput "<< value2<<")"<<std::endl;
 					file <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
 					file <<"set (configfile "<< configfile<<")"<<std::endl;
-					
 					file <<"include ("<<configfile<<")"<<std::endl;
 					file <<"include ("<<PathBms<<"/ThicknessSpharm.bms)"<<std::endl;
 					file.close();
-					/*
-					bm::ScriptParser m_Parser;
-					//m_Parser.LoadWrappedApplication("/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/bmm2" );
-					//m_Parser.LoadWrappedApplication(PathBmm);
-					//m_Parser.SetBatchMakeBinaryPath("/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/bmm2"); 	
-					//m_Parser.SetBatchMakeBinaryPath( "/tools/Python/Python-2.7.3/bin" ); 
-					m_Parser.Execute(BatchMakeScriptFile); */
 					
+					bm::ScriptParser m_Parser;
+					m_Parser.Execute(BatchMakeScriptFile); 	
 				}
-				
-			
-				
 				i++;
 		}
 		Sub.close();
-
 	} // fin du if (sub)
 	else
 	{
@@ -196,16 +178,12 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 	file2 <<"set (groupIds "<< final_groups<<")"<<std::endl;
 	file2 <<"set (subjects "<< subjGroup<<")"<<std::endl;
 	file2 <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
-	file2 <<"set (configfile "<< configfile<<")"<<std::endl;
-	//file2 <<"include (/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/shapeworks.bms)"<<std::endl;
+	file2 <<"set (configfile "<< configfile<<")"<<std::endl;	
 	file2 <<"include ("<<configfile<<")"<<std::endl;
 	file2 <<"include ("<<PathBms<<"/shapeworks.bms)"<<std::endl;
 	file2.close();  
 
 	bm::ScriptParser m_Parser1;
-	//m_Parser1.LoadWrappedApplication( "/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/bmm2");
-	//m_Parser1.LoadWrappedApplication(PathBmm);
-	//m_Parser1.SetBatchMakeBinaryPath( "/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/bmm2" ); 
 	m_Parser1.Execute(BatchMakeScriptFile2);
 ////////////////////////////////////////////////////////////////////////////////////////////////Pipeline3/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -226,13 +204,9 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 
 				readFileCSV(line, value1,value2,value3);
 				
-					file <<"set (labelMapInput "<< value2<<")"<<std::endl;
-					file <<"set (case1 "<< value1<<")"<<std::endl;
-					file <<"set (group "<< value3<<")"<<std::endl;
-				
-				
-
-
+				file <<"set (labelMapInput "<< value2<<")"<<std::endl;
+				file <<"set (case1 "<< value1<<")"<<std::endl;
+				file <<"set (group "<< value3<<")"<<std::endl;
 				file <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
 				file <<"set (configfile "<< configfile<<")"<<std::endl;
 				//file <<"include (/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/meshintensity.bms)"<<std::endl;
@@ -241,12 +215,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 				file.close();
 				
 				bm::ScriptParser m_Parser;
-
-				//m_Parser.LoadWrappedApplication( "/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/bmm2" );
-				//m_Parser.LoadWrappedApplication(PathBmm);
-				//m_Parser.SetBatchMakeBinaryPath( "/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/bmm2" ); 
-				m_Parser.Execute(BatchMakeScriptFile5); 
-				
+				m_Parser.Execute(BatchMakeScriptFile5); 	
 			}
 			i2++;
 		}
@@ -257,13 +226,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 	      std::cout << "ERROR: Unable  to open file for reading." << std::endl;
 		return -1;
 	}
-
-
-
 return 0;
-	
-
-
 
 }
 

@@ -2,13 +2,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(RodentThickness)  # name of the project
 
-# Slicer3
-find_package(Slicer3 REQUIRED)
-include(${Slicer3_USE_FILE})
-
-# Default install prefix
-slicer3_set_default_install_prefix_for_external_projects()
-
 FIND_PACKAGE(GenerateCLP REQUIRED)
 IF(GenerateCLP_FOUND)
 	INCLUDE(${GenerateCLP_USE_FILE})
@@ -44,12 +37,34 @@ QT4_WRAP_UI(UI_FILES guicsv.ui)
 
 include_directories(${CMAKE_BINARY_DIRECTORY})
 #####################
+ find_program(pathexecpython 
+       NAMES python
+       PATHS ${CMAKE_CURRENT_BINARY_DIR} # Here ${CMAKE_CURRENT_BINARY_DIR} is the inner build directory 
+	)
 
-SET(sources RodentThickness.cxx GuiCSV.h GuiCSV.cxx ScriptRunner.h ScriptRunner.cxx StatisticalpartRunner.h StatisticalpartRunner.cxx ${QtProject_HEADERS_MOC} ${UI_FILES}) # define the variable "sources" that contains the names of files
-GENERATECLP(sources RodentThickness.xml)
-ADD_EXECUTABLE(RodentThickness ${sources})  # add the files contained by "sources" to the project
+############
+SET(RTsources RodentThickness.cxx GuiCSV.h GuiCSV.cxx ScriptRunner.h ScriptRunner.cxx StatisticalpartRunner.h StatisticalpartRunner.cxx ${QtProject_HEADERS_MOC} ${UI_FILES}) # define the variable "sources" that contains the names of files
+GENERATECLP(RTsources RodentThickness.xml)
+ADD_EXECUTABLE(RodentThickness ${RTsources})  # add the files contained by "sources" to the project
 
 TARGET_LINK_LIBRARIES(RodentThickness ${QT_LIBRARIES} ${ITK_LIBRARIES} ${BatchMake_LIBRARIES})
+
+#======================================================================================
+# Testing for 
+
+  set(TestingSRCdirectory ${CMAKE_CURRENT_SOURCE_DIR}/Testing)
+  set(TestingBINdirectory ${CMAKE_CURRENT_BINARY_DIR}/Testing)
+  set(TestDataFolder ${TestingSRCdirectory}/Data)
+  add_library(RodentThicknessLib STATIC ${RTsources}) # STATIC is also the default
+  set_target_properties(RodentThicknessLib PROPERTIES COMPILE_FLAGS "-Dmain=ModuleEntryPoint")
+  target_link_libraries(RodentThicknessLib ${QT_LIBRARIES} ${ITK_LIBRARIES} ${BatchMake_LIBRARIES})
+  set_target_properties(RodentThicknessLib PROPERTIES LABELS RodentThickness)
+ 
+  # Create Tests
+  include(CTest)
+  add_subdirectory( ${TestingSRCdirectory} ) # contains a CMakeLists.txt
+# include_directories( ${TestingSRCdirectory} ) # contains a CMakeLists.txt
+
 
 
 

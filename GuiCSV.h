@@ -40,13 +40,13 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 		int SaveCSVDatasetBrowse(QString CSVBrowseName);
 		int checkdataset();
 /*CHECK IMAGE*/	int checkImage(std::string Image); 		
-
+		void ConfigDefault();
 /*SOFT CONFIG*/	int LoadConfig(QString ConfigFile); // returns -1 if fails, otherwise 0
 		void SaveConfig(QString ConfigBrowseName);
 /*MAIN FUNCT*/	int LaunchScriptWriter(); // returns -1 if failed, otherwise 0
 		int LaunchScriptRunner();
-void RunningCompleted();
-void RunningFailed();
+		void RunningCompleted();
+		void RunningFailed();
 
 	public slots:
 
@@ -58,11 +58,11 @@ void RunningFailed();
 		void FullTableWidget(int,int);
 /*SOFT CONFIG*/	void LoadConfigSlot();
 		void SaveConfigSlot();
-		void ConfigDefault();
+		void ConfigDefaultSlot();
 		void BrowseSoft(int); //in the soft dialog window
 		void ResetSoft(int);
 /*WIDGETCHANGE*/void WidgetHasChangedParam();
-
+/*READ ME*/	void ReadMe();
 /*OUTPUT*/	void OpenOutputBrowseWindow();
 /*MAIN FUNCT*/	int Compute();
 	
@@ -74,10 +74,10 @@ void RunningFailed();
 
 	private:
 
-bool m_noGUI;
-bool m_ScriptRunning;
-bool m_ErrorDetectedInConstructor; // useful in --nogui mode to exit the program without trying the compute function	
-std::vector< std::string > m_FindProgramRTExecDirVec;
+		bool m_noGUI;
+		bool m_ScriptRunning;
+		bool m_ErrorDetectedInConstructor; // useful in --nogui mode to exit the program without trying the compute function	
+		std::vector< std::string > m_FindProgramRTExecDirVec;
 /*DATASET*/	QString m_CSVseparator;
 /*PARAMETERS*/	int m_ParamSaved;		
 		QString m_StatisticaldatasetPath;	
@@ -85,7 +85,7 @@ std::vector< std::string > m_FindProgramRTExecDirVec;
 		QString m_FilesBmsPath;
 		QString m_outconfig;
 		QString m_outdataset;
-	
+		std::string m_notFound;
 		int m_statistic;
 /*MAIN FUNCT*/	ScriptRunner* m_scriptrunner;
 		StatisticalpartRunner*  m_statisticalpartrunner;

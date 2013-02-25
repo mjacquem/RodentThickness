@@ -19,12 +19,9 @@ int main(int argc, char* argv[])
 	if(noGUI) return RodentThicknessGUI.Compute();
 	else
 	{
-	RodentThicknessGUI.show();
-	return app.exec();
+		RodentThicknessGUI.show();
+		return app.exec();
 	}
-	return -1;
-
-	
-	
+	return -1;	
 
 }

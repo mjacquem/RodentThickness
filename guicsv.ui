@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>966</width>
-    <height>742</height>
+    <width>920</width>
+    <height>783</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,20 +32,20 @@
          <rect>
           <x>160</x>
           <y>40</y>
-          <width>491</width>
+          <width>341</width>
           <height>20</height>
          </rect>
         </property>
         <property name="text">
-         <string>  ENTER THE SUBJECT THEN THE PATH AND THE NAME OF THE INPUT</string>
+         <string>  Enter the subject , the input image then the group</string>
         </property>
        </widget>
        <widget class="QWidget" name="verticalLayoutWidget">
         <property name="geometry">
          <rect>
-          <x>540</x>
+          <x>680</x>
           <y>90</y>
-          <width>339</width>
+          <width>191</width>
           <height>251</height>
          </rect>
         </property>
@@ -65,8 +65,14 @@
          </item>
          <item>
           <widget class="QPushButton" name="loaddataButton">
+           <property name="toolTip">
+            <string>Open CSV file as Dataset</string>
+           </property>
            <property name="text">
             <string>Load data</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -85,6 +91,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="savedatabutton">
+           <property name="toolTip">
+            <string>Generate a CSV file with Dataset</string>
+           </property>
            <property name="text">
             <string>Save data</string>
            </property>
@@ -92,26 +101,6 @@
          </item>
          <item>
           <spacer name="verticalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="StatisticBox">
-           <property name="text">
-            <string>Compute the statistic part after processing part</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -149,7 +138,7 @@
            </row>
            <column>
             <property name="text">
-             <string>subject</string>
+             <string> subject Id</string>
             </property>
            </column>
            <column>
@@ -236,6 +225,25 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="verticalLayoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>550</x>
+          <y>370</y>
+          <width>341</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <item>
+          <widget class="QCheckBox" name="StatisticBox">
+           <property name="text">
+            <string>Compute the statistic part after processing part</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
       <widget class="QWidget" name="ConfigFile">
        <attribute name="title">
@@ -277,7 +285,7 @@
             <item>
              <widget class="QPushButton" name="MeshPointIntensitySamplingButton">
               <property name="text">
-               <string>MeshPointIntensitySampling</string>
+               <string>MeshPointsIntensitySampling</string>
               </property>
              </widget>
             </item>
@@ -305,7 +313,7 @@
             <item>
              <widget class="QPushButton" name="SegPostprocessButton">
               <property name="text">
-               <string>SegPostprocess</string>
+               <string>SegPostprocessCLP</string>
               </property>
              </widget>
             </item>
@@ -324,7 +332,17 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="BinaryToDistanceMapButton">
+              <property name="text">
+               <string>BinaryToDistanceMap</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="ShapeWorksPythonScriptButton">
+              <property name="toolTip">
+               <string>shapeworks.py folder gave</string>
+              </property>
               <property name="text">
                <string>ShapeWorksPythonScript</string>
               </property>
@@ -332,6 +350,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="concatToColumnsPythonScriptButton">
+              <property name="toolTip">
+               <string>concatToColumns.py folder gave</string>
+              </property>
               <property name="text">
                <string>concatToColumnsPythonScript</string>
               </property>
@@ -339,6 +360,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="vtkPointAttributesPythonScriptButton">
+              <property name="toolTip">
+               <string>vtkPointAttributes.py folder gave</string>
+              </property>
               <property name="text">
                <string>vtkPointAttributesPythonScript</string>
               </property>
@@ -346,6 +370,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="RScriptButton">
+              <property name="toolTip">
+               <string>rodentThickness.r folder gave</string>
+              </property>
               <property name="text">
                <string>RScript &quot; rodentThickness.r &quot;</string>
               </property>
@@ -386,6 +413,9 @@
              <widget class="QLineEdit" name="RScriptPath"/>
             </item>
             <item>
+             <widget class="QLineEdit" name="BinaryToDistanceMapPath"/>
+            </item>
+            <item>
              <widget class="QLineEdit" name="ShapeWorksPythonScriptPath"/>
             </item>
             <item>
@@ -405,6 +435,9 @@
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
                <widget class="QPushButton" name="measureThicknessFilterResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -412,6 +445,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="GenParaMeshResetCLPButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -419,6 +455,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="ParaToSPHARMMeshCLPResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -426,6 +465,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="MeshPointIntensitySamplingResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -433,6 +475,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="ShapeWorksRunResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -440,6 +485,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="ShapeWorksGroomResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -447,6 +495,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="ImageMathResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -454,6 +505,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="SegPostprocessResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -461,6 +515,9 @@
               </item>
               <item>
                <widget class="QPushButton" name="PythonPathResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
@@ -468,27 +525,63 @@
               </item>
               <item>
                <widget class="QPushButton" name="RScriptPathResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
                 <property name="text">
                  <string>R</string>
                 </property>
                </widget>
               </item>
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_12">
-                <item>
-                 <spacer name="verticalSpacer_5">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
+               <widget class="QPushButton" name="BinaryToDistanceMapResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
+                <property name="text">
+                 <string>R</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="ShapeWorksPythonScriptResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
+                <property name="text">
+                 <string>R</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="concatToColumnsPythonScriptResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
+                <property name="text">
+                 <string>R</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="vtkPointAttributesPythonScriptResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
+                <property name="text">
+                 <string>R</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="RScriptResetButton">
+                <property name="toolTip">
+                 <string>Reset Software Path</string>
+                </property>
+                <property name="text">
+                 <string>R</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -513,6 +606,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="DefaultButton">
+            <property name="toolTip">
+             <string>Use the program paths given by the system</string>
+            </property>
             <property name="text">
              <string>Default</string>
             </property>
@@ -540,7 +636,7 @@
             <item>
              <widget class="QPushButton" name="PathFilesBmsButton">
               <property name="text">
-               <string>Path for Batchmake Script</string>
+               <string>Directory containing Batchmake Script</string>
               </property>
              </widget>
             </item>
@@ -554,6 +650,19 @@
            </layout>
           </item>
          </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -576,11 +685,37 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <widget class="QPushButton" name="ComputeButton">
         <property name="text">
          <string>Compute</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_7">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>
@@ -591,7 +726,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>966</width>
+     <width>920</width>
      <height>25</height>
     </rect>
    </property>
@@ -603,7 +738,14 @@
     <addaction name="actionSave_Configuration"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionRead_Me"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoad_Configuration">
@@ -619,6 +761,11 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionRead_Me">
+   <property name="text">
+    <string>Read Me</string>
    </property>
   </action>
  </widget>

@@ -1,0 +1,7 @@
+subjId	labelMapInput	group
+2	${TestDataFolder}/20110404_crews_overnight_NADIA_CLE_0002_00002.right.nrrd	A
+3	${TestDataFolder}/Data/20110405_crews_overnight_NADIA_CLE_0002_00003.right.nrrd	B
+5	${TestDataFolder}/20110412_crews_overnight_NADIA_CLE_0002_00005.right.nrrd	B
+29	${TestDataFolder}/20110414_crews_overnight_NADIA_CLE_0002_00029.right.nrrd	A
+30	${TestDataFolder}/20110413_crews_overnight_NADIA_CLE_0002_00030.right.nrrd	A
+32	${TestDataFolder}/20110419_crews_overnight_NADIA_CLE_0002_00032.right.nrrd	B

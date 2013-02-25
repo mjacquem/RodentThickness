@@ -128,25 +128,17 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
    		 if (i != Length-1) subjGroup = subjGroup + subj[i] + ' ';
     		else subjGroup = subjGroup + subj[i];
  	 }
-  	//std::cout << final_groups << std::endl;
-	//std::cout << subjGroup << std::endl;
-//file bms
 	std::string BatchMakeScriptFile2 = WorkDir+"/RodentThickness/Script/"+"slicer3createfiletxt.bms";
 	std::ofstream file2( BatchMakeScriptFile2.c_str());
  
 	file2 <<"set (groupIds "<< final_groups<<")"<<std::endl;
 	file2 <<"set (subjects "<< subjGroup<<")"<<std::endl;
 	file2 <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
-	
-	
-	//file2 <<"include (/work/mjacquem/Slicer3RodentThicknessAnalysis/Batchmake/createfiletxt.bms)"<<std::endl;
 	file2 <<"include ("<<configfile<<")"<<std::endl;
 	file2 <<"include ("<<PathBms<<"/createfiletxt.bms)"<<std::endl;
 	file2.close();  
 
 	bm::ScriptParser m_Parser1;
-	//m_Parser1.LoadWrappedApplication(PathBmm);
-	//m_Parser1.SetBatchMakeBinaryPath( "/work/mjacquem/Slicer3RodentThicknessAnalysis/Batchmake/bmm2" ); 
 	m_Parser1.Execute(BatchMakeScriptFile2);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline2/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,23 +173,15 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 					file <<"set (group "<< value1<<")"<<std::endl;
 					file <<"set (surfacemodels "<< value5<<")"<<std::endl;
 					file <<"set (attributefilename "<< value8<<")"<<std::endl;	
-					
 					file <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
-					//file <<"include (/work/mjacquem/Slicer3RodentThicknessAnalysis/Batchmake/file.bms)"<<std::endl;
 					file <<"include ("<<configfile<<")"<<std::endl;
 					file <<"include ("<<PathBms<<"/file.bms)"<<std::endl;
 					if(i==1) surfacemodel=value5;
-
 					file.close();
 					
 					bm::ScriptParser m_Parser;
-					//m_Parser.LoadWrappedApplication( "/work/mjacquem/Slicer3RodentThicknessAnalysis/Batchmake/bmm2" );
-					//m_Parser.SetBatchMakeBinaryPath( "/work/mjacquem/Slicer3RodentThicknessAnalysis/Batchmake/bmm2" ); 
-					m_Parser.Execute(BatchMakeScriptFile); 
-					
+					m_Parser.Execute(BatchMakeScriptFile); 	
 				}
-			
-			
 			i++;
 		}
 		Sub.close();
@@ -214,18 +198,13 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 	file6 <<"set (surfacemodels "<< surfacemodel<<")"<<std::endl;
 	file6 <<"set (groupIds "<< final_groups<<")"<<std::endl;
 	file6 <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
-	
 	file6 <<"set (subjects "<< subjGroup<<")"<<std::endl;
-	//file6 <<"include (/work/mjacquem/Slicer3RodentThicknessAnalysis/Batchmake/correspondance.bms)"<<std::endl;
 	file6 <<"include ("<<configfile<<")"<<std::endl;
 	file6 <<"include ("<<PathBms<<"/correspondance.bms)"<<std::endl;
 	file6.close();  
 
 	bm::ScriptParser m_Parser2;
-	//m_Parser2.LoadWrappedApplication( "/work/mjacquem/Slicer3RodentThicknessAnalysis/Batchmake/bmm2" );
-	//m_Parser2.SetBatchMakeBinaryPath( "/work/mjacquem/Slicer3RodentThicknessAnalysis/Batchmake/bmm2" ); 
 	m_Parser2.Execute(BatchMakeScriptFile1);
-
 
 return 0;
 	

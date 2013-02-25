@@ -39,7 +39,19 @@ mode_t ITKmode_X_OK = 1;
 GuiCSV::GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGUI,std::string WorkDir,std::string commandRan) : QMainWindow()
 {
 setupUi(this);
+
 m_ErrorDetectedInConstructor=false;
+RScriptButton->setEnabled(false);
+RScriptPathButton->setEnabled(false);
+concatToColumnsPythonScriptButton->setEnabled(false);
+vtkPointAttributesPythonScriptButton->setEnabled(false);
+RScriptResetButton->setEnabled(false);
+RScriptPathResetButton->setEnabled(false);
+concatToColumnsPythonScriptResetButton->setEnabled(false);
+vtkPointAttributesPythonScriptResetButton->setEnabled(false);
+
+
+
 m_scriptrunner = new ScriptRunner;
 m_statisticalpartrunner = new StatisticalpartRunner;
 m_noGUI=noGUI;
@@ -51,22 +63,18 @@ if(!m_noGUI)
 {
 QObject::connect(loaddataButton, SIGNAL(clicked()), this, SLOT(ReadCSVSlot()));
 QObject::connect(savedatabutton, SIGNAL(clicked()), this, SLOT(SaveCSVDatasetBrowseSlot()));
-
 QObject::connect(OutputFolderButton, SIGNAL(clicked()), this, SLOT(OpenOutputBrowseWindow()));
 QObject::connect(ComputeButton, SIGNAL(clicked()), this, SLOT(Compute()));
-
 QObject::connect(tableWidget, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(FullTableWidget(int,int)));
 QObject::connect(AddRowButton, SIGNAL(clicked()), this, SLOT(OpenAddRow()));
 QObject::connect(DeleteRowButton, SIGNAL(clicked()),this, SLOT(RemoveSelectedRow()));
-
-
-QObject::connect(DefaultButton, SIGNAL(clicked()), this, SLOT(ConfigDefault()));
-
+QObject::connect(DefaultButton, SIGNAL(clicked()), this, SLOT(ConfigDefaultSlot()));
+QObject::connect(actionRead_Me, SIGNAL(triggered()), this, SLOT(ReadMe()));
 QObject::connect(actionExit, SIGNAL(triggered()), this, SLOT(ExitProgram()));
 QObject::connect(actionLoad_Configuration, SIGNAL(triggered()), this, SLOT(LoadConfigSlot()));
 QObject::connect(actionSave_Configuration, SIGNAL(triggered()), this, SLOT(SaveConfigSlot()));
-
 QObject::connect(StatisticBox, SIGNAL(stateChanged(int)), this, SLOT(WidgetHasChangedParam()));
+
 // Browse software path Buttons 
 	QSignalMapper *SoftButtonMapper = new QSignalMapper();
 	QObject::connect(SoftButtonMapper, SIGNAL(mapped(int)), this, SLOT( BrowseSoft(int) ));
@@ -101,6 +109,8 @@ QObject::connect(StatisticBox, SIGNAL(stateChanged(int)), this, SLOT(WidgetHasCh
 	SoftButtonMapper->setMapping(RScriptPathButton,14);
 	QObject::connect(ShapeWorksGroomButton, SIGNAL(clicked()), SoftButtonMapper, SLOT(map()));
 	SoftButtonMapper->setMapping(ShapeWorksGroomButton,15);
+	QObject::connect(BinaryToDistanceMapButton, SIGNAL(clicked()), SoftButtonMapper, SLOT(map()));
+	SoftButtonMapper->setMapping(BinaryToDistanceMapButton,16);
 /* Reset software path Buttons */
 	QSignalMapper *ResetSoftButtonMapper = new QSignalMapper();
 	QObject::connect(ResetSoftButtonMapper, SIGNAL(mapped(int)), this, SLOT( ResetSoft(int) ));
@@ -125,13 +135,23 @@ QObject::connect(StatisticBox, SIGNAL(stateChanged(int)), this, SLOT(WidgetHasCh
 	ResetSoftButtonMapper->setMapping(RScriptPathResetButton,9);
 	QObject::connect(ShapeWorksGroomResetButton, SIGNAL(clicked()), ResetSoftButtonMapper, SLOT(map()));
 	ResetSoftButtonMapper->setMapping(ShapeWorksGroomResetButton,10);
+	QObject::connect(BinaryToDistanceMapResetButton, SIGNAL(clicked()), ResetSoftButtonMapper, SLOT(map()));
+	ResetSoftButtonMapper->setMapping(BinaryToDistanceMapResetButton,11);
+	QObject::connect(ShapeWorksPythonScriptResetButton, SIGNAL(clicked()), ResetSoftButtonMapper, SLOT(map()));
+	ResetSoftButtonMapper->setMapping(ShapeWorksPythonScriptResetButton,12);
+	QObject::connect(concatToColumnsPythonScriptResetButton, SIGNAL(clicked()), ResetSoftButtonMapper, SLOT(map()));
+	ResetSoftButtonMapper->setMapping(concatToColumnsPythonScriptResetButton,13);
+	QObject::connect(vtkPointAttributesPythonScriptResetButton, SIGNAL(clicked()), ResetSoftButtonMapper, SLOT(map()));
+	ResetSoftButtonMapper->setMapping(vtkPointAttributesPythonScriptResetButton,14);
+	QObject::connect(RScriptResetButton, SIGNAL(clicked()), ResetSoftButtonMapper, SLOT(map()));
+	ResetSoftButtonMapper->setMapping(RScriptResetButton,15);
 } //no gui
 
 
 /* SET the soft config */
 // set the path to the executable directory for FindProgram
 std::string RTExecutablePath= itksys::SystemTools::GetRealPath( itksys::SystemTools::GetFilenamePath(commandRan).c_str() ); // get the place where the running executable is
-if(RTExecutablePath=="") RTExecutablePath= itksys::SystemTools::GetCurrentWorkingDirectory(); // If called by itself ($ DTIAtlasBuilder) = either in the PATH or in the current directory : will be found either way by find_program
+if(RTExecutablePath=="") RTExecutablePath= itksys::SystemTools::GetCurrentWorkingDirectory(); // If called by itself ($ RodentThickness) = either in the PATH or in the current directory : will be found either way by find_program
 m_FindProgramRTExecDirVec.push_back(RTExecutablePath); // FindProgram will search in the executable directory too
 
 if( configfile.empty() )  ConfigDefault();
@@ -193,15 +213,16 @@ if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) 
 	if(MeshPointIntensitySamplingPath->text().isEmpty()) notFound = notFound + "> MeshPointIntensitySampling\n";
 	if(ShapeWorksRunPath->text().isEmpty()) notFound = notFound + "> ShapeWorksRun\n";
 	if(ImageMathPath->text().isEmpty()) notFound = notFound + "> ImageMath\n";
-	if(SegPostprocessPath->text().isEmpty()) notFound = notFound + "> SegPostprocess\n";
-	if(ShapeWorksPythonScriptPath->text().isEmpty()) notFound = notFound + "> ShapeWorks.py\n";
+	if(SegPostprocessPath->text().isEmpty()) notFound = notFound + "> SegPostprocessCLP\n";
+	if(ShapeWorksPythonScriptPath->text().isEmpty()) notFound = notFound + "> shapeworks.py\n";
 	if(concatToColumnsPythonScriptPath->text().isEmpty()) notFound = notFound + "> concatToColumns.py\n";
 	if(vtkPointAttributesPythonScriptPath->text().isEmpty()) notFound = notFound + "> vtkPointAttributes.py\n";
-	if(PathFilesBmsPath->text().isEmpty()) notFound = notFound + "> PathFilesBms\n";
 	if(RScriptRodentThicknessPath->text().isEmpty()) notFound = notFound + "> rodentThicknessStats.r\n";
 	if(PythonPath->text().isEmpty()) notFound = notFound + "> python\n";
 	if(RScriptPath->text().isEmpty()) notFound = notFound + "> Rscript\n";
 	if(ShapeWorksGroomPath->text().isEmpty()) notFound = notFound + "> ShapeWorksGroom\n";
+	if(BinaryToDistanceMapPath->text().isEmpty()) notFound = notFound + "> BinaryToDistanceMap\n";
+	
 	if( !notFound.empty() )
 	{
 		if(!m_noGUI)
@@ -220,7 +241,9 @@ if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) 
 void GuiCSV::ExitProgram() /*SLOT*/
 {
 	std::cout<<"| End of the program"<<std::endl; // command line display
-	// delete m_scriptwriter;
+	delete m_statisticalpartrunner;
+	delete m_scriptrunner;
+	
 	qApp->quit(); //end of Application: close the main window
 }
 
@@ -315,8 +338,16 @@ int GuiCSV::ReadCSV(QString CSVfile)
 						QString line = stream.readLine();
 						QStringList list = line.split(m_CSVseparator);
 					if(tableWidget->rowCount()<=i) tableWidget->QTableWidget::insertRow(i);
-
-					if(list.at(0) != "subjId" )
+					
+					if(i==0)
+					{
+						
+						if(list.at(0) != "subjId" || list.at(1) != "labelMapInput" || list.at(2) != "group")
+						{
+							qDebug( "Could not open csv file, first line is not correct");						
+							return -1;
+						}
+					}else
 					{
 						QTableWidgetItem * Itemcell=new QTableWidgetItem( tr("%1").arg( list.at(0)) );
 						tableWidget->setItem(i-1,0,Itemcell);
@@ -324,7 +355,7 @@ int GuiCSV::ReadCSV(QString CSVfile)
 						tableWidget->setItem(i-1,1,Itemcell1);
 						QTableWidgetItem * Itemcell2=new QTableWidgetItem( tr("%1").arg( list.at(2)) );
 						tableWidget->setItem(i-1,2,Itemcell2);
-						//if( list.at(0) != "id" )  CaseListWidget->addItem( list.at(1) ); //display in the Widget so that some can be removed
+						
 					}
 					i++;
 				}
@@ -337,9 +368,6 @@ int GuiCSV::ReadCSV(QString CSVfile)
 				qDebug( "Could not open csv file");
 				return -1;
 			}
-
-			
-		
 
 		}
 		else std::cout<<"| The given CSV file does not exist"<<std::endl; // command line display
@@ -375,7 +403,6 @@ void GuiCSV::SaveCSVDatasetBrowseSlot()
 int GuiCSV::SaveCSVDatasetBrowse(QString CSVBrowseName) /*SLOT*/
 {
 
-	
 		QFile file(CSVBrowseName);
 		if ( file.open( IO_WriteOnly | IO_Translate ) )
 		{
@@ -387,21 +414,17 @@ int GuiCSV::SaveCSVDatasetBrowse(QString CSVBrowseName) /*SLOT*/
 			for(int i=0; i < tableWidget->rowCount();i++) 
 			{	
 			
-			stream << tableWidget->item(i,0)->text()<< m_CSVseparator << tableWidget->item(i,1)->text()<< m_CSVseparator << tableWidget->item(i,2)->text()<< endl;
+				stream << tableWidget->item(i,0)->text()<< m_CSVseparator << tableWidget->item(i,1)->text()<< m_CSVseparator << tableWidget->item(i,2)->text()<< endl;
 			
 			}
 			std::cout<<"DONE"<<std::endl; // command line display
-			return 0;
-			//SelectCasesLabel->setText( QString("Current CSV file : ") + CSVBrowseName );
-					
+			return 0;			
 		}
 		else
 		{
 			qDebug( "Could not create file");	
 			return -1 ;
 		}
-	
-
 }
 
   /////////////////////////////////////////
@@ -575,7 +598,7 @@ int GuiCSV::LoadConfig(QString configFile) // returns -1 if fails, otherwise 0
 				
 			}
 			if(!list.at(1).isEmpty()) SegPostprocessPath->setText(list.at(1));
-			else if(SegPostprocessPath->text().isEmpty()) notFound = notFound + "> SegPostProcess\n";
+			else if(SegPostprocessPath->text().isEmpty()) notFound = notFound + "> SegPostProcessCLP\n";
 
 			line = stream.readLine();
 			n=line.size();
@@ -595,6 +618,41 @@ int GuiCSV::LoadConfig(QString configFile) // returns -1 if fails, otherwise 0
 			if(!list.at(1).isEmpty()) ShapeWorksPythonScriptPath->setText(list.at(1));
 			else if(ShapeWorksPythonScriptPath->text().isEmpty()) notFound = notFound + "> PythonScript\n";
 
+			line = stream.readLine();
+			n=line.size();
+			line.remove(n-1,1);
+			list = line.split(" ");
+			if(!list.at(0).contains(QString("Set(PythonPath")))
+			{
+				if(!m_noGUI)
+				{
+					QMessageBox::critical(this, "Corrupt File", "This config file is corrupted");
+					std::cout<<"FAILED"<<std::endl; // command line display
+				}
+				else std::cout<<"FAILED"<<std::endl<<"| This config file is corrupted"<<std::endl;
+				return -1;
+				
+			}
+			if(!list.at(1).isEmpty()) PythonPath->setText(list.at(1));
+			else if(PythonPath->text().isEmpty()) notFound = notFound + "> python\n";
+
+			line = stream.readLine();
+			n=line.size();
+			line.remove(n-1,1);
+			list = line.split(" ");
+			if(!list.at(0).contains(QString("Set(BinaryToDistanceMapPath")))
+			{
+				if(!m_noGUI)
+				{
+					QMessageBox::critical(this, "Corrupt File", "This config file is corrupted");
+					std::cout<<"FAILED"<<std::endl; // command line display
+				}
+				else std::cout<<"FAILED"<<std::endl<<"| This config file is corrupted"<<std::endl;
+				return -1;
+				
+			}
+			if(!list.at(1).isEmpty()) BinaryToDistanceMapPath->setText(list.at(1));
+			else if(BinaryToDistanceMapPath->text().isEmpty()) notFound = notFound + "> BinaryToDistanceMap\n";
 
 			line = stream.readLine();
 			n=line.size();
@@ -650,23 +708,6 @@ int GuiCSV::LoadConfig(QString configFile) // returns -1 if fails, otherwise 0
 			if(!list.at(1).isEmpty()) RScriptRodentThicknessPath->setText(list.at(1));
 			else if(RScriptRodentThicknessPath->text().isEmpty()) notFound = notFound + "> rodentThicknessStats.r\n";
 			
-			line = stream.readLine();
-			n=line.size();
-			line.remove(n-1,1);
-			list = line.split(" ");
-			if(!list.at(0).contains(QString("Set(PythonPath")))
-			{
-				if(!m_noGUI)
-				{
-					QMessageBox::critical(this, "Corrupt File", "This config file is corrupted");
-					std::cout<<"FAILED"<<std::endl; // command line display
-				}
-				else std::cout<<"FAILED"<<std::endl<<"| This config file is corrupted"<<std::endl;
-				return -1;
-				
-			}
-			if(!list.at(1).isEmpty()) PythonPath->setText(list.at(1));
-			else if(PythonPath->text().isEmpty()) notFound = notFound + "> python\n";
 			
 			line = stream.readLine();
 			n=line.size();
@@ -739,11 +780,17 @@ void GuiCSV::SaveConfig(QString ConfigBrowseName) /*SLOT*/
 			stream << "Set(ImageMathPath " << ImageMathPath->text() <<")"<< endl;
 			stream << "Set(SegPostprocessPath " << SegPostprocessPath->text() <<")"<< endl;
 			stream << "Set(ShapeWorksPythonScriptPath " << ShapeWorksPythonScriptPath->text() <<")"<< endl;
-			stream << "Set(concatToColumnsPythonScriptPath " << concatToColumnsPythonScriptPath->text() <<")"<< endl;
-			stream << "Set(vtkPointAttributesPythonScriptPath " << vtkPointAttributesPythonScriptPath->text() <<")"<< endl;
-			stream << "Set(RScriptRodentThicknessPath " << RScriptRodentThicknessPath->text() <<")"<< endl;
 			stream << "Set(PythonPath " << PythonPath->text() <<")"<< endl;
-			stream << "Set(RScriptPath " << RScriptPath->text() <<")"<< endl;
+			stream << "Set(BinaryToDistanceMapPath " << BinaryToDistanceMapPath->text() <<")"<< endl;
+			if(concatToColumnsPythonScriptPath->text().isEmpty()) stream << "Set(concatToColumnsPythonScriptPath nopath)"<< endl;
+			else stream << "Set(concatToColumnsPythonScriptPath " << concatToColumnsPythonScriptPath->text() <<")"<< endl;
+			if(vtkPointAttributesPythonScriptPath->text().isEmpty()) stream << "Set(vtkPointAttributesPythonScriptPath nopath)"<< endl;			
+			else stream << "Set(vtkPointAttributesPythonScriptPath " << vtkPointAttributesPythonScriptPath->text() <<")"<< endl;
+			if(RScriptRodentThicknessPath->text().isEmpty()) stream << "Set(RScriptRodentThicknessPath nopath)"<< endl;			
+			else stream << "Set(RScriptRodentThicknessPath " << RScriptRodentThicknessPath->text() <<")"<< endl;
+			stream << "Set(PythonPath " << PythonPath->text() <<")"<< endl;
+			if(RScriptPath->text().isEmpty()) stream << "Set(RScriptPath nopath)"<< endl;
+			else stream << "Set(RScriptPath " << RScriptPath->text() <<")"<< endl;
 			std::cout<<"DONE"<<std::endl; // command line display
 		}
 		else 
@@ -753,13 +800,25 @@ void GuiCSV::SaveConfig(QString ConfigBrowseName) /*SLOT*/
 		}
 	}
 }
-
-void GuiCSV::ConfigDefault() /*SLOT*/
+void GuiCSV::ConfigDefaultSlot() /*SLOT*/
+{	
+		ConfigDefault();
+		if( !m_notFound.empty() )
+		{
+			if(!m_noGUI)
+			{
+				std::string text = "The following programs have not been found.\nPlease enter the path manually or open a configuration file:\n" + m_notFound;
+				QMessageBox::warning(this, "Program missing", QString(text.c_str()) );
+			}
+			else std::cout<<"| The following programs have not been found. Please give a configuration file or modify it or enter the path manually in the GUI:\n"<< m_notFound <<std::endl;
+		}
+}
+void GuiCSV::ConfigDefault() 
 {
 std::cout<<"| Searching the softwares..."; // command line display
 
 	std::string program;
-	std::string notFound;
+	std ::string notFound;
 
 	program = itksys::SystemTools::FindProgram("measureThicknessFilter",m_FindProgramRTExecDirVec);
 	if(program.empty()) { if(measureThicknessFilterPath->text().isEmpty()) notFound = notFound + "> measureThicknessFilter\n"; }
@@ -773,8 +832,8 @@ std::cout<<"| Searching the softwares..."; // command line display
 	if(program.empty()) { if(ParaToSPHARMMeshCLPPath->text().isEmpty()) notFound = notFound + "> ParaToSPHARMMeshCLP\n"; }
 	else ParaToSPHARMMeshCLPPath->setText(QString(program.c_str()));
 
-	program = itksys::SystemTools::FindProgram("MeshPointIntensitySampling",m_FindProgramRTExecDirVec);
-	if(program.empty()) { if(MeshPointIntensitySamplingPath->text().isEmpty()) notFound = notFound + "> MeshPointIntensitySampling\n"; }
+	program = itksys::SystemTools::FindProgram("MeshPointsIntensitySampling",m_FindProgramRTExecDirVec);
+	if(program.empty()) { if(MeshPointIntensitySamplingPath->text().isEmpty()) notFound = notFound + "> MeshPointsIntensitySampling\n"; }
 	else MeshPointIntensitySamplingPath->setText(QString(program.c_str()));
 
 	program = itksys::SystemTools::FindProgram("ShapeWorksRun",m_FindProgramRTExecDirVec);
@@ -789,22 +848,27 @@ std::cout<<"| Searching the softwares..."; // command line display
 	if(program.empty()) { if(ImageMathPath->text().isEmpty()) notFound = notFound + "> ImageMath\n"; }
 	else ImageMathPath->setText(QString(program.c_str()));
 	
-	program = itksys::SystemTools::FindProgram("SegPostProcess",m_FindProgramRTExecDirVec);
-	if(program.empty()) { if(SegPostprocessPath->text().isEmpty()) notFound = notFound + "> SegPostProcess\n"; }
+	program = itksys::SystemTools::FindProgram("SegPostProcessCLP",m_FindProgramRTExecDirVec);
+	if(program.empty()) { if(SegPostprocessPath->text().isEmpty()) notFound = notFound + "> SegPostProcessCLP\n"; }
 	else SegPostprocessPath->setText(QString(program.c_str()));
 	
-	/*program = itksys::SystemTools::FindFile("ShapeWorks.py",m_FindProgramRTExecDirVec);
-	if(program.empty()) { if(ShapeWorksPythonScriptPath->text().isEmpty()) notFound = notFound + ">ShapeWorks.py\n"; }
-	else ShapeWorksPythonScriptPath->setText(QString(program.c_str()));*/
+	program = itksys::SystemTools::FindFile("shapeworks.py",m_FindProgramRTExecDirVec);
+	if(program.empty()) { if(ShapeWorksPythonScriptPath->text().isEmpty()) notFound = notFound + ">shapeworks.py\n"; }
+	else ShapeWorksPythonScriptPath->setText(QString(program.c_str()));
 
 	program = itksys::SystemTools::FindProgram("python",m_FindProgramRTExecDirVec);
 	if(program.empty()) { if(PythonPath->text().isEmpty()) notFound = notFound + ">python\n"; }
 	else PythonPath->setText(QString(program.c_str()));
 	
+	program = itksys::SystemTools::FindProgram("BinaryToDistanceMap",m_FindProgramRTExecDirVec);
+	if(program.empty()) { if(BinaryToDistanceMapPath->text().isEmpty()) notFound = notFound + ">BinaryToDistanceMap\n"; }
+	else BinaryToDistanceMapPath->setText(QString(program.c_str()));
+	
+
 
 	if(m_statistic==1)
 	{
-		/*program = itksys::SystemTools::FindFile("concatToColumns.py",m_FindProgramRTExecDirVec);
+		program = itksys::SystemTools::FindFile("concatToColumns.py",m_FindProgramRTExecDirVec);
 		if(program.empty()) { if(concatToColumnsPythonScriptPath->text().isEmpty()) notFound = notFound + "> concatToColumns.py\n"; }
 		else concatToColumnsPythonScriptPath->setText(QString(program.c_str()));
 
@@ -814,32 +878,23 @@ std::cout<<"| Searching the softwares..."; // command line display
 
 		program = itksys::SystemTools::FindFile("rodentThicknessStats.r",m_FindProgramRTExecDirVec);
 		if(program.empty()) { if(RScriptRodentThicknessPath->text().isEmpty()) notFound = notFound + "> rodentThicknessStats.r\n"; }
-		else RScriptRodentThicknessPath->setText(QString(program.c_str()));*/
+		else RScriptRodentThicknessPath->setText(QString(program.c_str()));
 		
 		program = itksys::SystemTools::FindProgram("Rscript",m_FindProgramRTExecDirVec);
 		if(program.empty()) { if(RScriptPath->text().isEmpty()) notFound = notFound + "> Rscript\n"; }
 		else RScriptPath->setText(QString(program.c_str()));
 	}
 	std::cout<<"DONE"<<std::endl; // command line display
-
 	
-	if( !notFound.empty() )
-	{
-		if(!m_noGUI)
-		{
-			std::string text = "The following programs have not been found.\nPlease enter the path manually or open a configuration file:\n" + notFound;
-			QMessageBox::warning(this, "Program missing", QString(text.c_str()) );
-		}
-		else std::cout<<"| The following programs have not been found. Please give a configuration file or modify it or enter the path manually in the GUI:\n"<< notFound <<std::endl;
-	}
+	m_notFound=notFound;
 	
 }
 
 void GuiCSV::BrowseSoft(int soft)  /*SLOT*/ //softwares: 
 {
 	QString SoftBrowse;
-	std :: cout<< soft<< std ::endl;
-	if(soft ==11 || soft == 12) SoftBrowse = QFileDialog::getExistingDirectory(this);
+	
+	if(soft ==11 ) SoftBrowse = QFileDialog::getExistingDirectory(this);
 	else SoftBrowse = QFileDialog::getOpenFileName(this, "Open Software", QString(), "Executable Files (*)");
 	
 	
@@ -877,6 +932,8 @@ void GuiCSV::BrowseSoft(int soft)  /*SLOT*/ //softwares:
 			break;
 		case 15: ShapeWorksGroomPath->setText(SoftBrowse);
 			break;
+		case 16: BinaryToDistanceMapPath->setText(SoftBrowse);
+			break;
 		}
 	}
 }
@@ -893,13 +950,13 @@ void GuiCSV::ResetSoft(int softindex) /*SLOT*/ //softwares:
 		break;
 	case 3: soft="ParaToSPHARMMeshCLP";
 		break;
-	case 4: soft="MeshPointIntensitySampling";
+	case 4: soft="MeshPointsIntensitySampling";
 		break;
 	case 5:	soft="ShapeWorksRun";
 		break;
 	case 6: soft="ImageMath";
 		break;
-	case 7: soft="SegPostProcess";
+	case 7: soft="SegPostProcessCLP";
 		break;
 	case 8: soft="python";
 		break;
@@ -907,14 +964,23 @@ void GuiCSV::ResetSoft(int softindex) /*SLOT*/ //softwares:
 		break;
 	case 10:soft="ShapeWorksGroom";
 		break;
+	case 11:soft="BinaryToDistanceMap";
+		break;
+	case 12:soft="shapeworks.py";
+		break;
+	case 13:soft="concatToColumns.py";
+		break;
+	case 14:soft="vtkPointAttributes.py";
+		break;
+	case 15:soft="rodentthickness.r";
+		break;
 	}
 
 	std::cout<<"| Searching the software \'"<< soft <<"\'..."; // command line display
 	std::string program;
-	program = itksys::SystemTools::FindProgram(soft.c_str(),m_FindProgramRTExecDirVec);
+	if(softindex<12) program = itksys::SystemTools::FindProgram(soft.c_str(),m_FindProgramRTExecDirVec);
+	else program = itksys::SystemTools::FindFile(soft.c_str(),m_FindProgramRTExecDirVec);
 	
-
-
 	
 	if(program.empty()) 
 	{
@@ -933,12 +999,16 @@ void GuiCSV::ResetSoft(int softindex) /*SLOT*/ //softwares:
 		else if(softindex==8) PythonPath->setText(QString(program.c_str()));
 		else if(softindex==9) RScriptPath->setText(QString(program.c_str()));
 		else if(softindex==10) ShapeWorksGroomPath->setText(QString(program.c_str()));
+		else if(softindex==11) BinaryToDistanceMapPath->setText(QString(program.c_str()));
+		else if(softindex==12) ShapeWorksPythonScriptPath->setText(QString(program.c_str()));
+		else if(softindex==13) concatToColumnsPythonScriptPath->setText(QString(program.c_str()));
+		else if(softindex==14) vtkPointAttributesPythonScriptPath->setText(QString(program.c_str()));
+		else if(softindex==15) RScriptRodentThicknessPath->setText(QString(program.c_str()));
 		
 	}
 
 	std::cout<<"DONE"<<std::endl; // command line display
 	
-
 }
   /////////////////////////////////////////
  //               OUTPUT                //
@@ -953,7 +1023,25 @@ void GuiCSV::OpenOutputBrowseWindow() /*SLOT*/
 	}
 	
 }
+  /////////////////////////////////////////
+ // READ ME //
+/////////////////////////////////////////
 
+void GuiCSV::ReadMe() /*SLOT*/ /////to UPDATE
+{
+
+QDialog *dlg = new QDialog(this);
+dlg->setWindowTitle ("Read Me");
+
+std::string info = "RodentThickness\n===============\n\nA tool to measure cortical thickness of rodent brain\n\nThese Softwares need to be installed before executing the tool :\n- ImageMath\n- measureThicknessFilter\n- GenParaMeshCLP\n- ParaToSPHARMMeshCLP\n- ShapeWorksRun\n- ShapeWorksGroom\n- SegPostProcessCLP\n- BinaryToDistanceMap\n- MeshPointsIntensitysampling\n\nThe program use : \n- python2.6 or python2.7 with vtk installed\n- Rscript\n\n For any question, suggestion or remark, please contact mjacquem@unc.edu";
+QLabel *InfoLabel = new QLabel (info.c_str(), this);
+QVBoxLayout *VLayout = new QVBoxLayout();
+VLayout->addWidget(InfoLabel);
+
+dlg->setLayout(VLayout);
+
+dlg->setVisible(!dlg->isVisible()); // display the window
+}
 
 
   /////////////////////////////////////////
@@ -962,8 +1050,30 @@ void GuiCSV::OpenOutputBrowseWindow() /*SLOT*/
 
 void GuiCSV::WidgetHasChangedParam() /*SLOT*/ //called when any widget is changed
 {
-	if(StatisticBox->isChecked()) m_statistic=1;
-	else m_statistic=0;
+	if(StatisticBox->isChecked()) 
+	{
+		m_statistic=1;
+		RScriptButton->setEnabled(true);
+		RScriptPathButton->setEnabled(true);
+		concatToColumnsPythonScriptButton->setEnabled(true);
+		vtkPointAttributesPythonScriptButton->setEnabled(true);
+		RScriptResetButton->setEnabled(true);
+		RScriptPathResetButton->setEnabled(true);
+		concatToColumnsPythonScriptResetButton->setEnabled(true);
+		vtkPointAttributesPythonScriptResetButton->setEnabled(true);
+	}
+	else 
+	{
+		m_statistic=0;
+		RScriptButton->setEnabled(false);
+		RScriptPathButton->setEnabled(false);
+		concatToColumnsPythonScriptButton->setEnabled(false);
+		vtkPointAttributesPythonScriptButton->setEnabled(false);
+		RScriptResetButton->setEnabled(false);
+		RScriptPathResetButton->setEnabled(false);
+		concatToColumnsPythonScriptResetButton->setEnabled(false);
+		vtkPointAttributesPythonScriptResetButton->setEnabled(false);
+	}
 }
   /////////////////////////////////////////
  //           CHECK IMAGE OK            //
@@ -1021,8 +1131,7 @@ int GuiCSV::checkdataset()
 		
 	}
 	int mn=m+n;
-	return mn;
-	
+	return mn;	
 }
   /////////////////////////////////////////
  //           MAIN FUNCTIONS            //
@@ -1082,13 +1191,10 @@ int GuiCSV::LaunchScriptWriter()
 	 	QMessageBox::critical(this, "Item Empty", "Please enter all the item for subject and Image and Group");
 		return -1;
 	}		
-/* Variables for the QProcesses */
+
 	int ExitCode=0;
 	std::string program;
 
-/* Checking and Setting the values */
-
-/* Cases*/ 
 	for(int i=0; i <tableWidget->rowCount() ;i++) 
 	{	
 		std::string CurrentCase = tableWidget->item(i,1)->text().toStdString();//.substr( tableWidget->item(i,2)->text().split(":").at(0).size()+2 );
@@ -1169,7 +1275,7 @@ int GuiCSV::LaunchScriptWriter()
 	if(ExitCode!=0) return -1;
 /* Software paths */
 /* Checking if all the programs have been given */
-	if(measureThicknessFilterPath->text().isEmpty() || GenParaMeshCLPPath->text().isEmpty() || ParaToSPHARMMeshCLPPath->text().isEmpty() || MeshPointIntensitySamplingPath->text().isEmpty() || ShapeWorksRunPath->text().isEmpty() || ShapeWorksGroomPath->text().isEmpty() || ImageMathPath->text().isEmpty() || SegPostprocessPath->text().isEmpty() || ShapeWorksPythonScriptPath->text().isEmpty() || concatToColumnsPythonScriptPath->text().isEmpty() || vtkPointAttributesPythonScriptPath->text().isEmpty()) // if any path is missing => check in the config file and in the PATH
+	if(measureThicknessFilterPath->text().isEmpty() || GenParaMeshCLPPath->text().isEmpty() || ParaToSPHARMMeshCLPPath->text().isEmpty() || MeshPointIntensitySamplingPath->text().isEmpty() || ShapeWorksRunPath->text().isEmpty() || ShapeWorksGroomPath->text().isEmpty() || ImageMathPath->text().isEmpty() || SegPostprocessPath->text().isEmpty() || ShapeWorksPythonScriptPath->text().isEmpty() || concatToColumnsPythonScriptPath->text().isEmpty() || vtkPointAttributesPythonScriptPath->text().isEmpty()|| PythonPath->text().isEmpty()|| RScriptPath->text().isEmpty()|| RScriptRodentThicknessPath->text().isEmpty()|| BinaryToDistanceMapPath->text().isEmpty()) // if any path is missing => check in the config file and in the PATH
 	{
 
 		std::string programPath;
@@ -1195,8 +1301,8 @@ int GuiCSV::LaunchScriptWriter()
 		}
 		if(MeshPointIntensitySamplingPath->text().isEmpty())
 		{
-			programPath = itksys::SystemTools::FindProgram("MeshPointIntensitySampling",m_FindProgramRTExecDirVec);
-			if(programPath.empty()) notFound = notFound + "> MeshPointIntensitySampling\n";
+			programPath = itksys::SystemTools::FindProgram("MeshPointsIntensitySampling",m_FindProgramRTExecDirVec);
+			if(programPath.empty()) notFound = notFound + "> MeshPointsIntensitySampling\n";
 			else MeshPointIntensitySamplingPath->setText(QString(programPath.c_str()));
 		}
 		if(ShapeWorksRunPath->text().isEmpty())
@@ -1219,21 +1325,27 @@ int GuiCSV::LaunchScriptWriter()
 		}
 		if(SegPostprocessPath->text().isEmpty())
 		{
-			programPath = itksys::SystemTools::FindProgram("SegPostprocess",m_FindProgramRTExecDirVec);
-			if(programPath.empty()) notFound = notFound + "> SegPostprocess\n";
+			programPath = itksys::SystemTools::FindProgram("SegPostprocessCLP",m_FindProgramRTExecDirVec);
+			if(programPath.empty()) notFound = notFound + "> SegPostprocessCLP\n";
 			else SegPostprocessPath->setText(QString(programPath.c_str()));
 		}
 		if(ShapeWorksPythonScriptPath->text().isEmpty())
 		{
-			programPath = itksys::SystemTools::FindFile("ShapeWorks.py",m_FindProgramRTExecDirVec);
-			if(programPath.empty()) notFound = notFound + "> ShapeWorks.py\n";
+			programPath = itksys::SystemTools::FindFile("shapeworks.py",m_FindProgramRTExecDirVec);
+			if(programPath.empty()) notFound = notFound + "> shapeworks.py\n";
 			else ShapeWorksPythonScriptPath->setText(QString(programPath.c_str()));
 		}
 		if(PythonPath->text().isEmpty())
 		{
-			programPath = itksys::SystemTools::FindFile("python",m_FindProgramRTExecDirVec);
+			programPath = itksys::SystemTools::FindProgram("python",m_FindProgramRTExecDirVec);
 			if(programPath.empty()) notFound = notFound + "> python\n";
 			else PythonPath->setText(QString(programPath.c_str()));
+		}
+		if(BinaryToDistanceMapPath->text().isEmpty())
+		{
+			programPath = itksys::SystemTools::FindProgram("BinaryToDistanceMap",m_FindProgramRTExecDirVec);
+			if(programPath.empty()) notFound = notFound + "> BinaryToDistanceMap\n";
+			else BinaryToDistanceMapPath->setText(QString(programPath.c_str()));
 		}
 		if(m_statistic==1)
 		{	if(concatToColumnsPythonScriptPath->text().isEmpty())
@@ -1330,6 +1442,12 @@ int GuiCSV::LaunchScriptWriter()
 			QMessageBox::critical(this, "Non executable File", QString(text.c_str()) );
 			return -1;
 	}
+	if(! itksys::SystemTools::GetPermissions(BinaryToDistanceMapPath->text().toStdString().c_str(), ITKmode_X_OK) )
+	{
+			std::string text = "The file \'" + BinaryToDistanceMapPath->text().toStdString() + "\' is not executable";
+			QMessageBox::critical(this, "Non executable File", QString(text.c_str()) );
+			return -1;
+	}
 	if(m_statistic==1)
 	{
 		if(! itksys::SystemTools::GetPermissions(concatToColumnsPythonScriptPath->text().toStdString().c_str(), ITKmode_F_OK) )
@@ -1358,13 +1476,10 @@ int GuiCSV::LaunchScriptWriter()
 		}
 	}
 
-	
 	m_outconfig=m_OutputPath + QString("/RodentThickness/RodentThicknessconfigfile.bms");
-	
 	m_outdataset=m_OutputPath + QString("/RodentThickness/dataset.csv");
 	m_StatisticaldatasetPath=m_OutputPath + QString("/RodentThickness/outputdataset.csv");
 	SaveConfig(m_outconfig);
-	
 	SaveCSVDatasetBrowse(m_outdataset);
 
 
