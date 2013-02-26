@@ -1,3 +1,4 @@
+# include(${configfile})
 
 
 MakeDirectory(${WorkDir}/RodentThickness/Output/meshintensity)

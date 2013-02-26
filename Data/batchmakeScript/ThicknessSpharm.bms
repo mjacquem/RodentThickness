@@ -1,18 +1,14 @@
-
-
 MakeDirectory(${WorkDir}/RodentThickness/Output/MeasurementandSPHARM)
 Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/RodentThickness/Output/MeasurementandSPHARM)
 
 Set (cmdline ${measureThicknessFilterPath} --mr --sbt --workdir ${OutDirectoryMeasurementandSPHARM} --ids 3 --idl 4 --idh 1 --idn 5 --ttrns 100 ${labelMapInput} ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd)
 Run(output ${cmdline})
 
-
 Set (cmdline ${ImageMathPath} ${labelMapInput} -extractLabel 3 -outfile ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd)
 Run(output ${cmdline})
 
 Set(cmdline ${SegPostprocessPath} ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentationSegPostProcess.nrrd)
 Run(output ${cmdline})
-
 
 
 FileExists(ParaFileExists ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk)

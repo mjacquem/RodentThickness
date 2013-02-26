@@ -1,0 +1,9 @@
+
+Set(OutDirectoryCorrepondance ${WorkDir}/RodentThickness/Statistical)
+
+
+ForEach (groupId ${groupIds})
+WriteFile (${OutDirectoryCorrepondance}/listThicknessSamplingResult_${groupId}.txt '')
+EndForEach (${groupId})	
+
+

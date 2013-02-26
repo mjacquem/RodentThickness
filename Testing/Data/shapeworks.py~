@@ -45,8 +45,7 @@ def vtk2lpts(inputSurfaces, outputPoints):
     print "Converting %s into %s [%d points] ..." % (fin, fout, points.GetNumberOfPoints())
     for i in range(0, points.GetNumberOfPoints()):
       p = points.GetPoint(i)
-#      fo.write("%f %f %f\n" % (-10*p[0],-10*p[1],10*p[2])) 
-      fo.write("%f %f %f\n" % (-2.5*p[0],-2.5*p[1],2.5*p[2]))
+      fo.write("%f %f %f\n" % (-10*p[0],-10*p[1],10*p[2])) 
     fo.close()
 
 def file2string(fn):
@@ -71,8 +70,7 @@ def lpts2vtk(lptsIn, vtkTmpl, vtkOut):
   for (fin, fout) in zip(lptsIn,vtkOut):
     print "Processing", fin, fout
     lines = file2string(fin)
-#    points = [ [ float(f)*.1 for f in l.split(" ") ]  for l in lines ]
-    points = [ [ float(f)*.4 for f in l.split(" ") ]  for l in lines ]
+    points = [ [ float(f)*.1 for f in l.split(" ") ]  for l in lines ]
     meshPoints = mesh.GetPoints()
     if (meshPoints.GetNumberOfPoints() != len(points)):
       print "Mismatch between the template surface model and the corresponding points (%s) [%d:%d]" % (fin, meshPoints.GetNumberOfPoints(), len(points))

@@ -1,4 +1,4 @@
-
+# include(${configfile})
 
 MakeDirectory(${WorkDir}/RodentThickness/Output/shapeworks)
 Set(OutDirectoryshapeworks ${WorkDir}/RodentThickness/Output/shapeworks)

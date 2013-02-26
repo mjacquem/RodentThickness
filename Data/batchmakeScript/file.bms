@@ -1,0 +1,3 @@
+Set(OutDirectoryCorrepondance ${WorkDir}/RodentThickness/Statistical)
+
+AppendFile (${OutDirectoryCorrepondance}/listThicknessSamplingResult_${group}.txt ${attributefilename}\n)

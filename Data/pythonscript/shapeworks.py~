@@ -3,8 +3,9 @@ import os
 from optparse import OptionParser
 from vtk import vtkPolyDataReader, vtkPolyDataWriter, vtkThinPlateSplineTransform, vtkGeneralTransform, vtkTransformPolyDataFilter
 
-imageMathPath = " "
-shapeWorksRun = " "
+imageMathPath = "/tools/bin_linux64"
+
+shapeWorksRun = "/devel/linux/ShapeWorks/ShapeWorksRun"
 
 def warp(srcLandmark,dstLandmark,subj):
   tps = vtkThinPlateSplineTransform()
@@ -45,8 +46,7 @@ def vtk2lpts(inputSurfaces, outputPoints):
     print "Converting %s into %s [%d points] ..." % (fin, fout, points.GetNumberOfPoints())
     for i in range(0, points.GetNumberOfPoints()):
       p = points.GetPoint(i)
-#      fo.write("%f %f %f\n" % (-10*p[0],-10*p[1],10*p[2])) 
-      fo.write("%f %f %f\n" % (-2.5*p[0],-2.5*p[1],2.5*p[2]))
+      fo.write("%f %f %f\n" % (-10*p[0],-10*p[1],10*p[2])) 
     fo.close()
 
 def file2string(fn):
@@ -71,8 +71,7 @@ def lpts2vtk(lptsIn, vtkTmpl, vtkOut):
   for (fin, fout) in zip(lptsIn,vtkOut):
     print "Processing", fin, fout
     lines = file2string(fin)
-#    points = [ [ float(f)*.1 for f in l.split(" ") ]  for l in lines ]
-    points = [ [ float(f)*.4 for f in l.split(" ") ]  for l in lines ]
+    points = [ [ float(f)*.1 for f in l.split(" ") ]  for l in lines ]
     meshPoints = mesh.GetPoints()
     if (meshPoints.GetNumberOfPoints() != len(points)):
       print "Mismatch between the template surface model and the corresponding points (%s) [%d:%d]" % (fin, meshPoints.GetNumberOfPoints(), len(points))
@@ -117,9 +116,9 @@ def groom(imagesIn,imagesOut):
 
 def adjustSpacing(images):
   for f in images:
-    execute("%sImageMath %s -type float -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, f,f))
+    execute("%s/ImageMath %s -type float -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, f,f))
   
-def run(shapeWorksCmd,inputImages,inputPoints):
+def run(inputImages,inputPoints):
   tmpl = """<?xml version="1.0" ?>
 <inputs>        
 ###INPUTS###
@@ -136,12 +135,12 @@ def run(shapeWorksCmd,inputImages,inputPoints):
   """
   tmpl = tmpl.replace("###INPUTS###", "\n".join(inputImages)).replace("###POINT_FILES###", "\n".join(inputPoints))
   string2file("run.xml", tmpl)
-  execute("%s %s" % (shapeWorksCmd, "run.xml"))
+  execute("%s %s" % (shapeWorksRun, "run.xml"))
 
 
 def executePreProcessing(opts, args, inputImages, preprocessedImages):
   for (imgIn, imgOut) in zip(inputImages, preprocessedImages):
-    execute("%sImageMath %s -type short -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, imgIn, imgOut))
+    execute("%s/ImageMath %s -type short -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, imgIn, imgOut))
     execute("%s --binaryInput %s --smoothing 1.25 --output %s" % (opts.pathBinaryToDistanceMap, imgOut, imgOut))
 
 def executePostProcessing(opts, args, inputSurfaces):
@@ -182,8 +181,7 @@ def main(opts, args):
     executePreProcessing(opts, args, inputImages, preprocessedImages)
   if (not opts.isNoShapeWorks):
     vtk2lpts(inputSurfaces, inputPoints)
-    print "shapeWorksRun = [", shapeWorksRun, "]"
-    run(shapeWorksRun,preprocessedImages, inputPoints)
+    run(preprocessedImages, inputPoints)
   executePostProcessing(opts, args, inputSurfaces)
   return
 
@@ -208,7 +206,7 @@ if (__name__ =="__main__"):
   parser.add_option("-c", "--correspondingOutputList", help="text file containing the list of corresponding surfaces", dest="correspondingOutputList", default="")
   parser.add_option("--pathShapeWorksRun", help="tool path for shape Works",dest="pathShapeWorksRun", default="/NIRAL/tools/bin_linux64/ShapeWorksRun")
   parser.add_option("--pathShapeWorksGroom", help="tool path for shape Works",dest="pathShapeWorksGroom", default="/NIRAL/tools/bin_linux64/ShapeWorksGroom")
-  parser.add_option("--pathImageMath", help="path for ImageMath", dest="pathImageMath", default="/NIRAL/tools/bin_linux64/")
+  parser.add_option("--pathImageMath", help="path for ImageMath", dest="pathImageMath", default="/NIRAL/tools/bin_linux64/ImageMath")
   parser.add_option("--pathBinaryToDistanceMap", help="path for BinaryToDistanceMap", dest="pathBinaryToDistanceMap", default="/tools/bin_linux64/BinaryToDistanceMap")
   parser.add_option("--fixpoints", help="fix points by flipping x,y against the origin (adding minus", action="store_true", dest="isFixingPoint")
   parser.add_option("--nopreprocessing", action="store_true", help="do not create distance map", dest="isNoPreProcessing")

@@ -1,10 +1,10 @@
+#!/work/joohwi/Python/Python-build/bin/python
 import sys
+print sys.path
+
 import os
 from optparse import OptionParser
 from vtk import vtkPolyDataReader, vtkPolyDataWriter, vtkThinPlateSplineTransform, vtkGeneralTransform, vtkTransformPolyDataFilter
-
-imageMathPath = " "
-shapeWorksRun = " "
 
 def warp(srcLandmark,dstLandmark,subj):
   tps = vtkThinPlateSplineTransform()
@@ -16,7 +16,7 @@ def warp(srcLandmark,dstLandmark,subj):
   t1.SetInput(tps)
 
   tf = vtkTransformPolyDataFilter()
-  tf.SetInput(subj)
+  tf.SetInputData(subj)
   tf.SetTransform(t1)
   tf.Update()
 
@@ -33,7 +33,7 @@ def readvtk(fin):
 def writevtk(fin, mesh):
   r = vtkPolyDataWriter()
   r.SetFileName(fin)
-  r.SetInput(mesh)
+  r.SetInputData(mesh)
   r.Write()
 
 
@@ -45,8 +45,7 @@ def vtk2lpts(inputSurfaces, outputPoints):
     print "Converting %s into %s [%d points] ..." % (fin, fout, points.GetNumberOfPoints())
     for i in range(0, points.GetNumberOfPoints()):
       p = points.GetPoint(i)
-#      fo.write("%f %f %f\n" % (-10*p[0],-10*p[1],10*p[2])) 
-      fo.write("%f %f %f\n" % (-2.5*p[0],-2.5*p[1],2.5*p[2]))
+      fo.write("%f %f %f\n" % (10*p[0],10*p[1],10*p[2])) 
     fo.close()
 
 def file2string(fn):
@@ -69,10 +68,8 @@ def xml2dom(xml):
 def lpts2vtk(lptsIn, vtkTmpl, vtkOut):
   mesh = readvtk(vtkTmpl)
   for (fin, fout) in zip(lptsIn,vtkOut):
-    print "Processing", fin, fout
     lines = file2string(fin)
-#    points = [ [ float(f)*.1 for f in l.split(" ") ]  for l in lines ]
-    points = [ [ float(f)*.4 for f in l.split(" ") ]  for l in lines ]
+    points = [ [ float(f)*.1 for f in l.split(" ") ]  for l in lines ]
     meshPoints = mesh.GetPoints()
     if (meshPoints.GetNumberOfPoints() != len(points)):
       print "Mismatch between the template surface model and the corresponding points (%s) [%d:%d]" % (fin, meshPoints.GetNumberOfPoints(), len(points))
@@ -117,9 +114,9 @@ def groom(imagesIn,imagesOut):
 
 def adjustSpacing(images):
   for f in images:
-    execute("%sImageMath %s -type float -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, f,f))
+    execute("%s/ImageMath %s -type float -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, f,f))
   
-def run(shapeWorksCmd,inputImages,inputPoints):
+def run(inputImages,inputPoints):
   tmpl = """<?xml version="1.0" ?>
 <inputs>        
 ###INPUTS###
@@ -130,25 +127,29 @@ def run(shapeWorksCmd,inputImages,inputPoints):
 <number_of_particles> 1002 </number_of_particles> 
 <starting_regularization> 10.0 </starting_regularization> 
 <ending_regularization> 0.1 </ending_regularization> 
-<optimization_iterations> 300 </optimization_iterations> 
+<optimization_iterations> 100 </optimization_iterations> 
 <checkpointing_interval> 20 </checkpointing_interval> 
 <output_points_prefix> output </output_points_prefix> 
   """
   tmpl = tmpl.replace("###INPUTS###", "\n".join(inputImages)).replace("###POINT_FILES###", "\n".join(inputPoints))
   string2file("run.xml", tmpl)
-  execute("%s %s" % (shapeWorksCmd, "run.xml"))
+  execute("%s %s" % (shapeWorksRun, "run.xml"))
 
-
-def executePreProcessing(opts, args, inputImages, preprocessedImages):
-  for (imgIn, imgOut) in zip(inputImages, preprocessedImages):
-    execute("%sImageMath %s -type short -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, imgIn, imgOut))
-    execute("%s --binaryInput %s --smoothing 1.25 --output %s" % (opts.pathBinaryToDistanceMap, imgOut, imgOut))
-
-def executePostProcessing(opts, args, inputSurfaces):
+def main(opts, args):
+  toolPath = opts.pathShapeWorks
+  shapeWorksRun = "%s/ShapeWorksRun" % (toolPath)
+  shapeWorksGroom = "%s/ShapeWorksGroom" % (toolPath)
+  imageMathPath = opts.pathImageMath
+  inputImages = file2string(args[0])
+  inputSurfaces = file2string(args[1])
+  if (len(inputImages) != len(inputSurfaces)):
+    print "Number of subjects doesn't match [%d:%d]" % (len(inputImages), len(inputSurfaces))
+    return
+  preprocessedImages = [ "%03d.DT.nrrd" % (i) for (i,f) in enumerate(inputImages) ]
+  inputPoints = [ "%03d.initial.lpts" % (i) for (i,f) in enumerate(inputSurfaces) ]
   if (opts.correspondingOutputList == ""):
     outputSurfaces = [ f.replace(".vtk", ".out.vtk") for (i,f) in enumerate(inputSurfaces) ]
   else:
-    print "Using correspondence output to be", opts.correspondingOutputList
     outputSurfaces = file2string(opts.correspondingOutputList)
   if (opts.warpedOutputList == ""):
     warpedSurfaces = [ f.replace(".vtk", ".warped.vtk") for (i,f) in enumerate(inputSurfaces) ]
@@ -160,45 +161,13 @@ def executePostProcessing(opts, args, inputSurfaces):
     correspondingPoints = [ "output.%02d.lpts" % (i) for (i,f) in enumerate(inputSurfaces) ]
   else:
     correspondingPoints = [ "output.%03d.lpts" % (i) for (i,f) in enumerate(inputSurfaces) ]
+  groom(inputImages, preprocessedImages)
+  adjustSpacing(preprocessedImages)
+  vtk2lpts(inputSurfaces, inputPoints)
+  run(preprocessedImages, inputPoints)
   lpts2vtk(correspondingPoints, inputSurfaces[0], outputSurfaces)
-  if (not opts.isNoTPS):
-    tpsWarp(inputSurfaces[0],outputSurfaces,inputSurfaces[0],warpedSurfaces)
-
-def main(opts, args):
-  # toolPath = opts.pathShapeWorks
-  #shapeWorksRun = "%s/ShapeWorksRun" % (toolPath)
-  #shapeWorksGroom = "%s/ShapeWorksGroom" % (toolPath)
-  shapeWorksRun = opts.pathShapeWorksRun
-  shapeWorksGroom =opts.pathShapeWorksGroom
-  imageMathPath = opts.pathImageMath
-  inputImages = file2string(args[0])
-  inputSurfaces = file2string(args[1])
-  if (len(inputImages) != len(inputSurfaces)):
-    print "Number of subjects doesn't match [%d:%d]" % (len(inputImages), len(inputSurfaces))
-    return
-  preprocessedImages = [ "%03d.DT.nrrd" % (i) for (i,f) in enumerate(inputImages) ]
-  inputPoints = [ "%03d.initial.lpts" % (i) for (i,f) in enumerate(inputSurfaces) ]
-  if (not opts.isNoPreProcessing):
-    executePreProcessing(opts, args, inputImages, preprocessedImages)
-  if (not opts.isNoShapeWorks):
-    vtk2lpts(inputSurfaces, inputPoints)
-    print "shapeWorksRun = [", shapeWorksRun, "]"
-    run(shapeWorksRun,preprocessedImages, inputPoints)
-  executePostProcessing(opts, args, inputSurfaces)
+  tpsWarp(inputSurfaces[0],outputSurfaces,inputSurfaces[0],warpedSurfaces)
   return
-
-
-# add minus to x and y coordinate of all points
-def correctPoints(opts, args):
-  f = open(args[0], "r")
-  lins = f.readlines()
-  lins = [ "%f %f %f" % ( -float(y[0]), -float(y[1]), float(y[2]) ) for y in (x.split() for x in lins) ]
-  lins = "\n".join(lins)
-  f.close()
-  # write processed points
-  f = open(args[1], "w")
-  f.write(lins)
-  f.close()
 
 
 if (__name__ =="__main__"):
@@ -206,23 +175,12 @@ if (__name__ =="__main__"):
   parser.add_option("--workingDir", dest="workingDirectory", help="change working directory where intermediate files such as parameters.xml and output.*.lpts are created.", default="")
   parser.add_option("-w", "--warpedOutputList", help="text file containing the list of warped output", dest="warpedOutputList", default="")
   parser.add_option("-c", "--correspondingOutputList", help="text file containing the list of corresponding surfaces", dest="correspondingOutputList", default="")
-  parser.add_option("--pathShapeWorksRun", help="tool path for shape Works",dest="pathShapeWorksRun", default="/NIRAL/tools/bin_linux64/ShapeWorksRun")
-  parser.add_option("--pathShapeWorksGroom", help="tool path for shape Works",dest="pathShapeWorksGroom", default="/NIRAL/tools/bin_linux64/ShapeWorksGroom")
-  parser.add_option("--pathImageMath", help="path for ImageMath", dest="pathImageMath", default="/NIRAL/tools/bin_linux64/")
-  parser.add_option("--pathBinaryToDistanceMap", help="path for BinaryToDistanceMap", dest="pathBinaryToDistanceMap", default="/tools/bin_linux64/BinaryToDistanceMap")
-  parser.add_option("--fixpoints", help="fix points by flipping x,y against the origin (adding minus", action="store_true", dest="isFixingPoint")
-  parser.add_option("--nopreprocessing", action="store_true", help="do not create distance map", dest="isNoPreProcessing")
-  parser.add_option("--noshapeworks", action="store_true", help="do not run ShapeWorks", dest="isNoShapeWorks")
-  parser.add_option("--notps", action="store_true", help="do not run TPS warping", dest="isNoTPS")
-
+  parser.add_option("--pathShapeWorks", help="tool path for shape Works",dest="pathShapeWorks", default="/NIRAL/devel/linux/ShapeWorks")
+  parser.add_option("--pathImageMath", help="path for ImageMath", dest="pathImageMath", default="/tools/bin_linux64/ImageMath")
   (opts, args) = parser.parse_args()
 
   if (opts.workingDirectory != ""):
     os.chdir(opts.workingDirectory)
 
-  if (opts.isFixingPoint):
-    correctPoints(opts, args)
-  elif (len(args) == 2):
+  if (len(args) == 2):
     main(opts, args)
-  else:
-    parser.print_help()

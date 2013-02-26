@@ -1,2 +1,4 @@
 subjId	labelMapInput	group
-2	${TestDataFolder}/Imagetest.nrrd	A
+2	${TestDataFolder}/Imagetest2.nrrd	A
+5	${TestDataFolder}/Imagetest5.nrrd	A
+8	${TestDataFolder}/Imagetest8.nrrd	A
