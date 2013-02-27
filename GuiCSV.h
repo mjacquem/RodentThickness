@@ -65,7 +65,8 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 /*READ ME*/	void ReadMe();
 /*OUTPUT*/	void OpenOutputBrowseWindow();
 /*MAIN FUNCT*/	int Compute();
-	
+		void testpythonversion();
+		void ScriptQProcessDone(int);
 	signals: // none
 	protected :
 
@@ -86,6 +87,7 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 		QString m_outconfig;
 		QString m_outdataset;
 		std::string m_notFound;
+		QProcess * m_ScriptQProcess;
 		int m_statistic;
 /*MAIN FUNCT*/	ScriptRunner* m_scriptrunner;
 		StatisticalpartRunner*  m_statisticalpartrunner;

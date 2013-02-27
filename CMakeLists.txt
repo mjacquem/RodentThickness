@@ -41,9 +41,9 @@ include_directories(${CMAKE_BINARY_DIRECTORY})
        NAMES python
        PATHS ${CMAKE_CURRENT_BINARY_DIR} # Here ${CMAKE_CURRENT_BINARY_DIR} is the inner build directory 
 	)
-
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/GuiCSV.cxx.in ${CMAKE_CURRENT_BINARY_DIR}/GuiCSV.cxx)
 ############
-SET(RTsources RodentThickness.cxx GuiCSV.h GuiCSV.cxx ScriptRunner.h ScriptRunner.cxx StatisticalpartRunner.h StatisticalpartRunner.cxx ${QtProject_HEADERS_MOC} ${UI_FILES}) # define the variable "sources" that contains the names of files
+SET(RTsources RodentThickness.cxx GuiCSV.h ${CMAKE_CURRENT_BINARY_DIR}/GuiCSV.cxx ScriptRunner.h ScriptRunner.cxx StatisticalpartRunner.h StatisticalpartRunner.cxx ${QtProject_HEADERS_MOC} ${UI_FILES}) # define the variable "sources" that contains the names of files
 GENERATECLP(RTsources RodentThickness.xml)
 ADD_EXECUTABLE(RodentThickness ${RTsources})  # add the files contained by "sources" to the project
 
