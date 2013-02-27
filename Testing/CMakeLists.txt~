@@ -45,13 +45,13 @@ add_test(NAME TestExecGenParaMeshCLPHelp COMMAND GenParaMeshCLP --help)
 add_test(NAME TestExecParaToSPHARMMeshCLPHelp COMMAND ParaToSPHARMMeshCLP --help)
 
 #test9
-add_test(NAME TestExecMeasureThicknessFilter COMMAND /tools/bin_linux64/measureThicknessFilter --mr --sbt --workdir ${TestingBINdirectory} --ids 3 --idl 4 --idh 1 --idn 5 --ttrns 100 ${TestDataFolder}/Imagetest3.nrrd ${TestingBINdirectory}/ImageTestmeasurementoutput.nrrd)
+add_test(NAME TestExecMeasureThicknessFilter COMMAND /tools/bin_linux64/measureThicknessFilter --mr --sbt --workdir ${TestingBINdirectory} --ids 3 --idl 4 --idh 1 --idn 5 --ttrns 100 ${TestDataFolder}/Imagetest2.nrrd ${TestingBINdirectory}/ImageTestmeasurementoutput.nrrd)
 
 
 #test 10
 
 
-add_test(NAME TestExecImageMath COMMAND ImageMath ${TestDataFolder}/Imagetest3.nrrd -extractLabel 3 -outfile ${TestingBINdirectory}/Imagetest.labelMapNCsegmentation.nrrd)
+add_test(NAME TestExecImageMath COMMAND ImageMath ${TestDataFolder}/Imagetest2.nrrd -extractLabel 3 -outfile ${TestingBINdirectory}/Imagetest.labelMapNCsegmentation.nrrd)
 
 
 ## Test 11

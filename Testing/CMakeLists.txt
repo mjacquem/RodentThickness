@@ -142,15 +142,4 @@ add_test( NAME TestnoGUIAffineOutput COMMAND ${NoGUITestCommand}
   )
 
 
-# ${TestDataFolder}/2.labelMapNCsegmentation.nrrd
-   #  ${TestingBINdirectory}/Imagetest.labelMapNCsegmentation.nrrd
 
-#test14
-#add_test(NAME ImageMathCompareImage COMMAND $<TARGET_FILE:RodentThicknessGUITest> ${TestingBINdirectory}/RodentThicknessconfigfile.bms --compare ${TestingBINdirectory}/ImageTest2.labelMapNCsegmentation.nrrd /work/akaiser/DTIAtlasBuilder-IowaBuildContributions/Data/Testing/ImageTest1.nrrd${CompareParametersImageMathFA})
-
-#test15
-# add_test(NAME SegPostProcessCompareImage COMMAND $<TARGET_FILE:RodentThicknessGUITest> ${TestingBINdirectory}/RodentThicknessconfigfile.bms --compare ${TestingBINdirectory}/ImageTest2.labelMapNCsegmentationSegPostProcess.nrrd ${TestDataFolder}/2.labelMapNCsegmentationSegPostProcess.nrrd ${CompareParametersImageMathFA})
-
-#${TestDataFolder}/2.labelMapNCsegmentation.nrrd
-#/work/akaiser/DTIAtlasBuilder-IowaBuildContributions/Data/Testing/ImageTest1.nrrd
-							
