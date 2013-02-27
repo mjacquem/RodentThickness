@@ -300,7 +300,7 @@ void GuiCSV::FullTableWidget(int row, int column)
 {	
 	if (column==1)
 	{
-	QString item=QFileDialog::getOpenFileName(this, "Open image", QString(), "NRRD Images (*.nrrd *.nhdr *.*)");
+	QString item=QFileDialog::getOpenFileName(this, "Open image", QString(), "NRRD Images (*.nrrd *.nhdr)");
 	QTableWidgetItem * Itemcell=new QTableWidgetItem( tr("%1").arg( item ) );
 	
 	tableWidget->setItem(row,column,Itemcell);
@@ -895,6 +895,8 @@ void GuiCSV::BrowseSoft(int soft)  /*SLOT*/ //softwares:
 	QString SoftBrowse;
 	
 	if(soft ==11 ) SoftBrowse = QFileDialog::getExistingDirectory(this);
+	else if(soft > 7 && soft < 11) SoftBrowse = QFileDialog::getOpenFileName(this, "Open Python Script", QString(), "Python Script (*.py)");
+	else if(soft == 12) SoftBrowse = QFileDialog::getOpenFileName(this, "Open R Script", QString(), "R Script (*.r)");
 	else SoftBrowse = QFileDialog::getOpenFileName(this, "Open Software", QString(), "Executable Files (*)");
 	
 	
@@ -1406,13 +1408,13 @@ int GuiCSV::LaunchScriptWriter()
 			QMessageBox::critical(this, "Non executable File", QString(text.c_str()) );
 			return -1;
 	}
-	if(! itksys::SystemTools::GetPermissions(ShapeWorksRunPath->text().toStdString().c_str(), ITKmode_F_OK) )
+	if(! itksys::SystemTools::GetPermissions(ShapeWorksRunPath->text().toStdString().c_str(), ITKmode_X_OK) )
 	{
 			std::string text = "The file \'" + ShapeWorksRunPath->text().toStdString() + "\' is not executable";
 			QMessageBox::critical(this, "Non executable File", QString(text.c_str()) );
 			return -1;
 	}
-	if(! itksys::SystemTools::GetPermissions(ShapeWorksGroomPath->text().toStdString().c_str(), ITKmode_F_OK) )
+	if(! itksys::SystemTools::GetPermissions(ShapeWorksGroomPath->text().toStdString().c_str(), ITKmode_X_OK) )
 	{
 			std::string text = "The file \'" + ShapeWorksGroomPath->text().toStdString() + "\' is not executable";
 			QMessageBox::critical(this, "Non executable File", QString(text.c_str()) );
@@ -1430,7 +1432,7 @@ int GuiCSV::LaunchScriptWriter()
 			QMessageBox::critical(this, "Non executable File", QString(text.c_str()) );
 			return -1;
 	}
-	if(! itksys::SystemTools::GetPermissions(ShapeWorksPythonScriptPath->text().toStdString().c_str(), ITKmode_X_OK) )
+	if(! itksys::SystemTools::GetPermissions(ShapeWorksPythonScriptPath->text().toStdString().c_str(), ITKmode_F_OK) )
 	{
 			std::string text = "The file \'" + ShapeWorksPythonScriptPath->text().toStdString() + "\' is not a file";
 			QMessageBox::critical(this, "Non executable File", QString(text.c_str()) );
