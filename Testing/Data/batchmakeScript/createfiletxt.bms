@@ -1,7 +1,7 @@
 
 
-# MakeDirectory(${WorkDir}/RodentThickness/Statistical)
-Set(OutDirectoryCorrepondance ${WorkDir}/RodentThickness/Statistical)
+# MakeDirectory(${WorkDir}/RodentThicknessResults/Statistical)
+Set(OutDirectoryCorrepondance ${WorkDir}/RodentThicknessResults/Statistical)
 
 
 ForEach (groupId ${groupIds})

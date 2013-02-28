@@ -108,7 +108,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 		while(getline( Sub, line ))
 		{  			
 					std :: string value1,value2,value3;
-					std::string BatchMakeScriptFile = WorkDir+"/RodentThickness/Script/"+"slicer3ThicknessSPHARM.bms";
+					std::string BatchMakeScriptFile = WorkDir+"/RodentThicknessResults/Script/"+"slicer3ThicknessSPHARM.bms";
 					std::ofstream file( BatchMakeScriptFile.c_str());
 				
 				if(i==0)
@@ -172,7 +172,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
  	 }
   	
 //file bms
-	std::string BatchMakeScriptFile2 = WorkDir+"/RodentThickness/Script/"+"slicer3shapeworks.bms";
+	std::string BatchMakeScriptFile2 = WorkDir+"/RodentThicknessResults/Script/"+"slicer3shapeworks.bms";
 	std::ofstream file2( BatchMakeScriptFile2.c_str());
  
 	file2 <<"set (groupIds "<< final_groups<<")"<<std::endl;
@@ -199,7 +199,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 							
 				std :: string value1,value2,value3;
 			
-				std::string BatchMakeScriptFile5 = WorkDir+"/RodentThickness/Script/"+"slicer3meshintensity.bms";
+				std::string BatchMakeScriptFile5 = WorkDir+"/RodentThicknessResults/Script/"+"slicer3meshintensity.bms";
 				std::ofstream file( BatchMakeScriptFile5.c_str());
 
 				readFileCSV(line, value1,value2,value3);

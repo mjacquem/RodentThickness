@@ -1,10 +1,10 @@
 
 
-MakeDirectory(${WorkDir}/RodentThickness/Output/shapeworks)
-Set(OutDirectoryshapeworks ${WorkDir}/RodentThickness/Output/shapeworks)
+MakeDirectory(${WorkDir}/RodentThicknessResults/Output/shapeworks)
+Set(OutDirectoryshapeworks ${WorkDir}/RodentThicknessResults/Output/shapeworks)
 
 
-Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/RodentThickness/Output/MeasurementandSPHARM)
+Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/RodentThicknessResults/Output/MeasurementandSPHARM)
 
 
 
@@ -32,6 +32,6 @@ Set (cmdline ${PythonPath} ${ShapeWorksPythonScriptPath} ${OutDirectoryshapework
 Run (output ${cmdline})
 
 
-WriteFile (${WorkDir}/RodentThickness/outputdataset.csv group	subjId	labelMapInput	measurementoutput	surfacemodels	correspondenceMesh	warpedcorrespondenceMesh	ThicknessSamplingResults\n)
+WriteFile (${WorkDir}/RodentThicknessResults/outputdataset.csv group	subjId	labelMapInput	measurementoutput	surfacemodels	correspondenceMesh	warpedcorrespondenceMesh	ThicknessSamplingResults\n)
 
 

@@ -55,16 +55,16 @@ add_test(NAME TestExecImageMath COMMAND ImageMath ${TestDataFolder}/Imagetest2.n
 
 
 ## Test 11
-add_test(NAME TestExecSegPostProcess COMMAND SegPostProcessCLP ${TestingBINdirectory}/Imagetest.labelMapNCsegmentation.nrrd ${TestingBINdirectory}/Imagetest.labelMapNCsegmentationSegPostProcess.nrrd)
+add_test(NAME TestExecSegPostProcess COMMAND SegPostProcessCLP ${TestDataFolder}/Imagetest.labelMapNCsegmentation.nrrd ${TestingBINdirectory}/Imagetest.labelMapNCsegmentationSegPostProcess.nrrd)
 
 #Test 12 
-add_test(NAME TestExecGenParaMeshCLP COMMAND GenParaMeshCLP ${TestingBINdirectory}/Imagetest.labelMapNCsegmentationSegPostProcess.nrrd --label 1 ${TestingBINdirectory}/test_para.vtk ${TestingBINdirectory}/test_surf.vtk)
+add_test(NAME TestExecGenParaMeshCLP COMMAND GenParaMeshCLP ${TestDataFolder}/Imagetest.labelMapNCsegmentationSegPostProcess.nrrd --label 1 ${TestingBINdirectory}/test_para.vtk ${TestingBINdirectory}/test_surf.vtk)
 
 #test13
-add_test(NAME TestExecParaToSPHARMMeshCLP COMMAND ParaToSPHARMMeshCLP ${TestingBINdirectory}/test_para.vtk ${TestingBINdirectory}/test_surf.vtk --subdivLevel 10 --spharmDegree 20 ${TestingBINdirectory}/test.ip.)
+add_test(NAME TestExecParaToSPHARMMeshCLP COMMAND ParaToSPHARMMeshCLP ${TestDataFolder}/test_para.vtk ${TestDataFolder}/test_surf.vtk --subdivLevel 10 --spharmDegree 20 ${TestingBINdirectory}/test.ip.)
 
 #test 14
-add_test(NAME TestExecParaToSPHARMMeshCLP2 COMMAND ParaToSPHARMMeshCLP ${TestingBINdirectory}/test_para.vtk ${TestingBINdirectory}/test_surf.vtk --subdivLevel 50 --spharmDegree 20 ${TestingBINdirectory}/test.subj.)
+add_test(NAME TestExecParaToSPHARMMeshCLP2 COMMAND ParaToSPHARMMeshCLP ${TestDataFolder}/test_para.vtk ${TestDataFolder}/test_surf.vtk --subdivLevel 50 --spharmDegree 20 ${TestingBINdirectory}/test.subj.)
 
 #test 15
 add_test(NAME TestExecMeshPointsIntensitySamplingHelp COMMAND /NIRAL/tools/bin_linux64/MeshPointsIntensitySampling --help)
@@ -75,7 +75,7 @@ add_test(NAME TestExecBinaryToDistanceMap COMMAND BinaryToDistanceMap --help)
 
 
 #test 17
-add_test(NAME TestExecMeshPointsIntensitySampling COMMAND /NIRAL/tools/bin_linux64/MeshPointsIntensitySampling --workDir ${TestingBINdirectory} --inputAsPhysicalCoord --distanceVector test.distanceVector.nrrd -i nn -a ${TestingBINdirectory}/testimage.txt -m ${TestingBINdirectory}/testimage.sampling.vtk ${TestingBINdirectory}/ImageTestmeasurementoutput.nrrd ${TestDataFolder}/2.correspondence.vtk)
+add_test(NAME TestExecMeshPointsIntensitySampling COMMAND /NIRAL/tools/bin_linux64/MeshPointsIntensitySampling --workDir ${TestingBINdirectory} --inputAsPhysicalCoord --distanceVector test.distanceVector.nrrd -i nn -a ${TestingBINdirectory}/testimage.txt -m ${TestingBINdirectory}/testimage.sampling.vtk ${TestDataFolder}/ImageTestmeasurementoutput.nrrd ${TestDataFolder}/2.correspondence.vtk)
 
 #test 18
 add_test(NAME TestExecShapeWorks2 COMMAND ${pathexecpython} ${TestDataFolder}/pythontestversion.py)
@@ -135,7 +135,7 @@ set(RTParameters
 add_test( NAME TestnoGUIAffineOutput COMMAND ${NoGUITestCommand}
   --compare # --compare is an cmd line argument from the itk test files
    ${TestDataFolder}/2.labelMapNCsegmentationSegPostProcess.nrrd
-   ${TestingBINdirectory}/RodentThickness/Output/MeasurementandSPHARM/2.labelMapNCsegmentationSegPostProcess.nrrd# Affine Output
+   ${TestingBINdirectory}/RodentThicknessResults/Output/MeasurementandSPHARM/2.labelMapNCsegmentationSegPostProcess.nrrd# Affine Output
    ${CompareParametersImageMathFA}
   ${NameOfMain} # After this line, give the parameters to use in DTIAtlasBuilder
     ${RTParameters}
