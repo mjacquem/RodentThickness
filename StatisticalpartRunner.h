@@ -17,3 +17,9 @@ public:
 	int RunBatchmakeStatisticalScript(std::string dataset,std::string configfile,std::string PathBms,std::string WorkDir); 
 };
 #endif
+
+
+
+
+
+

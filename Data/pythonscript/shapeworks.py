@@ -37,15 +37,17 @@ def writevtk(fin, mesh):
   r.Write()
 
 
-def vtk2lpts(inputSurfaces, outputPoints):
-  for (fin, fout) in zip(inputSurfaces, outputPoints):
+def vtk2lpts(inputImages,inputSurfaces, outputPoints):
+  for (fim,fin, fout) in zip(inputImages, inputSurfaces, outputPoints):
     mesh = readvtk(fin)
     points = mesh.GetPoints()
     fo = open(fout, "w")
     print "Converting %s into %s [%d points] ..." % (fin, fout, points.GetNumberOfPoints())
     for i in range(0, points.GetNumberOfPoints()):
       p = points.GetPoint(i)
-      fo.write("%f %f %f\n" % (-10*p[0],-10*p[1],10*p[2])) 
+      pixsize=voxelSize(fim)
+      print pixsize
+      fo.write("%f %f %f\n" % (-1.25/pixsize[0]*p[0],-1.25/pixsize[1]*p[1],1.25/pixsize[2]*p[2]))
     fo.close()
 
 def file2string(fn):
@@ -65,12 +67,13 @@ def execute(cmd):
 def xml2dom(xml):
   return xml
 
-def lpts2vtk(lptsIn, vtkTmpl, vtkOut):
+def lpts2vtk(inputImages,lptsIn, vtkTmpl, vtkOut):
   mesh = readvtk(vtkTmpl)
-  for (fin, fout) in zip(lptsIn,vtkOut):
+  for (fim,fin, fout) in zip(inputImages,lptsIn,vtkOut):
     print "Processing", fin, fout
-    lines = file2string(fin)
-    points = [ [ float(f)*.1 for f in l.split(" ") ]  for l in lines ]
+    lines = file2string(fin) 
+    pixsize=voxelSize(fim)
+    points = [ [ float(f)*pixsize[0]/1.25 for f in l.split(" ") ] for l in lines ]
     meshPoints = mesh.GetPoints()
     if (meshPoints.GetNumberOfPoints() != len(points)):
       print "Mismatch between the template surface model and the corresponding points (%s) [%d:%d]" % (fin, meshPoints.GetNumberOfPoints(), len(points))
@@ -82,7 +85,7 @@ def lpts2vtk(lptsIn, vtkTmpl, vtkOut):
   return
 
 def tpsWarp(sourceLandmark,targetLandmarks,deformationInput,finalSurfaces):
-  src = readvtk(sourceLandmark)  
+  src = readvtk(sourceLandmark)
   deforming = readvtk(deformationInput)
   for (fin,fout) in zip(targetLandmarks,finalSurfaces):
     print "warping [%s => %s] : [%s => %s] ..." % (sourceLandmark, fin, deformationInput, fout)
@@ -95,43 +98,48 @@ def tpsWarp(sourceLandmark,targetLandmarks,deformationInput,finalSurfaces):
 def groom(imagesIn,imagesOut):
   tmpl = """<?xml version="1.0" ?>
 <background>0.0</background>
-<foreground>1.0</foreground> 
-<pad>0</pad> 
-<antialias_iterations>20</antialias_iterations> 
-<blur_sigma>0.0625</blur_sigma> 
-<fastmarching_isovalue>0.0</fastmarching_isovalue>  
-<verbose>0</verbose>      
-<inputs>          
+<foreground>1.0</foreground>
+<pad>0</pad>
+<antialias_iterations>20</antialias_iterations>
+<blur_sigma>0.0625</blur_sigma>
+<fastmarching_isovalue>0.0</fastmarching_isovalue>
+<verbose>0</verbose>
+<inputs>
 ##INPUTS##
-</inputs>   
-<outputs>           
+</inputs>
+<outputs>
 ##OUTPUTS##
 </outputs>
-  """
+"""
   tmpl = tmpl.replace("##INPUTS##", "\n".join(imagesIn))
   tmpl = tmpl.replace("##OUTPUTS##", "\n".join(imagesOut))
   string2file("groom.xml", tmpl)
   execute("%s %s isolate hole_fill antialias fastmarching blur" % (shapeWorksGroom, "groom.xml"))
 
-def adjustSpacing(images):
-  for f in images:
-    execute("%sImageMath %s -type float -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, f,f))
-  
+def voxelSize(inputImage):
+  pstat = os.popen("%s %s -info" % ( "ImageStat", inputImage))
+  lines = pstat.read()
+  pstat.close()
+  pixdims = [ i for i in lines.split("\n") if i.startswith("Pixdims") ]
+  spacing = [ float(i) for i in pixdims[0].split(" ")[1:] ]
+  return spacing
+
+
 def run(shapeWorksCmd,inputImages,inputPoints):
   tmpl = """<?xml version="1.0" ?>
-<inputs>        
+<inputs>
 ###INPUTS###
-</inputs>   
-<point_files> 
+</inputs>
+<point_files>
 ###POINT_FILES###
 </point_files>
-<number_of_particles> 1002 </number_of_particles> 
-<starting_regularization> 10.0 </starting_regularization> 
-<ending_regularization> 0.1 </ending_regularization> 
-<optimization_iterations> 300 </optimization_iterations> 
-<checkpointing_interval> 20 </checkpointing_interval> 
-<output_points_prefix> output </output_points_prefix> 
-  """
+<number_of_particles> 1002 </number_of_particles>
+<starting_regularization> 10.0 </starting_regularization>
+<ending_regularization> 0.1 </ending_regularization>
+<optimization_iterations> 300 </optimization_iterations>
+<checkpointing_interval> 20 </checkpointing_interval>
+<output_points_prefix> output </output_points_prefix>
+"""
   tmpl = tmpl.replace("###INPUTS###", "\n".join(inputImages)).replace("###POINT_FILES###", "\n".join(inputPoints))
   string2file("run.xml", tmpl)
   execute("%s %s" % (shapeWorksCmd, "run.xml"))
@@ -142,7 +150,7 @@ def executePreProcessing(opts, args, inputImages, preprocessedImages):
     execute("%sImageMath %s -type short -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, imgIn, imgOut))
     execute("%s --binaryInput %s --smoothing 1.25 --output %s" % (opts.pathBinaryToDistanceMap, imgOut, imgOut))
 
-def executePostProcessing(opts, args, inputSurfaces):
+def executePostProcessing(opts, args, inputSurfaces,inputImages):
   if (opts.correspondingOutputList == ""):
     outputSurfaces = [ f.replace(".vtk", ".out.vtk") for (i,f) in enumerate(inputSurfaces) ]
   else:
@@ -158,7 +166,7 @@ def executePostProcessing(opts, args, inputSurfaces):
     correspondingPoints = [ "output.%02d.lpts" % (i) for (i,f) in enumerate(inputSurfaces) ]
   else:
     correspondingPoints = [ "output.%03d.lpts" % (i) for (i,f) in enumerate(inputSurfaces) ]
-  lpts2vtk(correspondingPoints, inputSurfaces[0], outputSurfaces)
+  lpts2vtk(inputImages,correspondingPoints, inputSurfaces[0], outputSurfaces)
   if (not opts.isNoTPS):
     tpsWarp(inputSurfaces[0],outputSurfaces,inputSurfaces[0],warpedSurfaces)
 
@@ -179,10 +187,10 @@ def main(opts, args):
   if (not opts.isNoPreProcessing):
     executePreProcessing(opts, args, inputImages, preprocessedImages)
   if (not opts.isNoShapeWorks):
-    vtk2lpts(inputSurfaces, inputPoints)
+    vtk2lpts(inputImages,inputSurfaces, inputPoints)
     print "shapeWorksRun = [", shapeWorksRun, "]"
     run(shapeWorksRun,preprocessedImages, inputPoints)
-  executePostProcessing(opts, args, inputSurfaces)
+  executePostProcessing(opts, args, inputSurfaces,inputImages)
   return
 
 
