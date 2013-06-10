@@ -8,7 +8,7 @@ int main(int argc, char * argv[] )
 {
   QApplication app(argc, argv); // create a QApplication
 
-  GuiCSV TestGUI("",argv[1],"",false,"",argv[0]); // create a GuiCSV object : GuiCSV(CSVFile,ConfigFile,PathBms,noGUI,WorkDir,argv[0])
+  GuiCSV TestGUI("",argv[1],"",false,false,"",argv[0]); // create a GuiCSV object : GuiCSV(CSVFile,ConfigFile,PathBms,noGUI,WorkDir,argv[0])
 
   TestGUI.show(); // open the window
 

@@ -34,7 +34,7 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 
 	public:
 
-/*CONSTRUCTOR*/	GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGui,std::string WorkDir,std::string commandRan); //constructor
+/*CONSTRUCTOR*/	GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGui,bool ComputeStatistic, std::string WorkDir,std::string commandRan); //constructor
 
 /*DATASET*/	int ReadCSV(QString CSVfile); // returns -1 if fails, otherwise 0
 		int SaveCSVDatasetBrowse(QString CSVBrowseName);
@@ -77,6 +77,7 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 
 		bool m_noGUI;
 		bool m_ScriptRunning;
+		bool m_computestatistic;
 		bool m_ErrorDetectedInConstructor; // useful in --nogui mode to exit the program without trying the compute function	
 		std::vector< std::string > m_FindProgramRTExecDirVec;
 /*DATASET*/	QString m_CSVseparator;

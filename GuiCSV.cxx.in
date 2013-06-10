@@ -42,7 +42,7 @@ mode_t ITKmode_X_OK = 1;
 
 
 
-GuiCSV::GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGUI,std::string WorkDir,std::string commandRan) : QMainWindow()
+GuiCSV::GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGUI,bool ComputeStatistic,std::string WorkDir,std::string commandRan) : QMainWindow()
 {
 setupUi(this);
 
@@ -62,7 +62,13 @@ m_scriptrunner = new ScriptRunner;
 m_statisticalpartrunner = new StatisticalpartRunner;
 m_noGUI=noGUI;
 m_ScriptRunning=false;
+m_computestatistic=ComputeStatistic;
+if(!m_computestatistic) 
+{
 m_statistic=0;
+}
+else m_statistic=1;
+WidgetHasChangedParam();
 m_CSVseparator = QString("	");
 m_ParamSaved=1;
 if(!m_noGUI)
@@ -280,7 +286,7 @@ void GuiCSV::ExitProgram() /*SLOT*/
 
 void GuiCSV::closeEvent(QCloseEvent* event)
 {
-	int ret = QMessageBox::question(this,"Quit","Dou you want quit ?",QMessageBox::No | QMessageBox::Yes);
+	int ret = QMessageBox::question(this,"Quit","Do you want to quit ?",QMessageBox::No | QMessageBox::Yes);
 	if (ret == QMessageBox::No) 
 	{
 		event->ignore();
@@ -1086,6 +1092,7 @@ void GuiCSV::WidgetHasChangedParam() /*SLOT*/ //called when any widget is change
 	if(StatisticBox->isChecked()) 
 	{
 		m_statistic=1;
+		m_computestatistic=false;
 		RScriptButton->setEnabled(true);
 		RScriptPathButton->setEnabled(true);
 		concatToColumnsPythonScriptButton->setEnabled(true);
@@ -1292,7 +1299,7 @@ int GuiCSV::Compute() /*SLOT*/
 				{
 					if(m_noGUI) ExitProgram(); // no possibility to change options because no GUI so QUIT
 					return -1;
-				}	
+				}
 				return LaunchScriptRunner();	
 			} // else of if(OutputFolderLineEdit->text().isEmpty())
 
@@ -1599,7 +1606,7 @@ int GuiCSV::LaunchScriptWriter()
 				return -1;
 		}
 	}
-
+	
 	m_outconfig=m_OutputPath + QString("/RodentThicknessResults/RodentThicknessconfigfile.bms");
 	m_outdataset=m_OutputPath + QString("/RodentThicknessResults/dataset.csv");
 	m_StatisticaldatasetPath=m_OutputPath + QString("/RodentThicknessResults/outputdataset.csv");

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 CMAKE_POLICY(VERSION 2.8)
 
 ## Remove possible existing output folder already computed to rerun all tests
-message("Removing possible existing test output folder")
+
 file(REMOVE_RECURSE ${TestingBINdirectory})
 
 # Configure (Replace paths) and Copy needed files
@@ -130,6 +130,7 @@ set(RTParameters
   --configfile ${TestingBINdirectory}/RodentThicknessconfigfile.bms
   --PathBms ${TestDataFolder}/batchmakeScript
   --WorkDir ${TestingBINdirectory}
+  --CStat 
 )
 
 add_test( NAME TestnoGUIAffineOutput COMMAND ${NoGUITestCommand}
@@ -137,7 +138,7 @@ add_test( NAME TestnoGUIAffineOutput COMMAND ${NoGUITestCommand}
    ${TestDataFolder}/2.labelMapNCsegmentationSegPostProcess.nrrd
    ${TestingBINdirectory}/RodentThicknessResults/Output/MeasurementandSPHARM/2.labelMapNCsegmentationSegPostProcess.nrrd# Affine Output
    ${CompareParametersImageMathFA}
-  ${NameOfMain} # After this line, give the parameters to use in DTIAtlasBuilder
+  ${NameOfMain} # After this line, give the parameters to use in RodentThickness
     ${RTParameters}
   )
 

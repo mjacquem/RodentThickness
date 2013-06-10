@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
   <category>Demonstration </category>
-  <title>Rodent Thickness Measurement and SPHARM </title>
-  <description>Thickness Measurement and SPHARM</description>
+  <title>Rodent Cortical Thickness Analysis</title>
+  <description>RodentThickness is an automatic cortical thickness measurement tool for rat brains</description>
   <version>1.0 </version>
             
   <documentation-url></documentation-url>
@@ -48,6 +48,13 @@
 		<longflag>nogui</longflag>
 		<description>If you do not need the GUI</description>
 		<label>No GUI</label>
+		<default>false</default>
+	</boolean>
+	<boolean>
+		<name>ComputeStatistic</name>
+		<longflag>CStat</longflag>
+		<description>If you want to compute statistic</description>
+		<label>CStat</label>
 		<default>false</default>
 	</boolean>
 </parameters>
