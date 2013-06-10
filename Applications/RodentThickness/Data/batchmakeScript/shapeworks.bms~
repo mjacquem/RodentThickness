@@ -1,0 +1,25 @@
+MakeDirectory(${WorkDir}/RodentThicknessResults/Output/shapeworks)
+Set(OutDirectoryshapeworks ${WorkDir}/RodentThicknessResults/Output/shapeworks)
+
+Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/RodentThicknessResults/Output/MeasurementandSPHARM)
+
+WriteFile (${OutDirectoryshapeworks}/inputimage.txt '')
+WriteFile (${OutDirectoryshapeworks}/inputsurfacemodels.txt '')
+WriteFile (${OutDirectoryshapeworks}/outputCorrespondence.txt '')
+WriteFile (${OutDirectoryshapeworks}/outputWarped.txt  '')
+
+ForEach (subj ${subjects})
+	
+					AppendFile (${OutDirectoryshapeworks}/inputsurfacemodels.txt ${OutDirectoryMeasurementandSPHARM}/${subj}.ip.SPHARM.vtk\n)
+					AppendFile (${OutDirectoryshapeworks}/outputCorrespondence.txt ${OutDirectoryshapeworks}/${subj}.correspondence.vtk\n)
+					AppendFile (${OutDirectoryshapeworks}/outputWarped.txt ${OutDirectoryshapeworks}/${subj}.warped.vtk\n)
+					AppendFile (${OutDirectoryshapeworks}/inputimage.txt ${OutDirectoryMeasurementandSPHARM}/${subj}.labelMapNCsegmentationSegPostProcess.nrrd\n)
+			
+EndForEach (${subj})
+
+Set (cmdline ${PythonPath} ${ShapeWorksPythonScriptPath} ${OutDirectoryshapeworks}/inputimage.txt ${OutDirectoryshapeworks}/inputsurfacemodels.txt -c ${OutDirectoryshapeworks}/outputCorrespondence.txt -w ${OutDirectoryshapeworks}/outputWarped.txt --workingDir ${OutDirectoryshapeworks} --pathShapeWorksRun ${ShapeWorksRunPath} --pathShapeWorksGroom ${ShapeWorksGroomPath} --pathImageMath ${ImageMathPath} --pathBinaryToDistanceMap ${BinaryToDistanceMapPath})
+Run (output ${cmdline})
+
+WriteFile (${WorkDir}/RodentThicknessResults/outputdataset.csv group	subjId	labelMapInput	measurementoutput	surfacemodels	correspondenceMesh	warpedcorrespondenceMesh	ThicknessSamplingResults\n)
+
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+<title>Binary to Distance Map</title>
+<description>La la la</description>
+<category>Binary to Distance Map</category>
+   <parameters>
+	<label>Required parameters</label>
+	<description>asdasdasd</description>
+    
+    <file>
+      <longflag>binaryInput</longflag>
+      <description>Name of the binary file containing image</description>
+      <label>Parameter binaryInput</label>
+    </file>
+
+    <file>
+      <longflag>output</longflag>
+      <description>Name of output file containing binary image</description>
+      <label>output</label>
+    </file>
+
+    <double>
+      <name>smoothing</name>
+      <longflag>smoothing</longflag>
+      <label>Smoothing factor</label>
+      <default>0</default>
+      <constraints><minimum>0</minimum></constraints>
+    </double>
+	
+   </parameters>
+</executable>

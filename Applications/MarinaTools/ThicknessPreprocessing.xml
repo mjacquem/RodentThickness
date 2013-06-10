@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Thickness Measurement</category>
+  <title>Apply anti-alias filter before computing thickness measurement</title>
+  <description/>
+  <version>0.1</version>
+  <documentation-url/>
+  <license/>
+  <acknowledgements/>
+  <parameters>
+    <label>Input</label>
+    <description>Input mesh and image for value extraction</description>
+    <integer>
+      <name>solutionDomainLabel</name>
+      <label>Solution Domain Label</label>
+      <channel>input</channel>
+      <flag>s</flag>
+      <longflag>soultuionDomainLabel</longflag>
+      <default>3</default>
+    </integer>
+    <image>
+      <name>antiAliasedSolutionLabel</name>
+      <label>Anti-aliased solution label for surface creation</label>
+      <channel>output</channel>
+      <flag>a</flag>
+      <longflag>antiAliasedSolutionLabel</longflag>
+      <description>Output image of anti-alised result of solution label to create surface model of neo-cortex</description>
+      <default></default>
+    </image>
+    <image>
+      <name>inputBoundaryLabelMap</name>
+      <label>Input Image</label>
+      <channel>input</channel>
+      <index>0</index>
+      <description>Input image defining values for laplacian field</description>
+    </image>
+    <image>
+      <name>outputBoundaryLabelMap</name>
+      <label>Output Image</label>
+      <channel>output</channel>
+      <index>1</index>
+      <description>Output image with anti-aliased soultion domain label</description>
+    </image>
+  </parameters>
+</executable>

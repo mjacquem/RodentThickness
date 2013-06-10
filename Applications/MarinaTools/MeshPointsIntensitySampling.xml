@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Surface Model</category>
+  <title>Sampling image values at corresponding vertex</title>
+  <description/>
+  <version>0.1</version>
+  <documentation-url/>
+  <license/>
+  <acknowledgements/>
+  <parameters>
+    <label>Input</label>
+    <description>Input mesh and image for value extraction</description>
+    <boolean>
+      <name>overwriteDistanceVector</name>
+      <label>Overwrite Distance Vector</label>
+      <channel>input</channel>
+      <flag>w</flag>
+      <longflag>overwriteDistanceVector</longflag>
+      <description>Over-write distance vector for sampling projection</description>
+    </boolean>
+    <boolean>
+      <name>thresholdDistanceVector</name>
+      <label>Threshold Distance Vector Flag</label>
+      <channel>input</channel>
+      <flag>t</flag>
+      <longflag>thresholdDistanceVector</longflag>
+      <default>false</default>
+    </boolean>
+    <image>
+      <name>imageName</name>
+      <label>Image</label>
+      <channel>input</channel>
+      <index>0</index>
+      <description>Image which its value is extracted</description>
+    </image>
+    <file>
+      <name>meshName</name>
+      <label>Mesh</label>
+      <channel>input</channel>
+      <index>1</index>
+      <description>Mesh file to extract vertex value</description>
+    </file>
+		<string-enumeration>
+			<label>Interpolation</label>
+			<description>Interpolation method for sampling</description>
+			<name>interpolation</name>
+			<default>nn</default>
+			<flag>i</flag>
+			<longflag>interpolation</longflag>
+			<channel>input</channel>
+			<element>nn</element>
+			<element>linear</element>
+		</string-enumeration>
+    <file>
+      <name>distanceVector</name>
+      <label>Distance Vector</label>
+      <flag>d</flag>
+      <longflag>distanceVector</longflag>
+      <channel>input</channel>
+    </file>
+    <double>
+      <name>lowThreshold</name>
+      <description>Ignore sampling lower than this value(try to find closest value instead if the sampled value is smaller or equal to lowThreshold)</description>
+      <label>Low Threshold</label>
+      <default>0</default>
+      <flag>l</flag>
+      <longflag>lowThreshold</longflag>
+      <channel>input</channel>
+    </double>
+    <file>
+      <name>attrfileName</name>
+      <description>Attribute file name</description>
+      <label>Attribute file name</label>
+      <default>attribute.txt</default>
+      <flag>a</flag>
+      <longflag>attributeFile</longflag>
+      <channel>input</channel>
+    </file>
+    <file>
+      <name>meshOutput</name>
+      <description>Mesh output with actual sampling points</description>
+      <label>Mesh Output</label>
+      <default>mesh.sampling.vtk</default>
+      <flag>m</flag>
+      <longflag>meshOutput</longflag>
+      <channel>output</channel>
+    </file>
+    <file>
+      <name>workingDirectory</name>
+      <label>Working Directory</label>
+      <longflag>workDir</longflag>
+      <description>Designate working directory to generate distanceVector</description>
+      <channel>input</channel>
+    </file>
+    <file>
+      <name>thresholdVectorOutput</name>
+      <label>Threshold Vector Output</label>
+      <longflag>thresholdVectorOutput</longflag>
+    </file>
+		<boolean>
+			<name>inputAsPhysicalCoord</name>
+			<longflag>inputAsPhysicalCoord</longflag>
+			<description>Points of the input mesh is index-based coordinate (use if SPHARM input is given)</description>
+		</boolean>
+  </parameters>
+</executable>

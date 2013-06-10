@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Filtering</category>
+  <title>Measure Thickness Filter</title>
+  <description>
+    Measures the thickness of a structure described by a labelmap, given prescribed boundary conditions.
+</description>
+  <version>0.0.1.$Revision: 1.2 $(alpha)</version>
+  <documentation-url></documentation-url>
+  <license></license>
+  <contributor>Marc Niethammer</contributor>
+
+  <parameters>
+    <label>Measure Thickness Parameters</label>
+    <description>Parameters for the tickness measurement filter</description>
+
+    <boolean>
+      <name>machineReadableOutput</name>
+      <label>Machine Readable Output</label>
+      <default>false</default>
+      <longflag>--mr</longflag>
+      <description>Generates raw command line output (just numbers without description).</description>
+    </boolean>
+
+    <boolean>
+      <name>subtractBoundaryThickness</name>
+      <label>Subtracts the boundary thickness</label>
+      <default>false</default>
+      <longflag>--sbt</longflag>
+      <description>Starts thickness integrations with an offset of a negative half voxel width, to measure in-between boundary distances.</description>
+    </boolean>
+
+    <integer>
+      <name>transportTerminalTime</name>
+      <label>Terminal Time for transportation equation</label>
+      <longflag>--ttrns</longflag>
+      <description>Iteration time for transportation equation solver runs.</description>
+      <default>20</default>
+      <constraints>
+        <minimum>0</minimum>
+        <maximum>255</maximum>
+        <step>1</step>
+      </constraints>
+    </integer>
+
+    <integer>
+      <name>dirichletLowId</name>
+      <label>Dirichlet Low Id</label>
+      <longflag>--idl</longflag>
+      <description>Id number for the low Dirichlet boundary condition.</description>
+      <default>4</default>
+      <constraints>
+        <minimum>0</minimum>
+        <maximum>255</maximum>
+        <step>1</step>
+      </constraints>
+    </integer>
+
+    <integer>
+      <name>dirichletHighId</name>
+      <label>Dirichlet High Id</label>
+      <longflag>--idh</longflag>
+      <description>Id number for the high Dirichlet boundary condition.</description>
+      <default>5</default>
+      <constraints>
+        <minimum>0</minimum>
+        <maximum>255</maximum>
+        <step>1</step>
+      </constraints>
+    </integer>
+
+    <integer>
+      <name>neumannId</name>
+      <label>Neumann Id</label>
+      <longflag>--idn</longflag>
+      <description>Id number for the (zero) Neumann boundary condition.</description>
+      <default>6</default>
+      <constraints>
+        <minimum>0</minimum>
+        <maximum>255</maximum>
+        <step>1</step>
+      </constraints>
+    </integer>
+
+    <integer>
+      <name>solutionDomainId</name>
+      <label>Solution Domain Id</label>
+      <longflag>--ids</longflag>
+      <description>Id number for the low solution domain.</description>
+      <default>11</default>
+      <constraints>
+        <minimum>0</minimum>
+        <maximum>255</maximum>
+        <step>1</step>
+      </constraints>
+    </integer>
+
+    
+
+  </parameters>
+
+  <parameters>
+    <label>IO</label>
+    <description>Input/output parameters</description>
+    <image>
+      <name>inputVolume</name>
+      <label>Input Volume</label>
+      <channel>input</channel>
+      <index>0</index>
+      <description>Input labelmap for thickness measurement.</description>
+    </image>
+
+    <file>
+      <name>cachedLaplacianOutput</name>
+      <label>Use cached Laplacian output</label>
+      <channel>input</channel>
+      <longflag>--cachedLaplacianOutput</longflag>
+      <description>Use cached Laplacian output instead of using direct computation </description>
+    </file>
+
+    <image>
+      <name>outputVolume</name>
+      <label>Output Volume</label>
+      <channel>output</channel>
+      <index>1</index>
+      <description>Computed thickness volume.</description>
+    </image>
+    <file>
+      <name>thicknessListOutput</name>
+      <label>Thickness List Output File</label>
+      <channel>output</channel>
+      <longflag>--osl</longflag>
+      <description>File to write the list of all thickness measures to.</description>
+    </file>
+    <string>
+      <name>workingDirectory</name>
+      <label>Working Directory</label>
+      <channel>output</channel>
+      <longflag>--workdir</longflag>
+      <description>Directory to write all files (including temporary files; default is current directory)</description>
+      <default>.</default>
+    </string>
+  </parameters>
+</executable>
