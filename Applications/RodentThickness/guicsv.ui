@@ -21,7 +21,7 @@
        <enum>Qt::NoContextMenu</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="Dataset">
        <attribute name="title">
@@ -258,334 +258,318 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <item>
-             <widget class="QPushButton" name="measureThicknessFilterButton">
-              <property name="text">
-               <string>measureThicknessFilter</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="GenParaMeshCLPButton">
-              <property name="text">
-               <string>GenParaMeshCLP</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="ParaToSPHARMMeshCLPButton">
-              <property name="text">
-               <string>ParaToSPHARMMeshCLP</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="MeshPointIntensitySamplingButton">
-              <property name="text">
-               <string>MeshPointsIntensitySampling</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="ShapeWorksRunButton">
-              <property name="text">
-               <string>ShapeWorksRun</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="ShapeWorksGroomButton">
-              <property name="text">
-               <string>ShapeWorksGroom</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="ImageMathButton">
-              <property name="text">
-               <string>ImageMath</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="SegPostprocessButton">
-              <property name="text">
-               <string>SegPostprocessCLP</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="PythonPathButton">
-              <property name="text">
-               <string>Python Path</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="RScriptPathButton">
-              <property name="text">
-               <string>RScript Path</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="BinaryToDistanceMapButton">
-              <property name="text">
-               <string>BinaryToDistanceMap</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="ShapeWorksPythonScriptButton">
-              <property name="toolTip">
-               <string>shapeworks.py folder gave</string>
-              </property>
-              <property name="text">
-               <string>ShapeWorksPythonScript</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="concatToColumnsPythonScriptButton">
-              <property name="toolTip">
-               <string>concatToColumns.py folder gave</string>
-              </property>
-              <property name="text">
-               <string>concatToColumnsPythonScript</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="vtkPointAttributesPythonScriptButton">
-              <property name="toolTip">
-               <string>vtkPointAttributes.py folder gave</string>
-              </property>
-              <property name="text">
-               <string>vtkPointAttributesPythonScript</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="RScriptButton">
-              <property name="toolTip">
-               <string>rodentThickness.r folder gave</string>
-              </property>
-              <property name="text">
-               <string>RScript &quot; rodentThickness.r &quot;</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QPushButton" name="measureThicknessFilterButton">
+            <property name="text">
+             <string>measureThicknessFilter</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_6">
-            <item>
-             <widget class="QLineEdit" name="measureThicknessFilterPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="GenParaMeshCLPPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="ParaToSPHARMMeshCLPPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="MeshPointIntensitySamplingPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="ShapeWorksRunPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="ShapeWorksGroomPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="ImageMathPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="SegPostprocessPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="PythonPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="RScriptPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="BinaryToDistanceMapPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="ShapeWorksPythonScriptPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="concatToColumnsPythonScriptPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="vtkPointAttributesPythonScriptPath"/>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="RScriptRodentThicknessPath"/>
-            </item>
-           </layout>
+          <item row="0" column="3">
+           <widget class="QPushButton" name="measureThicknessFilterResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_2">
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayout_11">
-              <item>
-               <widget class="QPushButton" name="measureThicknessFilterResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="GenParaMeshResetCLPButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="ParaToSPHARMMeshCLPResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="MeshPointIntensitySamplingResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="ShapeWorksRunResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="ShapeWorksGroomResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="ImageMathResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="SegPostprocessResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="PythonPathResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="RScriptPathResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="BinaryToDistanceMapResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="ShapeWorksPythonScriptResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="concatToColumnsPythonScriptResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="vtkPointAttributesPythonScriptResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="RScriptResetButton">
-                <property name="toolTip">
-                 <string>Reset Software Path</string>
-                </property>
-                <property name="text">
-                 <string>R</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="GenParaMeshCLPButton">
+            <property name="text">
+             <string>GenParaMeshCLP</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="GenParaMeshCLPPath"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="measureThicknessFilterPath"/>
+          </item>
+          <item row="1" column="3">
+           <widget class="QPushButton" name="GenParaMeshResetCLPButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="ParaToSPHARMMeshCLPButton">
+            <property name="text">
+             <string>ParaToSPHARMMeshCLP</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="ParaToSPHARMMeshCLPPath"/>
+          </item>
+          <item row="2" column="3">
+           <widget class="QPushButton" name="ParaToSPHARMMeshCLPResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QPushButton" name="MeshPointIntensitySamplingButton">
+            <property name="text">
+             <string>MeshPointsIntensitySampling</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="MeshPointIntensitySamplingPath"/>
+          </item>
+          <item row="3" column="3">
+           <widget class="QPushButton" name="MeshPointIntensitySamplingResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QPushButton" name="ShapeWorksRunButton">
+            <property name="text">
+             <string>ShapeWorksRun</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="ShapeWorksRunPath"/>
+          </item>
+          <item row="4" column="3">
+           <widget class="QPushButton" name="ShapeWorksRunResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QPushButton" name="ShapeWorksGroomButton">
+            <property name="text">
+             <string>ShapeWorksGroom</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QLineEdit" name="ShapeWorksGroomPath"/>
+          </item>
+          <item row="5" column="3">
+           <widget class="QPushButton" name="ShapeWorksGroomResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QPushButton" name="ImageMathButton">
+            <property name="text">
+             <string>ImageMath</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QLineEdit" name="ImageMathPath"/>
+          </item>
+          <item row="6" column="3">
+           <widget class="QPushButton" name="ImageMathResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="0">
+           <widget class="QPushButton" name="SegPostprocessButton">
+            <property name="text">
+             <string>SegPostprocessCLP</string>
+            </property>
+           </widget>
+          </item>
+          <item row="7" column="1">
+           <widget class="QLineEdit" name="SegPostprocessPath"/>
+          </item>
+          <item row="7" column="3">
+           <widget class="QPushButton" name="SegPostprocessResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0">
+           <widget class="QPushButton" name="PythonPathButton">
+            <property name="text">
+             <string>Python Path</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="1">
+           <widget class="QLineEdit" name="PythonPath"/>
+          </item>
+          <item row="8" column="3">
+           <widget class="QPushButton" name="PythonPathResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QPushButton" name="RScriptPathButton">
+            <property name="text">
+             <string>RScript Path</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="RScriptPath"/>
+          </item>
+          <item row="9" column="3">
+           <widget class="QPushButton" name="RScriptPathResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="0">
+           <widget class="QPushButton" name="BinaryToDistanceMapButton">
+            <property name="text">
+             <string>BinaryToDistanceMap</string>
+            </property>
+           </widget>
+          </item>
+          <item row="10" column="1">
+           <widget class="QLineEdit" name="BinaryToDistanceMapPath"/>
+          </item>
+          <item row="10" column="3">
+           <widget class="QPushButton" name="BinaryToDistanceMapResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="0">
+           <widget class="QPushButton" name="ShapeWorksPythonScriptButton">
+            <property name="toolTip">
+             <string>shapeworks.py folder gave</string>
+            </property>
+            <property name="text">
+             <string>ShapeWorksPythonScript</string>
+            </property>
+           </widget>
+          </item>
+          <item row="11" column="1">
+           <widget class="QLineEdit" name="ShapeWorksPythonScriptPath"/>
+          </item>
+          <item row="11" column="3">
+           <widget class="QPushButton" name="ShapeWorksPythonScriptResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="0">
+           <widget class="QPushButton" name="concatToColumnsPythonScriptButton">
+            <property name="toolTip">
+             <string>concatToColumns.py folder gave</string>
+            </property>
+            <property name="text">
+             <string>concatToColumnsPythonScript</string>
+            </property>
+           </widget>
+          </item>
+          <item row="12" column="1">
+           <widget class="QLineEdit" name="concatToColumnsPythonScriptPath"/>
+          </item>
+          <item row="12" column="3">
+           <widget class="QPushButton" name="concatToColumnsPythonScriptResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="0">
+           <widget class="QPushButton" name="vtkPointAttributesPythonScriptButton">
+            <property name="toolTip">
+             <string>vtkPointAttributes.py folder gave</string>
+            </property>
+            <property name="text">
+             <string>vtkPointAttributesPythonScript</string>
+            </property>
+           </widget>
+          </item>
+          <item row="13" column="1">
+           <widget class="QLineEdit" name="vtkPointAttributesPythonScriptPath"/>
+          </item>
+          <item row="13" column="3">
+           <widget class="QPushButton" name="vtkPointAttributesPythonScriptResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="0">
+           <widget class="QPushButton" name="RScriptButton">
+            <property name="toolTip">
+             <string>rodentThickness.r folder gave</string>
+            </property>
+            <property name="text">
+             <string>RScript &quot; rodentThickness.r &quot;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="14" column="1">
+           <widget class="QLineEdit" name="RScriptRodentThicknessPath"/>
+          </item>
+          <item row="14" column="3">
+           <widget class="QPushButton" name="RScriptResetButton">
+            <property name="toolTip">
+             <string>Reset Software Path</string>
+            </property>
+            <property name="text">
+             <string>R</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>

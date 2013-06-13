@@ -64,6 +64,10 @@ if(USE_SPHARM-PDM)
  set(${LOCAL_PROJECT_NAME}_DEPENDENCIES spharm-pdm)
 endif()
 
+
+ 
+#set(${LOCAL_PROJECT_NAME}_DEPENDENCIES rscript)
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/SetExternalProjectOptions.cmake)
 #python test
 

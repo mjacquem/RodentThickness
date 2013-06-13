@@ -177,9 +177,16 @@ m_FindProgramRTExecDirVec.push_back(datafolderscript);
 
 std :: string pyscript = datafolderscript +"/pythonscript/";
 m_FindProgramRTExecDirVec.push_back(pyscript);
-
+std :: string pyscript1 = RTExecutablePath +"/pythonscript/";
+m_FindProgramRTExecDirVec.push_back(pyscript1);
+std :: string pyscript2 = RTExecutablePath +"/Data/pythonscript/";
+m_FindProgramRTExecDirVec.push_back(pyscript2);
 std :: string rscriptpath = datafolderscript +"/rscript/";
 m_FindProgramRTExecDirVec.push_back(rscriptpath);
+std :: string rscriptpath1 = RTExecutablePath +"/rscript/";
+m_FindProgramRTExecDirVec.push_back(rscriptpath1);
+std :: string rscriptpath2 = RTExecutablePath +"/Data/rscript/";
+m_FindProgramRTExecDirVec.push_back(rscriptpath2);
 
 if( configfile.empty() )  ConfigDefault();
 
@@ -227,14 +234,11 @@ if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) 
 		PathFilesBmsPath->setText(QString(PathBms.c_str()));
 	}
 	else 
-	{
-		std :: string batchscript = datafolderscript +"/batchmakeScript";
-		PathFilesBmsPath->setText(QString(batchscript.c_str()));
-		if(m_noGUI) // no parameters and nogui => not possible
-		{
-			std::cout<<"The path bms will set the default path (if you change the directory for batcmake script , please change the path "<<std::endl; // command line display
-			
-		}
+	{	
+		std ::string program = itksys::SystemTools::FindDirectory("batchmakeScript",m_FindProgramRTExecDirVec);
+		
+		PathFilesBmsPath->setText(QString(program.c_str()));
+	
 	}
 
 

@@ -18,7 +18,21 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/Common.cmake)
 
 
 if( RodentThickness_BUILD_SLICER_EXTENSION )
+  
+ if(NOT Slicer_SOURCE_DIR)
+    set(EXTENSION_NAME CorticalRodentThicknessAnalysis)
+    set(EXTENSION_HOMEPAGE "https://www.nitrc.org/projects/rodentthickness/")
+    set(EXTENSION_CATEGORY "")
+    set(EXTENSION_CONTRIBUTORS "Marie Jacquemard (UNC)")
+    set(EXTENSION_DESCRIPTION "A tool to measure cortical thickness of rodent brain")
+    set(EXTENSION_STATUS Beta)
+    set(EXTENSION_BUILD_SUBDIRECTORY RodentThickness-build)
+  endif()
+
   set( USE_SYSTEM_VTK ON )
+  set( USE_SYSTEM_ITK ON)
+  set( USE_SYSTEM_BatchMake OFF)
+  set( USE_SYSTEM_SlicerExecutionModel ON)
   set( BUILD_SHARED_LIBS OFF )
   set(EXTENSION_SUPERBUILD_BINARY_DIR ${${EXTENSION_NAME}_BINARY_DIR} )
   unsetForSlicer(NAMES CMAKE_MODULE_PATH CMAKE_C_COMPILER CMAKE_CXX_COMPILER ITK_DIR SlicerExecutionModel_DIR VTK_DIR QT_QMAKE_EXECUTABLE ITK_VERSION_MAJOR CMAKE_CXX_FLAGS CMAKE_C_FLAGS )
@@ -26,7 +40,7 @@ if( RodentThickness_BUILD_SLICER_EXTENSION )
   include(${Slicer_USE_FILE})
   unsetAllForSlicerBut( NAMES VTK_DIR QT_QMAKE_EXECUTABLE )
   resetForSlicer(NAMES CMAKE_MODULE_PATH CMAKE_C_COMPILER CMAKE_CXX_COMPILER ITK_VERSION_MAJOR CMAKE_CXX_FLAGS CMAKE_C_FLAGS)
-  set( NIRAL_UTILITIES_DEPENDS niral_utilities)
+ 
 endif()
 #-----------------------------------------------------------------------------
 # Git protocole option

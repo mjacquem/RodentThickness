@@ -12,15 +12,15 @@ set(proj ${extProjName}) #This local name
 
 #set(${proj}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake)
 set(${proj}_DEPENDENCIES BatchMake VTK SlicerExecutionModel ${ITK_EXTERNAL_NAME})
-message(WARNING "plop")
+
 
 SlicerMacroCheckExternalProjectDependency(${proj})
 
-message(WARNING "plop2")
+
 
 ExternalProject_Add(spharm-pdm
   SVN_REPOSITORY "http://www.nitrc.org/svn/spharm-pdm"
-  SVN_REVISION -r "181"
+  SVN_REVISION -r "190"
   SVN_USERNAME slicerbot
   SVN_PASSWORD slicer
   SOURCE_DIR ${proj}
