@@ -489,7 +489,7 @@ void GuiCSV::LoadConfigSlot() /*SLOT*/
 
 int GuiCSV::LoadConfig(QString configFile) // returns -1 if fails, otherwise 0
 {
-	if( access(configFile.toStdString().c_str(), F_OK) == 0 ) // Test if the config file exists => unistd::access() returns 0 if F(file)_OK
+	if(itksys::SystemTools::GetPermissions(configFile.toStdString().c_str(), ITKmode_F_OK)) // Test if the config file exists => unistd::access() returns 0 if F(file)_OK
 	{
 		std::cout<<"| Loading Configuration file \'"<< configFile.toStdString() <<"\'..."; // command line display
 
