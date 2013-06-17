@@ -80,7 +80,10 @@ LaplaceGradientImageFilter<TLabelMapImage, TInputImage, TOperatorValueType, TOut
   this->m_LabelMapIsSet = 0;
 
 }
-
+int roundd(double d)
+{
+      return static_cast<int>(d + 0.5);
+}
 template <class TLabelMapImage, class TInputImage, class TOperatorValueType, class TOutputValueType >
 void
 LaplaceGradientImageFilter< TLabelMapImage, TInputImage, TOperatorValueType, TOutputValueType >
@@ -199,7 +202,7 @@ LaplaceGradientImageFilter< TLabelMapImage, TInputImage, TOperatorValueType, TOu
 
     // go through all the dimensions
 
-    int iCenterId = (int)(round(imD.GetCenterPixel()));
+    int iCenterId = (int)(roundd(imD.GetCenterPixel()));
 
     typename InputImageType::IndexType currentIndex = imD.GetIndex();
 
@@ -218,8 +221,8 @@ LaplaceGradientImageFilter< TLabelMapImage, TInputImage, TOperatorValueType, TOu
 	
 	// figure out if we can compute central differences or not
       
-	int iPId = (int)(round(imD.GetNext( iI, 1 ) ) );
-	int iNId = (int)(round(imD.GetPrevious( iI, 1 ) ) );
+	int iPId = (int)(roundd(imD.GetNext( iI, 1 ) ) );
+	int iNId = (int)(roundd(imD.GetPrevious( iI, 1 ) ) );
 
 	// let's see if we are at the boundary
 	// and if so, disable the use of values across the boundary

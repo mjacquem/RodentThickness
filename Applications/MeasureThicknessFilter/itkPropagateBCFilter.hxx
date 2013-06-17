@@ -94,7 +94,6 @@ PropagateBCFilter<TInputImage>
 
 }
 
-
 /**
  * Compute filter for Gaussian kernel
  */
@@ -407,7 +406,7 @@ void
   for ( int iJ=0; iJ<iNumberOfBCToDetermine; iJ++ ) {
 
     IndexType currentIndex = bcSet[iJ];
-    double dCurrentRoundedValue = round(bcImage->GetPixel( currentIndex ));
+    double dCurrentRoundedValue = roundd(bcImage->GetPixel( currentIndex ));
 
     //std::cout << bcImage->GetPixel( currentIndex ) << std::endl;
 

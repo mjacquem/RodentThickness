@@ -82,7 +82,10 @@ namespace {
 //   cout << newpoint[0] << "," << newpoint[1] << "," << newpoint[2] << " => " << meshPoint[0] << "," << meshPoint[1] << "," << meshPoint[2] << endl;
     points->SetPoint(pointId, meshPoint);
   }
-
+  int roundd(double d)
+  {
+      return static_cast<int>(d + 0.5);
+  }
   void thresholdDistanceVector(string distanceVector, string thresholdVectorOutput) {
     cout << "Reading " << distanceVector << " ... ";
     typedef itk::ImageFileReader<DistanceFilterType::VectorImageType> VectorReaderType;
@@ -234,7 +237,7 @@ namespace {
         DistanceFilterType::VectorImageType::PixelType distanceValue;
         DistanceFilterType::VectorImageType::IndexType distanceIndex;
         for (int d = 0; d < 3; d++) {
-          distanceIndex[d] = (long int) round(pointIndex[d]);
+          distanceIndex[d] = (long int) roundd(pointIndex[d]);
         }
         distanceValue = distanceMap->GetPixel(distanceIndex);
 
