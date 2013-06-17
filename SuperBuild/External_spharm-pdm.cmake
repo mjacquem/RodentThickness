@@ -8,14 +8,13 @@ set(${CMAKE_CURRENT_LIST_FILENAME}_FILE_INCLUDED 1)
 
 # Include dependent projects if any
 set(extProjName spharm-pdm) #The find_package known name
+
+#set(${extProjName}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake)
+set(${extProjName}_DEPENDENCIES BatchMake VTK SlicerExecutionModel ${ITK_EXTERNAL_NAME})
+
+
+SlicerMacroCheckExternalProjectDependency(${extProjName})
 set(proj ${extProjName}) #This local name
-
-#set(${proj}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake)
-set(${proj}_DEPENDENCIES BatchMake VTK SlicerExecutionModel ${ITK_EXTERNAL_NAME})
-
-
-SlicerMacroCheckExternalProjectDependency(${proj})
-
 
 
 ExternalProject_Add(spharm-pdm

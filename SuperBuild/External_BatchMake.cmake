@@ -51,9 +51,22 @@ if(NOT DEFINED ${extProjName}_DIR AND NOT ${USE_SYSTEM_${extProjName}})
 # set(${proj}_REPOSITORY "${git_protocol}://github.com/hjmjohnson/TempBatchMake.git")
 # set(${proj}_GIT_TAG FixInstallBatchMake)
 
+set( BatchMakeCURLCmakeArg "" )
+  if( RodentThickness_BUILD_SLICER_EXTENSION )
+    find_library( PathToSlicerZlib
+    NAMES zlib
+    PATHS ${Slicer_HOME}/../zlib-install/lib # ${Slicer_HOME} is <topofbuildtree>/Slicer-build: defined in SlicerConfig.cmake
+    PATH_SUFFIXES Debug Release RelWithDebInfo MinSizeRel # For Windows, it can be any one of these
+    NO_DEFAULT_PATH
+    NO_SYSTEM_ENVIRONMENT_PATH
+    )
+    set( BatchMakeCURLCmakeArg -DCURL_SPECIAL_LIBZ:PATH=${PathToSlicerZlib} )
+  endif( RodentThickness_BUILD_SLICER_EXTENSION )
+
+
   set(${proj}_REPOSITORY "${git_protocol}://batchmake.org/BatchMake.git")
- # set(${proj}_GIT_TAG "1f5bf4f92e8678c34dc6f7558be5e6613804d988")
-  set(${proj}_GIT_TAG "aee6ff198a392e6026730784d9c1c19a1296c465")
+  set(${proj}_GIT_TAG "8addbdb62f0135ba01ffe12ddfc32121b6d66ef5")
+ # set(${proj}_GIT_TAG "aee6ff198a392e6026730784d9c1c19a1296c465")   8addbdb62f0135ba01ffe12ddfc32121b6d66ef5  1f5bf4f92e8678c34dc6f7558be5e6613804d988
  ExternalProject_Add(${proj}
     GIT_REPOSITORY ${${proj}_REPOSITORY}
     GIT_TAG ${${proj}_GIT_TAG}
@@ -64,10 +77,17 @@ if(NOT DEFINED ${extProjName}_DIR AND NOT ${USE_SYSTEM_${extProjName}})
     CMAKE_ARGS
       ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
       ${COMMON_EXTERNAL_PROJECT_ARGS}
+      -DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_CURRENT_BINARY_DIR}/BatchMake-build/bin
+      -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_CURRENT_BINARY_DIR}/BatchMake-build/bin
+      -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_CURRENT_BINARY_DIR}/BatchMake-build/bin
+      -DCMAKE_BUNDLE_OUTPUT_DIRECTORY:PATH=${CMAKE_CURRENT_BINARY_DIR}/BatchMake-build/bin
       -DBUILD_EXAMPLES:BOOL=OFF
       -DBUILD_TESTING:BOOL=OFF
+      -DBUILD_SHARED_LIBS:BOOL=OFF
       ${${proj}_CMAKE_OPTIONS}
+      ${BatchMakeCURLCmakeArg}
     INSTALL_COMMAND ""
+    PATCH_COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/SuperBuild/BatchMakePatchedZip.c ${CMAKE_CURRENT_BINARY_DIR}/BatchMake/Utilities/Zip/zip.c 
     DEPENDS
       ${${proj}_DEPENDENCIES}
     )

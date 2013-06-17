@@ -30,7 +30,7 @@ mark_as_advanced(${LOCAL_PROJECT_NAME}_INSTALL_DEVELOPMENT)
 
 set(ITK_VERSION_MAJOR 4 CACHE STRING "Choose the expected ITK major version to build RodentThickness (3 or 4).")
 # Set the possible values of ITK major version for cmake-gui
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "3" "4")
+set_property(CACHE ITK_VERSION_MAJOR PROPERTY STRINGS "3" "4")
 if(NOT ${ITK_VERSION_MAJOR} STREQUAL "3" AND NOT ${ITK_VERSION_MAJOR} STREQUAL "4")
   message(FATAL_ERROR "ITK_VERSION_MAJOR should be either 3 or 4")
 endif()
@@ -95,7 +95,7 @@ endif()
 
 #-----------------------------------------------------------------------------
 # Set a default build type if none was specified
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES AND UNIX)
   message(STATUS "Setting build type to 'Release' as none was specified.")
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
   # Set the possible values of build type for cmake-gui
