@@ -61,16 +61,7 @@ if(NOT ( DEFINED "${extProjName}_DIR" OR ( DEFINED "${USE_SYSTEM_${extProjName}}
       )
   endif()
 
-  if(${PROJECT_NAME}_BUILD_FFTWF_SUPPORT)
-    set(${proj}_FFTWF_ARGS
-      -DITK_USE_FFTWF:BOOL=ON
-      )
-  endif()
-  if(${PROJECT_NAME}_BUILD_FFTWD_SUPPORT)
-    set(${proj}_FFTWD_ARGS
-      -DITK_USE_FFTWD:BOOL=ON
-      )
-  endif()
+
 
   set(${proj}_WRAP_ARGS)
   #if(foo)

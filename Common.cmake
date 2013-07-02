@@ -42,14 +42,14 @@ if(${ITK_VERSION_MAJOR} STREQUAL "3")
   set(USE_ITKv4 OFF)
 endif()
 
-#CMAKE_DEPENDENT_OPTION(
-#  USE_DTIPrep                         "Build DTIPrep"                                ON "${LOCAL_PROJECT_NAME}_USE_QT" ON)
+
+
 
 set(${LOCAL_PROJECT_NAME}_USE_QT ON)
 if(${LOCAL_PROJECT_NAME}_USE_QT AND NOT RodentThickness_BUILD_SLICER_EXTENSION )
   if(NOT QT4_FOUND)
-    find_package(Qt4 4.6 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
-    include(${QT_USE_FILE})
+    #find_package(Qt4 4.6 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
+    #include(${QT_USE_FILE})
   endif()
 endif()
 

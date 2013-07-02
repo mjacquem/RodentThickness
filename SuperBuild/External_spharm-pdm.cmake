@@ -36,6 +36,7 @@ ExternalProject_Add(spharm-pdm
   -DCOMPILE_ParaToSPHARMMeshCLP:BOOL=ON
   -DCOMPILE_ShapeAnalysisModule:BOOL=OFF
   -DCOMPILE_StatNonParamTestPDM:BOOL=OFF
+  -DCOMPILE_shapeAnalysisMANCOVA_Wizard:BOOL=OFF
   -DCOMPILE_shapeworks:BOOL=ON
   -DCOMPILE_ParticleModule:BOOL=OFF
   -DUSE_SYSTEM_ITK:BOOL=ON

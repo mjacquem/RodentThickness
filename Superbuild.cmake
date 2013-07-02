@@ -33,6 +33,7 @@ if( RodentThickness_BUILD_SLICER_EXTENSION )
   set( USE_SYSTEM_ITK ON)
   set( USE_SYSTEM_BatchMake OFF)
   set( USE_SYSTEM_SlicerExecutionModel ON)
+  set( USE_SYSTEM_Rscript OFF)
   set( BUILD_SHARED_LIBS OFF )
   set(EXTENSION_SUPERBUILD_BINARY_DIR ${${EXTENSION_NAME}_BINARY_DIR} )
   unsetForSlicer(NAMES CMAKE_MODULE_PATH CMAKE_C_COMPILER CMAKE_CXX_COMPILER ITK_DIR SlicerExecutionModel_DIR VTK_DIR QT_QMAKE_EXECUTABLE ITK_VERSION_MAJOR CMAKE_CXX_FLAGS CMAKE_C_FLAGS )
@@ -55,10 +56,12 @@ find_package(Git REQUIRED)
 
 # I don't know who removed the Find_Package for QT, but it needs to be here
 # in order to build VTK if ${LOCAL_PROJECT_NAME}_USE_QT is set.
-if(${LOCAL_PROJECT_NAME}_USE_QT AND NOT RodentThickness_BUILD_SLICER_EXTENSION)
-    find_package(Qt4 REQUIRED)
-endif()
-
+#if(${LOCAL_PROJECT_NAME}_USE_QT AND NOT RodentThickness_BUILD_SLICER_EXTENSION)
+ #   find_package(Qt4 REQUIRED)
+ #   include(${QT_USE_FILE}) 
+#endif()
+find_package(Qt4 REQUIRED)
+include(${QT_USE_FILE}) 
 
 # Compute -G arg for configuring external projects with the same CMake generator:
 if(CMAKE_EXTRA_GENERATOR)
@@ -105,7 +108,7 @@ option(USE_SYSTEM_ITK "Build using an externally defined version of ITK" OFF)
 option(USE_SYSTEM_SlicerExecutionModel "Build using an externally defined version of SlicerExecutionModel"  OFF)
 option(USE_SYSTEM_VTK "Build using an externally defined version of VTK" OFF)
 option(USE_SYSTEM_BatchMake "Build using an externally defined version of BatchMake" OFF)
-
+option(USE_SYSTEM_Rscript "Build using an externally defined version of Rscript" OFF)
 
 #------------------------------------------------------------------------------
 # ${LOCAL_PROJECT_NAME} dependency list
@@ -117,8 +120,8 @@ include(SlicerMacroCheckExternalProjectDependency)
 
 set(ITK_EXTERNAL_NAME ITKv${ITK_VERSION_MAJOR})
 
-set(${LOCAL_PROJECT_NAME}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake )
-
+set(${LOCAL_PROJECT_NAME}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake)
+#set(${LOCAL_PROJECT_NAME}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake Rscript)
 if(BUILD_STYLE_UTILS)
   #list(APPEND ${LOCAL_PROJECT_NAME}_DEPENDENCIES Cppcheck KWStyle Uncrustify)
 endif()
