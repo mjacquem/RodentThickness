@@ -128,7 +128,7 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
    		 if (i != Length-1) subjGroup = subjGroup + subj[i] + ' ';
     		else subjGroup = subjGroup + subj[i];
  	 }
-	std::string BatchMakeScriptFile2 = WorkDir+"/RodentThicknessResults/Script/"+"slicer3createfiletxt.bms";
+	std::string BatchMakeScriptFile2 = WorkDir+"/Script/"+"slicer3createfiletxt.bms";
 	std::ofstream file2( BatchMakeScriptFile2.c_str());
  
 	file2 <<"set (groupIds "<< final_groups<<")"<<std::endl;
@@ -166,7 +166,7 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 				}
 				if (i>0)
 				{
-					std::string BatchMakeScriptFile = WorkDir+"/RodentThicknessResults/Script/"+"slicer3filetxt.bms";
+					std::string BatchMakeScriptFile = WorkDir+"/Script/"+"slicer3filetxt.bms";
 					std::ofstream file( BatchMakeScriptFile.c_str());
 					readFileCSV(line, value1,value2,value3,value4,value5,value6,value7,value8);
 					file <<"set (case1 "<< value2<<")"<<std::endl;
@@ -193,7 +193,7 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 	}
 //////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline3////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //file bms
-	std::string BatchMakeScriptFile1 = WorkDir+"/RodentThicknessResults/Script/"+"slicer3correspondence.bms";
+	std::string BatchMakeScriptFile1 = WorkDir+"/Script/"+"slicer3correspondence.bms";
 	std::ofstream file6( BatchMakeScriptFile1.c_str());
 	file6 <<"set (surfacemodels "<< surfacemodel<<")"<<std::endl;
 	file6 <<"set (groupIds "<< final_groups<<")"<<std::endl;

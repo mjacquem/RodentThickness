@@ -1,5 +1,5 @@
-MakeDirectory(${WorkDir}/RodentThicknessResults/Output/1.MeasurementandSPHARM)
-Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/RodentThicknessResults/Output/1.MeasurementandSPHARM)
+MakeDirectory(${WorkDir}/Processing/1.MeasurementandSPHARM)
+Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/Processing/1.MeasurementandSPHARM)
 
 Set (cmdline ${measureThicknessFilterPath} --mr --sbt --workdir ${OutDirectoryMeasurementandSPHARM} --ids 3 --idl 4 --idh 1 --idn 5 --ttrns 100 ${labelMapInput} ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd)
 Run(output ${cmdline})

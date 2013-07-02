@@ -1,13 +1,13 @@
 
-MakeDirectory(${WorkDir}/RodentThicknessResults/Output/3.meshintensity)
-Set(OutDirectorymeshintensity ${WorkDir}/RodentThicknessResults/Output/3.meshintensity)
-Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/RodentThicknessResults/Output/1.MeasurementandSPHARM)
-Set(OutDirectoryshapeworks ${WorkDir}/RodentThicknessResults/Output/2.shapeworks)
+MakeDirectory(${WorkDir}/Processing/3.meshintensity)
+Set(OutDirectorymeshintensity ${WorkDir}/Processing/3.meshintensity)
+Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/Processing/1.MeasurementandSPHARM)
+Set(OutDirectoryshapeworks ${WorkDir}/Processing/2.shapeworks)
 
 Set (cmdline ${MeshPointIntensitySamplingPath} --workDir ${OutDirectorymeshintensity} --inputAsPhysicalCoord --distanceVector ${case1}.distanceVector.nrrd -i nn -a ${OutDirectorymeshintensity}/${case1}.txt -m ${OutDirectorymeshintensity}/${case1}.sampling.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd ${OutDirectoryshapeworks}/${case1}.correspondence.vtk)    
 Run (output ${cmdline})
 
-AppendFile(${WorkDir}/RodentThicknessResults/outputdataset.csv ${group}	${case1} 	${labelMapInput} 	${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd 	${OutDirectoryMeasurementandSPHARM}/${case1}.ip.SPHARM.vtk	${OutDirectoryshapeworks}/${case1}.correspondance.vtk	${OutDirectoryshapeworks}/${case1}.warped.vtk 	${OutDirectorymeshintensity}/${case1}.txt\n)		
+AppendFile(${WorkDir}/outputdataset.csv ${group}	${case1} 	${labelMapInput} 	${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd 	${OutDirectoryMeasurementandSPHARM}/${case1}.ip.SPHARM.vtk	${OutDirectoryshapeworks}/${case1}.correspondance.vtk	${OutDirectoryshapeworks}/${case1}.warped.vtk 	${OutDirectorymeshintensity}/${case1}.txt\n)		
 
 
 	

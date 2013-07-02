@@ -1,4 +1,4 @@
-Set(OutDirectoryCorrepondance ${WorkDir}/RodentThicknessResults/Statistical)
+Set(OutDirectoryCorrepondance ${WorkDir}/Statistical)
 
 ForEach (groupId ${groupIds})
 Set (cmdline ${PythonPath} ${concatToColumnsPythonScriptPath} -f ${OutDirectoryCorrepondance}/listThicknessSamplingResult_${groupId}.txt -o ${OutDirectoryCorrepondance}/data.${groupId}.txt)

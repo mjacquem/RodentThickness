@@ -108,7 +108,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 		while(getline( Sub, line ))
 		{  			
 					std :: string value1,value2,value3;
-					std::string BatchMakeScriptFile = WorkDir+"/RodentThicknessResults/Script/"+"slicer3ThicknessSPHARM.bms";
+					std::string BatchMakeScriptFile = WorkDir+"/Script/"+"slicer3ThicknessSPHARM.bms";
 					std::ofstream file( BatchMakeScriptFile.c_str());
 				
 				if(i==0)
@@ -116,9 +116,9 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 					
 					readFileCSV(line, column1,column2,column3);
 	
-					if(column1.compare("subjId") != 0 && column2.compare("labelMapInput") != 0 && column3.compare("group") != 0 ) 
+					/*if(column1.compare("subjId") != 0 && column2.compare("labelMapInput") != 0 && column3.compare("group") != 0 ) 
 					{	std :: cout << " Name of the Columns is not good : group , sudjId, labelMapInput" << std :: endl ;
-						return -1;	}
+						return -1;	}*/
 					
 				}
 				if (i>0)
@@ -172,7 +172,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
  	 }
   	
 //file bms
-	std::string BatchMakeScriptFile2 = WorkDir+"/RodentThicknessResults/Script/"+"slicer3shapeworks.bms";
+	std::string BatchMakeScriptFile2 = WorkDir+"/Script/"+"slicer3shapeworks.bms";
 	std::ofstream file2( BatchMakeScriptFile2.c_str());
  
 	file2 <<"set (groupIds "<< final_groups<<")"<<std::endl;
@@ -199,7 +199,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 							
 				std :: string value1,value2,value3;
 			
-				std::string BatchMakeScriptFile5 = WorkDir+"/RodentThicknessResults/Script/"+"slicer3meshintensity.bms";
+				std::string BatchMakeScriptFile5 = WorkDir+"/Script/"+"slicer3meshintensity.bms";
 				std::ofstream file( BatchMakeScriptFile5.c_str());
 
 				readFileCSV(line, value1,value2,value3);

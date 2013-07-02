@@ -384,11 +384,11 @@ int GuiCSV::ReadCSV(QString CSVfile)
 					if(i==0)
 					{
 						
-						if(list.at(0) != "subjId" || list.at(1) != "labelMapInput" || list.at(2) != "group")
+						/*if(list.at(0) != "subjId" || list.at(1) != "labelMapInput" || list.at(2) != "group")
 						{
 							qDebug( "Could not open csv file, first line is not correct");						
 							return -1;
-						}
+						}*/
 					}else
 					{
 						QTableWidgetItem * Itemcell=new QTableWidgetItem( tr("%1").arg( list.at(0)) );
@@ -1421,39 +1421,39 @@ int GuiCSV::LaunchScriptWriter()
 		return -1;
 	}
 
-	if(! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/RodentThicknessResults").c_str(), ITKmode_F_OK)) // Test if the main folder does not exists => unistd::access() returns 0 if F(file)_OK
+	if(! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() ).c_str(), ITKmode_F_OK)) // Test if the main folder does not exists => unistd::access() returns 0 if F(file)_OK
 	{
 		std::cout<<"| Creating Main directory..."<<std::endl; // command line display
 		QProcess * mkdirMainProcess = new QProcess;
-		program = "mkdir " + m_OutputPath.toStdString() + "/RodentThicknessResults"; //  Creates the directory
+		program = "mkdir " + m_OutputPath.toStdString(); //  Creates the directory
 		std::cout<<"| $ " << program << std::endl;
 		ExitCode = mkdirMainProcess->execute( program.c_str() );
 	}
 
-	if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/RodentThicknessResults/Output").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
+	if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Processing").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
 	{
 		std::cout<<"| Creating output directory..."<<std::endl; // command line display
 		QProcess * mkdirScriptProcess = new QProcess;
-		program = "mkdir " + m_OutputPath.toStdString() + "/RodentThicknessResults/Output";
+		program = "mkdir " + m_OutputPath.toStdString() + "/Processing";
 		std::cout<<"| $ " << program << std::endl;
 		ExitCode = mkdirScriptProcess->execute( program.c_str() );
 	}
 	if(m_statistic==1)
 	{
-		if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/RodentThicknessResults/Statistical").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
+		if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Statistical").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
 		{
 			std::cout<<"| Creating Statistical directory..."<<std::endl; // command line display
 			QProcess * mkdirScriptProcess = new QProcess;
-			program = "mkdir " + m_OutputPath.toStdString() + "/RodentThicknessResults/Statistical";
+			program = "mkdir " + m_OutputPath.toStdString() + "/Statistical";
 			std::cout<<"| $ " << program << std::endl;
 			ExitCode = mkdirScriptProcess->execute( program.c_str() );
 		}
 	}
-	if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/RodentThicknessResults/Script").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
+	if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Script").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
 	{
 		std::cout<<"| Creating Script directory..."<<std::endl; // command line display
 		QProcess * mkdirScriptProcess = new QProcess;
-		program = "mkdir " + m_OutputPath.toStdString() + "/RodentThicknessResults/Script";
+		program = "mkdir " + m_OutputPath.toStdString() + "/Script";
 		std::cout<<"| $ " << program << std::endl;
 		ExitCode = mkdirScriptProcess->execute( program.c_str() );
 	}
@@ -1669,9 +1669,9 @@ int GuiCSV::LaunchScriptWriter()
 		}
 	}
 	
-	m_outconfig=m_OutputPath + QString("/RodentThicknessResults/RodentThicknessconfigfile.bms");
-	m_outdataset=m_OutputPath + QString("/RodentThicknessResults/dataset.csv");
-	m_StatisticaldatasetPath=m_OutputPath + QString("/RodentThicknessResults/outputdataset.csv");
+	m_outconfig=m_OutputPath + QString("/RodentThicknessconfigfile.bms");
+	m_outdataset=m_OutputPath + QString("/dataset.csv");
+	m_StatisticaldatasetPath=m_OutputPath + QString("/outputdataset.csv");
 	SaveConfig(m_outconfig);
 	SaveCSVDatasetBrowse(m_outdataset);
 

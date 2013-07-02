@@ -1,4 +1,4 @@
-Set(OutDirectoryCorrepondance ${WorkDir}/RodentThicknessResults/Statistical)
+Set(OutDirectoryCorrepondance ${WorkDir}/Statistical)
 
 
 ForEach (groupId ${groupIds})
