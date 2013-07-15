@@ -16,13 +16,13 @@ void ScriptRunner :: readFileCSV(std::string line, std::string &variable1, std::
 {
 	int pos1=0, pos2=0, pos3=0;
 
-	pos1 = line.find('	',0);
+	pos1 = line.find(',',0);
 	variable1.assign(line,0,pos1);			
 				
- 	pos2 = line.find('	',pos1+1);
+ 	pos2 = line.find(',',pos1+1);
 	variable2.assign(line,pos1+1,pos2-pos1-1);		
 			
-	pos3 = line.find('	',pos2+1);
+	pos3 = line.find(',',pos2+1);
 	variable3.assign(line,pos2+1,pos3-pos2-1);	
 
 }
@@ -93,7 +93,7 @@ std::ifstream groups(file.c_str(), std::ios::in);
 
 }
 
-int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfile,std::string PathBms,std::string WorkDir)
+int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfile,std::string PathBms,std::string WorkDir, int extractlabel, int idl , int idh)
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline 1//////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 	std::string nameFile;
@@ -130,6 +130,9 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 					file <<"set (labelMapInput "<< value2<<")"<<std::endl;
 					file <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
 					file <<"set (configfile "<< configfile<<")"<<std::endl;
+					file <<"set (extractlabel "<< extractlabel<<")"<<std::endl;
+					file <<"set (idl "<< idl<<")"<<std::endl;
+					file <<"set (idh "<< idh<<")"<<std::endl;
 					file <<"include ("<<configfile<<")"<<std::endl;
 					file <<"include ("<<PathBms<<"/ThicknessSpharm.bms)"<<std::endl;
 					file.close();
@@ -209,6 +212,9 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 				file <<"set (group "<< value3<<")"<<std::endl;
 				file <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
 				file <<"set (configfile "<< configfile<<")"<<std::endl;
+				file <<"set (ids "<< extractlabel<<")"<<std::endl;
+				file <<"set (idl "<< idl<<")"<<std::endl;
+				file <<"set (idh "<< idh<<")"<<std::endl;
 				//file <<"include (/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/meshintensity.bms)"<<std::endl;
 				file <<"include ("<<configfile<<")"<<std::endl;
 				file <<"include ("<<PathBms<<"/meshintensity.bms)"<<std::endl;

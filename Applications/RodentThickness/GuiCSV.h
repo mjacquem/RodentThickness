@@ -34,7 +34,7 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 
 	public:
 
-/*CONSTRUCTOR*/	GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGui,bool ComputeStatistic, std::string WorkDir,std::string commandRan); //constructor
+/*CONSTRUCTOR*/	GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGui,bool ComputeStatistic, std::string WorkDir,int extractlabel,int dirichletLowId,int dirichletHighId, std::string commandRan); //constructor
 
 /*DATASET*/	int ReadCSV(QString CSVfile); // returns -1 if fails, otherwise 0
 		int SaveCSVDatasetBrowse(QString CSVBrowseName);
@@ -48,7 +48,7 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 		int LaunchScriptRunner();
 		void RunningCompleted();
 		void RunningFailed();
-
+		
 	public slots:
 
 /*EXIT*/	void ExitProgram();
@@ -68,6 +68,7 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 /*MAIN FUNCT*/	int Compute();
 		void testpythonversion();
 		void ScriptQProcessDone(int);
+		void ChangeValueParameters();
 	signals: // none
 	protected :
 
@@ -88,6 +89,10 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 		QString m_FilesBmsPath;
 		QString m_outconfig;
 		QString m_outdataset;
+		int m_label;
+		int m_idl;
+		int m_idh;
+		int m_idn;
 		std::string m_notFound;
 		QProcess * m_ScriptQProcess;
 		int m_statistic;

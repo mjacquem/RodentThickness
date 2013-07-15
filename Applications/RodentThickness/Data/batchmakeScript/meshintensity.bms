@@ -7,7 +7,7 @@ Set(OutDirectoryshapeworks ${WorkDir}/Processing/2.shapeworks)
 Set (cmdline ${MeshPointIntensitySamplingPath} --workDir ${OutDirectorymeshintensity} --inputAsPhysicalCoord --distanceVector ${case1}.distanceVector.nrrd -i nn -a ${OutDirectorymeshintensity}/${case1}.txt -m ${OutDirectorymeshintensity}/${case1}.sampling.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd ${OutDirectoryshapeworks}/${case1}.correspondence.vtk)    
 Run (output ${cmdline})
 
-AppendFile(${WorkDir}/outputdataset.csv ${group}	${case1} 	${labelMapInput} 	${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd 	${OutDirectoryMeasurementandSPHARM}/${case1}.ip.SPHARM.vtk	${OutDirectoryshapeworks}/${case1}.correspondance.vtk	${OutDirectoryshapeworks}/${case1}.warped.vtk 	${OutDirectorymeshintensity}/${case1}.txt\n)		
+AppendFile(${WorkDir}/outputdataset.csv ${group},${case1},${labelMapInput},${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd,${OutDirectoryMeasurementandSPHARM}/${case1}.ip.SPHARM.vtk,${OutDirectoryshapeworks}/${case1}.correspondance.vtk,${OutDirectorymeshintensity}/${case1}.txt,${ids},${idl},${idh}\n)		
 
 
 	

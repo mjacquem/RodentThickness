@@ -1,10 +1,11 @@
 MakeDirectory(${WorkDir}/Processing/1.MeasurementandSPHARM)
 Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/Processing/1.MeasurementandSPHARM)
+MakeDirectory(${OutDirectoryMeasurementandSPHARM}/EulerFile)
 
-Set (cmdline ${measureThicknessFilterPath} --mr --sbt --workdir ${OutDirectoryMeasurementandSPHARM} --ids 3 --idl 4 --idh 1 --idn 5 --ttrns 100 ${labelMapInput} ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd)
+Set (cmdline ${measureThicknessFilterPath} --mr --sbt --workdir ${OutDirectoryMeasurementandSPHARM} --ids ${extractlabel} --idl ${idl} --idh ${idh} --ttrns 100 ${labelMapInput} ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd)
 Run(output ${cmdline})
 
-Set (cmdline ${ImageMathPath} ${labelMapInput} -extractLabel 3 -outfile ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd)
+Set (cmdline ${ImageMathPath} ${labelMapInput} -extractLabel ${extractlabel} -outfile ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd)
 Run(output ${cmdline})
 
 Set(cmdline ${SegPostprocessPath} ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentationSegPostProcess.nrrd --UseUnitSpacing)
@@ -15,9 +16,11 @@ FileExists(ParaFileExists ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk)
 Echo (${ParaFileExists})
 
  If (${ParaFileExists} == 0)
-	Set (cmdline ${GenParaMeshCLPPath} ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentationSegPostProcess.nrrd --label 1 ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_surf.vtk)
+	Set (cmdline ${GenParaMeshCLPPath} --EulerFile --outEulerName ${OutDirectoryMeasurementandSPHARM}/EulerFile/Euler_${case1}.txt ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentationSegPostProcess.nrrd --label 1 ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_surf.vtk)
 	Run(output ${cmdline})
 EndIf (${ParaFileExists})
+
+
 
 FileExists(SPHARMFileExists ${OutDirectoryMeasurementandSPHARM}/${case1}.ip.SPHARM.vtk)
 Echo (${SPHARMFileExists})

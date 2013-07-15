@@ -21,7 +21,7 @@
        <enum>Qt::NoContextMenu</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Dataset">
        <attribute name="title">
@@ -128,12 +128,12 @@
           <widget class="QTableWidget" name="tableWidget">
            <row>
             <property name="text">
-             <string> Row 1</string>
+             <string>1</string>
             </property>
            </row>
            <row>
             <property name="text">
-             <string>Row 2</string>
+             <string>2</string>
             </property>
            </row>
            <column>
@@ -243,6 +243,79 @@
           </widget>
          </item>
         </layout>
+       </widget>
+       <widget class="QWidget" name="verticalLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>470</y>
+          <width>841</width>
+          <height>136</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Label Cortex Level</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="extractlabelspinbox"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="toolTip">
+              <string>Id number for the low Dirichlet boundary condition </string>
+             </property>
+             <property name="text">
+              <string>Label Brain Level</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="idlspinbox"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_12">
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="toolTip">
+              <string>Id number for the high Dirichlet boundary condition </string>
+             </property>
+             <property name="text">
+              <string>Label Outside Level</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="idhspinbox"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QLabel" name="label_8">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>440</y>
+          <width>131</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Parameters</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="ConfigFile">

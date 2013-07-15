@@ -43,7 +43,7 @@ mode_t ITKmode_X_OK = 1;
 
 
 
-GuiCSV::GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGUI,bool ComputeStatistic,std::string WorkDir,std::string commandRan) : QMainWindow()
+GuiCSV::GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGUI,bool ComputeStatistic,std::string WorkDir,int extractlabel,int dirichletLowId,int dirichletHighId, std::string commandRan) : QMainWindow()
 {
 setupUi(this);
 
@@ -64,18 +64,28 @@ m_statisticalpartrunner = new StatisticalpartRunner;
 m_noGUI=noGUI;
 m_ScriptRunning=false;
 m_computestatistic=ComputeStatistic;
+m_label=extractlabel;
+
+m_idl=dirichletLowId;
+m_idh=dirichletHighId;
+
 if(!m_computestatistic) 
 {
 m_statistic=0;
 }
 else m_statistic=1;
 WidgetHasChangedParam();
-m_CSVseparator = QString("	");
+m_CSVseparator = QString(",");
 m_ParamSaved=1;
 if(!m_noGUI)
 {
 m_ScriptQProcess = new QProcess;
 QObject::connect(m_ScriptQProcess, SIGNAL(finished(int)), this, SLOT(ScriptQProcessDone(int)));
+
+QObject::connect(extractlabelspinbox, SIGNAL(valueChanged(int)), this, SLOT(ChangeValueParameters()));
+QObject::connect(idlspinbox, SIGNAL(valueChanged(int)), this, SLOT(ChangeValueParameters()));
+QObject::connect(idhspinbox, SIGNAL(valueChanged(int)), this, SLOT(ChangeValueParameters()));
+
 
 QObject::connect(loaddataButton, SIGNAL(clicked()), this, SLOT(ReadCSVSlot()));
 QObject::connect(savedatabutton, SIGNAL(clicked()), this, SLOT(SaveCSVDatasetBrowseSlot()));
@@ -167,14 +177,25 @@ QObject::connect(PythonPath, SIGNAL(editingFinished()), this, SLOT(testpythonver
 /* SET the soft config */
 // set the path to the executable directory for FindProgram
 std::string RTExecutablePath= itksys::SystemTools::GetRealPath( itksys::SystemTools::GetFilenamePath(commandRan).c_str() ); // get the place where the running executable is
-if(RTExecutablePath=="") RTExecutablePath= itksys::SystemTools::GetCurrentWorkingDirectory(); // If called by itself ($ RodentThickness) = either in the PATH or in the current directory : will be found either way by find_program
+std::string CurrentPathExec= itksys::SystemTools::GetCurrentWorkingDirectory(); // If called by itself ($ RodentThickness) = either in the PATH or in the current directory : will be found either way by find_program
 m_FindProgramRTExecDirVec.push_back(RTExecutablePath); // FindProgram will search in the executable directory too
+m_FindProgramRTExecDirVec.push_back(CurrentPathExec);
+
+QString RTexec = QString(${RTExecutablePath}) + QString("/Applications");
+std ::string RTexec1 = RTexec.toStdString();
+m_FindProgramRTExecDirVec.push_back(RTexec1);
+
+QString RTcurrentexec = QString(${CurrentPathExec}) + QString("/Applications");
+std ::string RTcurrentexec1 = RTcurrentexec.toStdString();
+m_FindProgramRTExecDirVec.push_back(RTcurrentexec1);
 
 QString ScriptPython = QString("${CMAKE_CURRENT_SOURCE_DIR}") + QString("/Data");
 std ::string datafolderscript = ScriptPython.toStdString();
+QString ScriptPython1 = QString("${CMAKE_CURRENT_SOURCE_DIR}") + QString("/Applications/RodentThickness/Data");
+std ::string datafolderscript1 = ScriptPython1.toStdString();
 //std ::cout << datafolderscript << std ::endl;
 m_FindProgramRTExecDirVec.push_back(datafolderscript);
-
+m_FindProgramRTExecDirVec.push_back(datafolderscript1);
 std :: string pyscript = datafolderscript +"/pythonscript/";
 m_FindProgramRTExecDirVec.push_back(pyscript);
 std :: string pyscript1 = RTExecutablePath +"/pythonscript/";
@@ -1228,13 +1249,12 @@ int GuiCSV ::checknumberofgroups()
 		QString group = tableWidget->item(i,2)->text() ;
 		datatable = group.data();
 		datagroup2 = secondgroup->text().data();
-		std::cout<<"i="<<i<<std::endl;
-		std::cout<<"nbligne"<<tableWidget->rowCount()<<std::endl;
+		
  		while (!datatable->isNull() || !datagroup->isNull() || !datagroup2->isNull()) 
 		{
 			if(*datatable != *datagroup && *datatable != *datagroup2) comp=1;
 			compteur++;			
-			std::cout<<"1 "<<comp<<" compteur= "<<compteur<<std::endl;
+			
 			++datatable;
 			++datagroup;
 			++datagroup2;
@@ -1320,6 +1340,16 @@ void GuiCSV::ScriptQProcessDone(int ExitCode) /*SLOT*/
 
 
 }
+///////////////ExtractLabel
+
+void  GuiCSV:: ChangeValueParameters()
+{
+	m_label=extractlabelspinbox->value();
+	m_idl=idlspinbox->value();
+	m_idh=idhspinbox->value();
+		
+}
+
 
   /////////////////////////////////////////
  //           MAIN FUNCTIONS            //
@@ -1369,11 +1399,7 @@ int GuiCSV::Compute() /*SLOT*/
 }
 int GuiCSV::LaunchScriptWriter()
 {	
-	if(checknumberofgroups()==1)
-	{
-	 	QMessageBox::critical(this, "Number of groups", "Two differents groups maximum");
-		return -1;
-	}		
+	
 	if(checkdataset()==1)
 	{
 	 	QMessageBox::critical(this, "Item Empty", "Please enter all the item for subject and Image");
@@ -1383,8 +1409,15 @@ int GuiCSV::LaunchScriptWriter()
 	{
 	 	QMessageBox::critical(this, "Item Empty", "Please enter all the item for subject and Image and Group");
 		return -1;
-	}		
-
+	}
+if(m_statistic==1)
+{
+	if(checknumberofgroups()==1)
+	{
+	 	QMessageBox::critical(this, "Number of groups", "Two differents groups maximum");
+		return -1;
+	}				
+}
 	int ExitCode=0;
 	std::string program;
 
@@ -1684,7 +1717,7 @@ int GuiCSV :: LaunchScriptRunner()
 	m_ScriptRunning=true;
 	if(m_statistic==0)
 	{
-		if(m_scriptrunner->RunBatchmakeScript(m_outdataset.toStdString(),m_outconfig.toStdString(),m_FilesBmsPath.toStdString(),m_OutputPath.toStdString())==0) 
+		if(m_scriptrunner->RunBatchmakeScript(m_outdataset.toStdString(),m_outconfig.toStdString(),m_FilesBmsPath.toStdString(),m_OutputPath.toStdString(),m_label,m_idl,m_idh)==0) 
 		{	
 			RunningCompleted();	
 			return 0;
@@ -1697,7 +1730,7 @@ int GuiCSV :: LaunchScriptRunner()
 	}
 	else
 	{
-		if(m_scriptrunner->RunBatchmakeScript(m_outdataset.toStdString(),m_outconfig.toStdString(),m_FilesBmsPath.toStdString(), m_OutputPath.toStdString())==0) 
+		if(m_scriptrunner->RunBatchmakeScript(m_outdataset.toStdString(),m_outconfig.toStdString(),m_FilesBmsPath.toStdString(), m_OutputPath.toStdString(),m_label,m_idl,m_idh)==0) 
 		{	
 		       if(m_statisticalpartrunner->RunBatchmakeStatisticalScript(m_StatisticaldatasetPath.toStdString(),m_outconfig.toStdString(),m_FilesBmsPath.toStdString(), m_OutputPath.toStdString())==0)
 			{	RunningCompleted();	

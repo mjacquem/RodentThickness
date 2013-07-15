@@ -57,6 +57,41 @@
 		<label>CStat</label>
 		<default>false</default>
 	</boolean>
+	<integer>
+		<name>extractlabel</name>
+		<longflag>CortexLevel</longflag>
+		<description>Image Math : Cortex Level</description>
+		<label>CortexLevel</label>
+		<default>1</default>
+	</integer>
+
+    <integer>
+      <name>dirichletLowId</name>
+      <label>Dirichlet Low Id</label>
+      <longflag>--idl</longflag>
+      <description>Id number for the low Dirichlet boundary condition.</description>
+      <default>4</default>
+      <constraints>
+        <minimum>0</minimum>
+        <maximum>255</maximum>
+        <step>1</step>
+      </constraints>
+    </integer>
+
+    <integer>
+      <name>dirichletHighId</name>
+      <label>Dirichlet High Id</label>
+      <longflag>--idh</longflag>
+      <description>Id number for the high Dirichlet boundary condition.</description>
+      <default>5</default>
+      <constraints>
+        <minimum>0</minimum>
+        <maximum>255</maximum>
+        <step>1</step>
+      </constraints>
+    </integer>
+
+
 </parameters>
 <parameters>
     <label>Output</label>

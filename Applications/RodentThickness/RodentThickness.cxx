@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 	PARSE_ARGS;
 	QApplication app(argc, argv);
 
-	GuiCSV RodentThicknessGUI(dataset,configfile,PathBms,noGUI,ComputeStatistic,WorkDir,argv[0]);
+	GuiCSV RodentThicknessGUI(dataset,configfile,PathBms,noGUI,ComputeStatistic,WorkDir,extractlabel,dirichletLowId,dirichletHighId,argv[0]);
 
 	if(noGUI) return RodentThicknessGUI.Compute();
 	else
