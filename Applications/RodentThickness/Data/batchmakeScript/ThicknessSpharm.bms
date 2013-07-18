@@ -4,7 +4,7 @@ MakeDirectory(${OutDirectoryMeasurementandSPHARM}/EulerFile)
 
 
 Set (cmdline ${measureThicknessFilterPath} --mr --sbt --workdir ${OutDirectoryMeasurementandSPHARM} --ids ${extractlabel} --idl ${idl} --idh ${idh} --ttrns 100 ${labelMapInput} ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd)
-#Run(output ${cmdline})
+Run(output ${cmdline})
 
 Set (cmdline ${ImageMathPath} ${labelMapInput} -extractLabel ${extractlabel} -outfile ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd)
 Run(output ${cmdline})
