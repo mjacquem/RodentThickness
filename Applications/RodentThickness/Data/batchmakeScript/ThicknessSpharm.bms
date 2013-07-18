@@ -2,8 +2,9 @@ MakeDirectory(${WorkDir}/Processing/1.MeasurementandSPHARM)
 Set(OutDirectoryMeasurementandSPHARM ${WorkDir}/Processing/1.MeasurementandSPHARM)
 MakeDirectory(${OutDirectoryMeasurementandSPHARM}/EulerFile)
 
+
 Set (cmdline ${measureThicknessFilterPath} --mr --sbt --workdir ${OutDirectoryMeasurementandSPHARM} --ids ${extractlabel} --idl ${idl} --idh ${idh} --ttrns 100 ${labelMapInput} ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd)
-Run(output ${cmdline})
+#Run(output ${cmdline})
 
 Set (cmdline ${ImageMathPath} ${labelMapInput} -extractLabel ${extractlabel} -outfile ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentation.nrrd)
 Run(output ${cmdline})
@@ -13,30 +14,49 @@ Run(output ${cmdline})
 
 
 FileExists(ParaFileExists ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk)
-Echo (${ParaFileExists})
 
  If (${ParaFileExists} == 0)
+	
 	Set (cmdline ${GenParaMeshCLPPath} --EulerFile --outEulerName ${OutDirectoryMeasurementandSPHARM}/EulerFile/Euler_${case1}.txt ${OutDirectoryMeasurementandSPHARM}/${case1}.labelMapNCsegmentationSegPostProcess.nrrd --label 1 ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_surf.vtk)
 	Run(output ${cmdline})
+Else(${ParaFileExists})
+  Set(textgen Files already exist , no recompile GenParaMesh)
+  Echo (${textgen})
 EndIf (${ParaFileExists})
 
 
+Set (cmdline ${PythonPath} /work/mjacquem/GuiRodentThickness/Applications/RodentThickness/Data/pythonscript/VerifyEulerScript.py ${OutDirectoryMeasurementandSPHARM}/EulerFile/Euler_${case1}.txt)
+Run(output ${cmdline} prog_error prog_exit_status)
+
+
+If (${prog_exit_status} == 0)
 
 FileExists(SPHARMFileExists ${OutDirectoryMeasurementandSPHARM}/${case1}.ip.SPHARM.vtk)
-Echo (${SPHARMFileExists})
+
  If (${SPHARMFileExists} == 0)
 	
 	Set (cmdline ${ParaToSPHARMMeshCLPPath} ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_surf.vtk --subdivLevel 10 --spharmDegree 20  ${OutDirectoryMeasurementandSPHARM}/${case1}.ip.)
 	Run(output ${cmdline})
+Else(${SPHARMFileExists})
+    Set(textPara Files already exist , no recompile ParaToSPHARM)
+    Echo (${textPara})
 EndIf (${SPHARMFileExists})
 
 FileExists(SPHARMFileExists2 ${OutDirectoryMeasurementandSPHARM}/${case1}.subj.SPHARM.vtk)
-Echo (${SPHARMFileExists2})
+
  If (${SPHARMFileExists2} == 0)
+	
 	Set (cmdline ${ParaToSPHARMMeshCLPPath} ${OutDirectoryMeasurementandSPHARM}/${case1}_para.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_surf.vtk --subdivLevel 50 --spharmDegree 20  ${OutDirectoryMeasurementandSPHARM}/${case1}.subj.)
 	Run(output ${cmdline})
+Else(${SPHARMFileExists2})
+	Echo (${textPara})
 EndIf (${SPHARMFileExists2})
 
 
 
+Else (${prog_exit_status})
+	Set( foo Euler number is different of two )
+	Echo (${foo})
+
+EndIf(${prog_exit_status})
 

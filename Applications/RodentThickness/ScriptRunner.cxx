@@ -3,7 +3,11 @@
 #include <string>
 #include <vector>
 // #include <stdio.h>
-//#include <unistd.h>
+
+#ifdef _unix || _linux
+#include <unistd.h>
+#endif
+
 #include "errno.h"
 #include <fstream>
 #include "bmScriptParser.h"
@@ -11,6 +15,8 @@
 #include <stdlib.h>
 
 #include "ScriptRunner.h"
+#include <itksys/SystemTools.hxx> 
+
 
 void ScriptRunner :: readFileCSV(std::string line, std::string &variable1, std::string &variable2,std::string &variable3)
 {
@@ -96,11 +102,14 @@ std::ifstream groups(file.c_str(), std::ios::in);
 int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfile,std::string PathBms,std::string WorkDir, int extractlabel, int idl , int idh)
 {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline 1//////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+	mode_t ITKmode_F_OK = 0;
 	std::string nameFile;
+
 	nameFile=dataset;	
 	std::ifstream Sub(nameFile.c_str(),std::ios::in);
 	int i=0, ordercsv=0;
-	
+	int error=0;
+	int existingfile=1;
 	if(Sub)
 	{
 		std :: string line;
@@ -138,9 +147,12 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 					file.close();
 					
 					bm::ScriptParser m_Parser;
-					m_Parser.Execute(BatchMakeScriptFile); 	
+					if(m_Parser.Execute(BatchMakeScriptFile)==false ) error=1;	
 				}
 				i++;
+			if(!itksys::SystemTools::GetPermissions((WorkDir+"/Processing/1.MeasurementandSPHARM/"+value1+".ip.SPHARM.vtk").c_str(), ITKmode_F_OK)) existingfile=0;
+				
+			if(!itksys::SystemTools::GetPermissions((WorkDir+"/Processing/1.MeasurementandSPHARM/"+value1+".subj.SPHARM.vtk").c_str(), ITKmode_F_OK)) existingfile=0;
 		}
 		Sub.close();
 	} // fin du if (sub)
@@ -149,6 +161,10 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 	      std::cout << "ERROR: Unable  to open file for reading." << std::endl;
 		return -1;
 	}
+//
+
+if(error==0 && existingfile == 1)
+{
 //////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline2////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	std::string nameFile2;
 	nameFile2=dataset;	
@@ -187,9 +203,12 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 	file2.close();  
 
 	bm::ScriptParser m_Parser1;
-	m_Parser1.Execute(BatchMakeScriptFile2);
+	if(m_Parser1.Execute(BatchMakeScriptFile2)==false) error =1;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////Pipeline3/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
+if(error ==0 && existingfile==1)
+{	
 	std::ifstream Sub2(nameFile.c_str(),std::ios::in);
 	int i2=0;
 	if(Sub2)
@@ -215,7 +234,6 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 				file <<"set (ids "<< extractlabel<<")"<<std::endl;
 				file <<"set (idl "<< idl<<")"<<std::endl;
 				file <<"set (idh "<< idh<<")"<<std::endl;
-				//file <<"include (/work/mjacquem/Slicer3RodentThicknessProcessing/SampleBatchMake/meshintensity.bms)"<<std::endl;
 				file <<"include ("<<configfile<<")"<<std::endl;
 				file <<"include ("<<PathBms<<"/meshintensity.bms)"<<std::endl;
 				file.close();
@@ -232,6 +250,8 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 	      std::cout << "ERROR: Unable  to open file for reading." << std::endl;
 		return -1;
 	}
+}
+if(error == 1) return -1;
 return 0;
 
 }

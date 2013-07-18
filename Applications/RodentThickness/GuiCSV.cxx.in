@@ -178,8 +178,9 @@ QObject::connect(PythonPath, SIGNAL(editingFinished()), this, SLOT(testpythonver
 // set the path to the executable directory for FindProgram
 std::string RTExecutablePath= itksys::SystemTools::GetRealPath( itksys::SystemTools::GetFilenamePath(commandRan).c_str() ); // get the place where the running executable is
 std::string CurrentPathExec= itksys::SystemTools::GetCurrentWorkingDirectory(); // If called by itself ($ RodentThickness) = either in the PATH or in the current directory : will be found either way by find_program
+//m_FindProgramRTExecDirVec.push_back(CurrentPathExec);
 m_FindProgramRTExecDirVec.push_back(RTExecutablePath); // FindProgram will search in the executable directory too
-m_FindProgramRTExecDirVec.push_back(CurrentPathExec);
+std::cout<<"RT: "<<RTExecutablePath<<std::endl;
 
 QString RTexec = QString(${RTExecutablePath}) + QString("/Applications");
 std ::string RTexec1 = RTexec.toStdString();
@@ -260,8 +261,12 @@ if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) 
 		
 		PathFilesBmsPath->setText(QString(program.c_str()));
 	
-	}
-
+	}	
+	
+	idhspinbox->setValue(dirichletHighId);
+	idlspinbox->setValue(dirichletLowId);
+	extractlabelspinbox->setValue(extractlabel);
+	StatisticBox->setChecked(ComputeStatistic);
 
 
  	
@@ -886,47 +891,57 @@ std::cout<<"| Searching the softwares..."; // command line display
 	std::string program;
 	std ::string notFound;
 
-	program = itksys::SystemTools::FindProgram("measureThicknessFilter",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("measureThicknessFilter",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("measureThicknessFilter",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(measureThicknessFilterPath->text().isEmpty()) notFound = notFound + "> measureThicknessFilter\n"; }
 	else measureThicknessFilterPath->setText(QString(program.c_str()));
 
-	program = itksys::SystemTools::FindProgram("GenParaMeshCLP",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("GenParaMeshCLP",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("GenParaMeshCLP",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(GenParaMeshCLPPath->text().isEmpty()) notFound = notFound + "> GenParaMeshCLP\n"; }
 	else GenParaMeshCLPPath->setText(QString(program.c_str()));
 
-	program = itksys::SystemTools::FindProgram("ParaToSPHARMMeshCLP",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("ParaToSPHARMMeshCLP",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("ParaToSPHARMMeshCLP",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(ParaToSPHARMMeshCLPPath->text().isEmpty()) notFound = notFound + "> ParaToSPHARMMeshCLP\n"; }
 	else ParaToSPHARMMeshCLPPath->setText(QString(program.c_str()));
 
-	program = itksys::SystemTools::FindProgram("MeshPointsIntensitySampling",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("MeshPointsIntensitySampling",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("MeshPointsIntensitySampling",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(MeshPointIntensitySamplingPath->text().isEmpty()) notFound = notFound + "> MeshPointsIntensitySampling\n"; }
 	else MeshPointIntensitySamplingPath->setText(QString(program.c_str()));
 
-	program = itksys::SystemTools::FindProgram("ShapeWorksRun",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("ShapeWorksRun",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("ShapeWorksRun",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(ShapeWorksRunPath->text().isEmpty()) notFound = notFound + "> ShapeWorksRun\n"; }
 	else ShapeWorksRunPath->setText(QString(program.c_str()));
 
-	program = itksys::SystemTools::FindProgram("ShapeWorksGroom",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("ShapeWorksGroom",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("ShapeWorksGroom",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(ShapeWorksGroomPath->text().isEmpty()) notFound = notFound + "> ShapeWorksGroom\n"; }
 	else ShapeWorksGroomPath->setText(QString(program.c_str()));
 
-	program = itksys::SystemTools::FindProgram("ImageMath",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("ImageMath",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("ImageMath",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(ImageMathPath->text().isEmpty()) notFound = notFound + "> ImageMath\n"; }
 	else ImageMathPath->setText(QString(program.c_str()));
 	
-	program = itksys::SystemTools::FindProgram("SegPostProcessCLP",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("SegPostProcessCLP",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("SegPostProcessCLP",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(SegPostprocessPath->text().isEmpty()) notFound = notFound + "> SegPostProcessCLP\n"; }
 	else SegPostprocessPath->setText(QString(program.c_str()));
 	
-	program = itksys::SystemTools::FindFile("shapeworks.py",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindFile("shapeworks.py",m_FindProgramRTExecDirVec,1);
 	if(program.empty()) { if(ShapeWorksPythonScriptPath->text().isEmpty()) notFound = notFound + ">shapeworks.py\n"; }
 	else ShapeWorksPythonScriptPath->setText(QString(program.c_str()));
 
-	program = itksys::SystemTools::FindProgram("python",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("python",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("python",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(PythonPath->text().isEmpty()) notFound = notFound + ">python\n"; }
 	else PythonPath->setText(QString(program.c_str()));
 	
-	program = itksys::SystemTools::FindProgram("BinaryToDistanceMap",m_FindProgramRTExecDirVec);
+	program = itksys::SystemTools::FindProgram("BinaryToDistanceMap",m_FindProgramRTExecDirVec,1);
+	if(program.empty()) { program = itksys::SystemTools::FindProgram("BinaryToDistanceMap",m_FindProgramRTExecDirVec); }
 	if(program.empty()) { if(BinaryToDistanceMapPath->text().isEmpty()) notFound = notFound + ">BinaryToDistanceMap\n"; }
 	else BinaryToDistanceMapPath->setText(QString(program.c_str()));
 	
@@ -934,19 +949,20 @@ std::cout<<"| Searching the softwares..."; // command line display
 
 	if(m_statistic==1)
 	{
-		program = itksys::SystemTools::FindFile("concatToColumns.py",m_FindProgramRTExecDirVec);
+		program = itksys::SystemTools::FindFile("concatToColumns.py",m_FindProgramRTExecDirVec,1);
 		if(program.empty()) { if(concatToColumnsPythonScriptPath->text().isEmpty()) notFound = notFound + "> concatToColumns.py\n"; }
 		else concatToColumnsPythonScriptPath->setText(QString(program.c_str()));
 
-		program = itksys::SystemTools::FindFile("vtkPointAttributes.py",m_FindProgramRTExecDirVec);
+		program = itksys::SystemTools::FindFile("vtkPointAttributes.py",m_FindProgramRTExecDirVec,1);
 		if(program.empty()) { if(vtkPointAttributesPythonScriptPath->text().isEmpty()) notFound = notFound + "> vtkPointAttributes.py\n"; }
 		else vtkPointAttributesPythonScriptPath->setText(QString(program.c_str()));
 
-		program = itksys::SystemTools::FindFile("rodentThicknessStats.r",m_FindProgramRTExecDirVec);
+		program = itksys::SystemTools::FindFile("rodentThicknessStats.r",m_FindProgramRTExecDirVec,1);
 		if(program.empty()) { if(RScriptRodentThicknessPath->text().isEmpty()) notFound = notFound + "> rodentThicknessStats.r\n"; }
 		else RScriptRodentThicknessPath->setText(QString(program.c_str()));
 		
-		program = itksys::SystemTools::FindProgram("Rscript",m_FindProgramRTExecDirVec);
+		program = itksys::SystemTools::FindProgram("Rscript",m_FindProgramRTExecDirVec,1);
+	 	if(program.empty()) { program = itksys::SystemTools::FindProgram("Rscript",m_FindProgramRTExecDirVec);}
 		if(program.empty()) { if(RScriptPath->text().isEmpty()) notFound = notFound + "> Rscript\n"; }
 		else RScriptPath->setText(QString(program.c_str()));
 	}

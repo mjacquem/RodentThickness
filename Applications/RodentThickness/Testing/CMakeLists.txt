@@ -55,10 +55,10 @@ add_test(NAME TestExecImageMath COMMAND ${Executablebin}/ImageMath ${TestDataFol
 
 
 ## Test 11
-add_test(NAME TestExecSegPostProcess COMMAND ${Executablebin}/SegPostProcessCLP ${TestDataFolder}/Imagetest.labelMapNCsegmentation.nrrd ${TestingBINdirectory}/Imagetest.labelMapNCsegmentationSegPostProcess.nrrd)
+add_test(NAME TestExecSegPostProcess COMMAND ${Executablebin}/SegPostProcessCLP ${TestDataFolder}/Imagetest.labelMapNCsegmentation.nrrd ${TestingBINdirectory}/Imagetest.labelMapNCsegmentationSegPostProcess.nrrd --UseUnitSpacing)
 
 #Test 12 
-add_test(NAME TestExecGenParaMeshCLP COMMAND ${Executablebin}/GenParaMeshCLP ${TestDataFolder}/Imagetest.labelMapNCsegmentationSegPostProcess.nrrd --label 1 ${TestingBINdirectory}/test_para.vtk ${TestingBINdirectory}/test_surf.vtk --UseUnitSpacing)
+add_test(NAME TestExecGenParaMeshCLP COMMAND ${Executablebin}/GenParaMeshCLP ${TestDataFolder}/Imagetest.labelMapNCsegmentationSegPostProcess.nrrd --label 1 ${TestingBINdirectory}/test_para.vtk ${TestingBINdirectory}/test_surf.vtk )
 
 #test13
 add_test(NAME TestExecParaToSPHARMMeshCLP COMMAND ${Executablebin}/ParaToSPHARMMeshCLP ${TestDataFolder}/test_para.vtk ${TestDataFolder}/test_surf.vtk --subdivLevel 10 --spharmDegree 20 ${TestingBINdirectory}/test.ip.)

@@ -1,5 +1,10 @@
 # include <iostream>
-#include <unistd.h>
+
+
+#include <unistd.h> 
+
+
+
 
 #include "string"
 #include "errno.h"
@@ -109,7 +114,7 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 	nameFile2=dataset;	
 	int number_of_subject = GetNumberGroups(nameFile2);
 	number_of_subject = number_of_subject - 1; // First line isn't a group name
- 	
+ 	int error=0;
 //Initialisations
 	std :: vector<std :: string> groupIds, subj;
 	std::string final_groups, subjGroup;
@@ -139,16 +144,18 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 	file2.close();  
 
 	bm::ScriptParser m_Parser1;
-	m_Parser1.Execute(BatchMakeScriptFile2);
+	if(m_Parser1.Execute(BatchMakeScriptFile2) == false ) error=1;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline2/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+string surfacemodel;
+if(error==0)
+{
 
 	std::string nameFile;
 	nameFile=dataset;	
 	std::ifstream Sub(nameFile.c_str(),std::ios::in);
 	int i=0;
-	string surfacemodel;
+	
 	if(Sub)
 	{
 		std :: string line;
@@ -180,7 +187,7 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 					file.close();
 					
 					bm::ScriptParser m_Parser;
-					m_Parser.Execute(BatchMakeScriptFile); 	
+					if(m_Parser.Execute(BatchMakeScriptFile) ==false) error=1; 	
 				}
 			i++;
 		}
@@ -191,8 +198,11 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 	      std::cout << "ERROR: Unable  to open file for reading." << std::endl;
 	return -1;
 	}
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline3////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //file bms
+if(error==0)
+{
 	std::string BatchMakeScriptFile1 = WorkDir+"/Script/"+"slicer3correspondence.bms";
 	std::ofstream file6( BatchMakeScriptFile1.c_str());
 	file6 <<"set (surfacemodels "<< surfacemodel<<")"<<std::endl;
@@ -205,7 +215,8 @@ int StatisticalpartRunner :: RunBatchmakeStatisticalScript(std::string dataset,s
 
 	bm::ScriptParser m_Parser2;
 	m_Parser2.Execute(BatchMakeScriptFile1);
-
+}
+if(error == 1) return -1;
 return 0;
 	
 }

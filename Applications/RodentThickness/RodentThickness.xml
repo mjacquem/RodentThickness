@@ -83,7 +83,7 @@
       <label>Dirichlet High Id</label>
       <longflag>--idh</longflag>
       <description>Id number for the high Dirichlet boundary condition.</description>
-      <default>5</default>
+      <default>0</default>
       <constraints>
         <minimum>0</minimum>
         <maximum>255</maximum>
