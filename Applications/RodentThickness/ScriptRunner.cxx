@@ -48,8 +48,8 @@ int ScriptRunner :: GetNumberGroups(std::string file) //count the number of grou
 	    return c;
 
 }
-int ScriptRunner :: GetGroups(std::string file, std :: vector<std :: string>  &groupIds , std :: vector<std :: string>  &subjgroups, std :: vector<std :: string>  &Groups) //search the different groups and define variable for batchamke script
-{
+int ScriptRunner :: GetGroups(std::string file, std :: vector<std :: string>  &groupIds , std :: vector<std :: string>  &subjgroups, std :: vector<std :: string>  &Groups) 
+{//search the different groups and define variable for batchamke script
 std::ifstream groups(file.c_str(), std::ios::in);
     int first_line = 0;
     if (groups)
