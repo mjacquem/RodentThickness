@@ -14,6 +14,8 @@ set(proj ${extProjName}) #This local name
 # unset(${extProjName}_DIR CACHE)
 #endif()
 
+
+
 # Sanity checks
 if(DEFINED ${extProjName}_DIR AND NOT EXISTS ${${extProjName}_DIR})
   message(FATAL_ERROR "${extProjName}_DIR variable is defined but corresponds to non-existing directory")
@@ -43,8 +45,11 @@ if(NOT DEFINED ${extProjName}_DIR AND NOT ${USE_SYSTEM_${extProjName}})
   set(VTK_WRAP_TCL OFF)
   set(VTK_WRAP_PYTHON OFF)
 
+
+
+
   if (Slicer_USE_PYTHONQT)
-    set(VTK_WRAP_PYTHON ON)
+    set(VTK_WRAP_PYTHON OFF)
   endif()
 
   set(VTK_PYTHON_ARGS)
@@ -55,8 +60,11 @@ if(NOT DEFINED ${extProjName}_DIR AND NOT ${USE_SYSTEM_${extProjName}})
       -DPYTHON_INCLUDE_DIR:PATH=${slicer_PYTHON_INCLUDE}
       -DPYTHON_LIBRARY:FILEPATH=${slicer_PYTHON_LIBRARY}
       )
+   
   endif()
 
+
+      
   set(VTK_QT_ARGS)
   if(${PROJECT_NAME}_USE_QT)
     if(NOT APPLE)
@@ -142,6 +150,8 @@ if(NOT DEFINED ${extProjName}_DIR AND NOT ${USE_SYSTEM_${extProjName}})
       ${VTK_QT_ARGS}
       ${VTK_MAC_ARGS}
       )
+
+
   ### --- End Project specific additions
   set(${proj}_REPOSITORY ${git_protocol}://vtk.org/VTK.git CACHE STRING "" FORCE)
   set(${proj}_GIT_TAG "v5.10.1" CACHE STRING "" FORCE)
