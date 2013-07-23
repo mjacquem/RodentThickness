@@ -18,7 +18,7 @@
 #include <itksys/SystemTools.hxx> 
 
 
-void ScriptRunner :: readFileCSV(std::string line, std::string &variable1, std::string &variable2,std::string &variable3)
+void ScriptRunner :: readFileCSV(std::string line, std::string &variable1, std::string &variable2,std::string &variable3) //read the csv file 
 {
 	int pos1=0, pos2=0, pos3=0;
 
@@ -32,7 +32,7 @@ void ScriptRunner :: readFileCSV(std::string line, std::string &variable1, std::
 	variable3.assign(line,pos2+1,pos3-pos2-1);	
 
 }
-int ScriptRunner :: GetNumberGroups(std::string file)
+int ScriptRunner :: GetNumberGroups(std::string file) //count the number of groups
 {
 	std::ifstream groups(file.c_str(), std::ios::in);
      	int c = 0;
@@ -48,7 +48,7 @@ int ScriptRunner :: GetNumberGroups(std::string file)
 	    return c;
 
 }
-int ScriptRunner :: GetGroups(std::string file, std :: vector<std :: string>  &groupIds , std :: vector<std :: string>  &subjgroups, std :: vector<std :: string>  &Groups, int ordercsv)
+int ScriptRunner :: GetGroups(std::string file, std :: vector<std :: string>  &groupIds , std :: vector<std :: string>  &subjgroups, std :: vector<std :: string>  &Groups) //search the different groups and define variable for batchamke script
 {
 std::ifstream groups(file.c_str(), std::ios::in);
     int first_line = 0;
@@ -100,14 +100,15 @@ std::ifstream groups(file.c_str(), std::ios::in);
 }
 
 int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfile,std::string PathBms,std::string WorkDir, int extractlabel, int idl , int idh)
-{
+{ //Run 3 Batchamke script 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline 1//////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+	
 	mode_t ITKmode_F_OK = 0;
 	std::string nameFile;
 
 	nameFile=dataset;	
 	std::ifstream Sub(nameFile.c_str(),std::ios::in);
-	int i=0, ordercsv=0;
+	int i=0;
 	int error=0;
 	int existingfile=1;
 	if(Sub)
@@ -117,7 +118,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 		while(getline( Sub, line ))
 		{  			
 					std :: string value1,value2,value3;
-					std::string BatchMakeScriptFile = WorkDir+"/Script/"+"slicer3ThicknessSPHARM.bms";
+					std::string BatchMakeScriptFile = WorkDir+"/Script/"+"slicer3ThicknessSPHARM.bms"; //create a new batchmake script 
 					std::ofstream file( BatchMakeScriptFile.c_str());
 				
 				if(i==0)
@@ -133,7 +134,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 				if (i>0)
 				{	
 					readFileCSV(line, value1,value2,value3);
-						
+						//write in the batchmake script
 					file <<"set (group "<< value3<<")"<<std::endl;
 					file <<"set (case1 "<< value1<<")"<<std::endl;
 					file <<"set (labelMapInput "<< value2<<")"<<std::endl;
@@ -143,11 +144,11 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 					file <<"set (idl "<< idl<<")"<<std::endl;
 					file <<"set (idh "<< idh<<")"<<std::endl;
 					file <<"include ("<<configfile<<")"<<std::endl;
-					file <<"include ("<<PathBms<<"/ThicknessSpharm.bms)"<<std::endl;
+					file <<"include ("<<PathBms<<"/ThicknessSpharm.bms)"<<std::endl; 
 					file.close();
 					
 					bm::ScriptParser m_Parser;
-					if(m_Parser.Execute(BatchMakeScriptFile)==false ) error=1;	
+					if(m_Parser.Execute(BatchMakeScriptFile)==false ) error=1;	//Run the batchmake script where ThicknessSpharm.bms (Data) is included 
 				}
 				i++;
 			if(!itksys::SystemTools::GetPermissions((WorkDir+"/Processing/1.MeasurementandSPHARM/"+value1+".ip.SPHARM.vtk").c_str(), ITKmode_F_OK)) existingfile=0;
@@ -175,11 +176,11 @@ if(error==0 && existingfile == 1)
 	std :: vector<std :: string> groupIds, Groups, subj;
 	std::string final_groups, subjGroup;
 
-	int L = GetGroups(nameFile2, groupIds, subj, Groups,ordercsv);  
+	int L = GetGroups(nameFile2, groupIds, subj, Groups);  
 	if(L==-1) return -1;
 	int Length=Groups.size();
 
-	for (int i=0;i<L;++i)
+	for (int i=0;i<L;++i)  //create variable to give to the new batchamke script
   	{  		 
 		if (i != L-1) final_groups = final_groups + groupIds[i] + ' ';
     		else final_groups = final_groups + groupIds[i];
@@ -191,7 +192,7 @@ if(error==0 && existingfile == 1)
  	 }
   	
 //file bms
-	std::string BatchMakeScriptFile2 = WorkDir+"/Script/"+"slicer3shapeworks.bms";
+	std::string BatchMakeScriptFile2 = WorkDir+"/Script/"+"slicer3shapeworks.bms"; //create a new batchamke script
 	std::ofstream file2( BatchMakeScriptFile2.c_str());
  
 	file2 <<"set (groupIds "<< final_groups<<")"<<std::endl;
@@ -199,7 +200,7 @@ if(error==0 && existingfile == 1)
 	file2 <<"set (WorkDir "<< WorkDir<<")"<<std::endl;
 	file2 <<"set (configfile "<< configfile<<")"<<std::endl;	
 	file2 <<"include ("<<configfile<<")"<<std::endl;
-	file2 <<"include ("<<PathBms<<"/shapeworks.bms)"<<std::endl;
+	file2 <<"include ("<<PathBms<<"/shapeworks.bms)"<<std::endl;  //Run the batchmake script where shapeworks.bms (Data) is included 
 	file2.close();  
 
 	bm::ScriptParser m_Parser1;
@@ -221,7 +222,7 @@ if(error ==0 && existingfile==1)
 							
 				std :: string value1,value2,value3;
 			
-				std::string BatchMakeScriptFile5 = WorkDir+"/Script/"+"slicer3meshintensity.bms";
+				std::string BatchMakeScriptFile5 = WorkDir+"/Script/"+"slicer3meshintensity.bms";  //create a new batchamke script
 				std::ofstream file( BatchMakeScriptFile5.c_str());
 
 				readFileCSV(line, value1,value2,value3);
@@ -235,7 +236,7 @@ if(error ==0 && existingfile==1)
 				file <<"set (idl "<< idl<<")"<<std::endl;
 				file <<"set (idh "<< idh<<")"<<std::endl;
 				file <<"include ("<<configfile<<")"<<std::endl;
-				file <<"include ("<<PathBms<<"/meshintensity.bms)"<<std::endl;
+				file <<"include ("<<PathBms<<"/meshintensity.bms)"<<std::endl;  //Run the batchmake script where meshintensity.bms (Data) is included 
 				file.close();
 				
 				bm::ScriptParser m_Parser;

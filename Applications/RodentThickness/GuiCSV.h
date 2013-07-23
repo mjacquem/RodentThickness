@@ -76,14 +76,13 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 
 
 	private:
-
+/*DATASET*/	QString m_CSVseparator;
 		bool m_noGUI;
 		bool m_ScriptRunning;
 		bool m_computestatistic;
 		bool m_ErrorDetectedInConstructor; // useful in --nogui mode to exit the program without trying the compute function	
 		std::vector< std::string > m_FindProgramRTExecDirVec;
-/*DATASET*/	QString m_CSVseparator;
-/*PARAMETERS*/	int m_ParamSaved;		
+/*PARAMETERS*/		
 		QString m_StatisticaldatasetPath;	
 		QString m_OutputPath;
 		QString m_FilesBmsPath;
@@ -93,10 +92,11 @@ class GuiCSV : public QMainWindow, public Ui::MainWindow
 		int m_idl;
 		int m_idh;
 		int m_idn;
-		std::string m_notFound;
-		QProcess * m_ScriptQProcess;
 		int m_statistic;
-/*MAIN FUNCT*/	ScriptRunner* m_scriptrunner;
+		std::string m_notFound;
+		
+/*MAIN FUNCT*/	QProcess * m_ScriptQProcess;
+		ScriptRunner* m_scriptrunner;
 		StatisticalpartRunner*  m_statisticalpartrunner;
 };
 #endif

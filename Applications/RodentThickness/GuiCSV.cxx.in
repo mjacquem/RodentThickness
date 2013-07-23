@@ -1,3 +1,4 @@
+/* homemade */
 #include "GuiCSV.h"
 /*Qt classes*/
 #include <QFileDialog>
@@ -27,12 +28,7 @@
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 #include <itksys/SystemTools.hxx> // for FindProgram() and GetFilenamePath()
-/* Values of the C variables:
-F_OK= 0
-W_OK= 2
-R_OK= 4
-X_OK= 1
-*/
+/* ITK modes = same values than the C variables: F_OK W_OK R_OK X_OK */
 mode_t ITKmode_F_OK = 0;
 mode_t ITKmode_W_OK = 2;
 mode_t ITKmode_R_OK = 4;
@@ -41,12 +37,15 @@ mode_t ITKmode_X_OK = 1;
 
 
 
-
+  /////////////////////////////////////////
+ // CONSTRUCTOR //
+/////////////////////////////////////////
 
 GuiCSV::GuiCSV(std::string dataset,std::string configfile,std::string PathBms,bool noGUI,bool ComputeStatistic,std::string WorkDir,int extractlabel,int dirichletLowId,int dirichletHighId, std::string commandRan) : QMainWindow()
 {
 setupUi(this);
 
+/* Variables */
 m_ErrorDetectedInConstructor=false;
 RScriptButton->setEnabled(false);
 RScriptPathButton->setEnabled(false);
@@ -56,18 +55,19 @@ RScriptResetButton->setEnabled(false);
 RScriptPathResetButton->setEnabled(false);
 concatToColumnsPythonScriptResetButton->setEnabled(false);
 vtkPointAttributesPythonScriptResetButton->setEnabled(false);
-
-
-
-m_scriptrunner = new ScriptRunner;
-m_statisticalpartrunner = new StatisticalpartRunner;
-m_noGUI=noGUI;
 m_ScriptRunning=false;
+//XML
+m_noGUI=noGUI;
 m_computestatistic=ComputeStatistic;
 m_label=extractlabel;
-
 m_idl=dirichletLowId;
 m_idh=dirichletHighId;
+
+/* Script writing object */
+m_scriptrunner = new ScriptRunner;  // delete in "void GuiCSV::ExitProgram()"
+m_statisticalpartrunner = new StatisticalpartRunner;
+
+
 
 if(!m_computestatistic) 
 {
@@ -76,12 +76,15 @@ m_statistic=0;
 else m_statistic=1;
 WidgetHasChangedParam();
 m_CSVseparator = QString(",");
-m_ParamSaved=1;
+
+
 if(!m_noGUI)
 {
+/* Objects connections */
 m_ScriptQProcess = new QProcess;
 QObject::connect(m_ScriptQProcess, SIGNAL(finished(int)), this, SLOT(ScriptQProcessDone(int)));
 
+/* When any value changes for the parameters*/
 QObject::connect(extractlabelspinbox, SIGNAL(valueChanged(int)), this, SLOT(ChangeValueParameters()));
 QObject::connect(idlspinbox, SIGNAL(valueChanged(int)), this, SLOT(ChangeValueParameters()));
 QObject::connect(idhspinbox, SIGNAL(valueChanged(int)), this, SLOT(ChangeValueParameters()));
@@ -180,7 +183,7 @@ std::string RTExecutablePath= itksys::SystemTools::GetRealPath( itksys::SystemTo
 std::string CurrentPathExec= itksys::SystemTools::GetCurrentWorkingDirectory(); // If called by itself ($ RodentThickness) = either in the PATH or in the current directory : will be found either way by find_program
 //m_FindProgramRTExecDirVec.push_back(CurrentPathExec);
 m_FindProgramRTExecDirVec.push_back(RTExecutablePath); // FindProgram will search in the executable directory too
-std::cout<<"RT: "<<RTExecutablePath<<std::endl;
+
 
 QString RTexec = QString(${RTExecutablePath}) + QString("/Applications");
 std ::string RTexec1 = RTexec.toStdString();
@@ -194,7 +197,7 @@ QString ScriptPython = QString("${CMAKE_CURRENT_SOURCE_DIR}") + QString("/Data")
 std ::string datafolderscript = ScriptPython.toStdString();
 QString ScriptPython1 = QString("${CMAKE_CURRENT_SOURCE_DIR}") + QString("/Applications/RodentThickness/Data");
 std ::string datafolderscript1 = ScriptPython1.toStdString();
-//std ::cout << datafolderscript << std ::endl;
+
 m_FindProgramRTExecDirVec.push_back(datafolderscript);
 m_FindProgramRTExecDirVec.push_back(datafolderscript1);
 std :: string pyscript = datafolderscript +"/pythonscript/";
@@ -210,7 +213,7 @@ m_FindProgramRTExecDirVec.push_back(rscriptpath1);
 std :: string rscriptpath2 = RTExecutablePath +"/Data/rscript/";
 m_FindProgramRTExecDirVec.push_back(rscriptpath2);
 
-if( configfile.empty() )  ConfigDefault();
+if( configfile.empty() )  ConfigDefault();  /* Initialize the options */
 
 // Look for the config file in the executable directory
 std::string SoftConfigPath= RTExecutablePath + "/RodentThicknessConfigfile.bms";
@@ -222,7 +225,7 @@ SoftConfigPath = CurrentPath + "/RodentThicknessConfigfile.bms";
 if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) ) if( LoadConfig(QString( SoftConfigPath.c_str() )) == -1 ) m_ErrorDetectedInConstructor=true; // if file exists
 
 	 
-
+	// Read the csv file give by command line
 	if( !dataset.empty() ) 
 	{
 		if( ReadCSV( QString(dataset.c_str())) == -1 ) m_ErrorDetectedInConstructor=true;
@@ -232,7 +235,7 @@ if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) 
 		std::cout<<"| Please give a dataset file"<<std::endl; // command line display
 		m_ErrorDetectedInConstructor=true;
 	} 		
-
+	// Load the configuration file give by command line
 	if( !configfile.empty() ) 
 	{
 		if( LoadConfig( QString(configfile.c_str())) == -1 ) m_ErrorDetectedInConstructor=true;
@@ -242,6 +245,7 @@ if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) 
 		std::cout<<"| Please give a parameter file"<<std::endl; // command line display
 		m_ErrorDetectedInConstructor=true;
 	}
+	// Load the output directory give by command line
 	if( !WorkDir.empty() ) 
 	{
 		OutputFolderPath->setText(QString(WorkDir.c_str()));
@@ -251,6 +255,7 @@ if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) 
 		std::cout<<"| Please give an output directory"<<std::endl; // command line display
 		m_ErrorDetectedInConstructor=true;
 	}
+	// Load the batchmake script directory give by command line
 	if( !PathBms.empty() ) 
 	{	
 		PathFilesBmsPath->setText(QString(PathBms.c_str()));
@@ -262,13 +267,13 @@ if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) 
 		PathFilesBmsPath->setText(QString(program.c_str()));
 	
 	}	
-	
+	// Load the values of the parameters give by command line
 	idhspinbox->setValue(dirichletHighId);
 	idlspinbox->setValue(dirichletLowId);
 	extractlabelspinbox->setValue(extractlabel);
 	StatisticBox->setChecked(ComputeStatistic);
 
-
+/* NOW that all the files have been loaded => test if all the paths are here */
  	
 
 	std::string notFound;
@@ -330,7 +335,7 @@ void GuiCSV::closeEvent(QCloseEvent* event)
  //                ROWS                //
 /////////////////////////////////////////
 
-void GuiCSV::OpenAddRow() /*SLOT*/
+void GuiCSV::OpenAddRow() /*SLOT*/  //Add row in the table
 {
 	
 	int ItemRow;
@@ -368,7 +373,7 @@ void GuiCSV::FullTableWidget(int row, int column)
 {	
 	if (column==1)
 	{
-	QString item=QFileDialog::getOpenFileName(this, "Open image", QString(), "NRRD Images (*.nrrd *.nhdr)");
+	QString item=QFileDialog::getOpenFileName(this, "Open image", QString(), "NRRD Images (*.nrrd *.nhdr)"); //Open nrrd image
 	QTableWidgetItem * Itemcell=new QTableWidgetItem( tr("%1").arg( item ) );
 	
 	tableWidget->setItem(row,column,Itemcell);
@@ -391,7 +396,7 @@ int GuiCSV::ReadCSV(QString CSVfile)
 {	
 	if(!CSVfile.isEmpty())
 	{
-		if( itksys::SystemTools::GetPermissions(CSVfile.toStdString().c_str(), ITKmode_F_OK) ) // Test if the csv file exists => unistd::access() returns 0 if F(file)_OK
+		if( itksys::SystemTools::GetPermissions(CSVfile.toStdString().c_str(), ITKmode_F_OK) ) // Test if the csv file exists => itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 		{
 			QFile file(CSVfile);
 
@@ -447,11 +452,11 @@ int GuiCSV::ReadCSV(QString CSVfile)
 }
 void GuiCSV::SaveCSVDatasetBrowseSlot()
 {
-	if(tableWidget->rowCount()<1)
+	if(tableWidget->rowCount()<1) 
 	{
 		QMessageBox::critical(this, "No Cases", "Please give at least one case");
 	}
-	else if(checkdataset()==1)
+	else if(checkdataset()==1)  //Verify the data 
 	{
 		 QMessageBox::critical(this, "Item Empty", "Please enter all the item for subject and Image");
 	}
@@ -465,7 +470,7 @@ void GuiCSV::SaveCSVDatasetBrowseSlot()
 	}
 	else	
 	{	
-		QString CSVBrowseName = QFileDialog::getSaveFileName(this, tr("Save Dataset"),"/dataset.csv",tr("CSV File (*.csv)"));
+		QString CSVBrowseName = QFileDialog::getSaveFileName(this, tr("Save Dataset"),"/dataset.csv",tr("CSV File (*.csv)")); 
 		if(!CSVBrowseName.isEmpty())
 		{	
 			if(SaveCSVDatasetBrowse(CSVBrowseName)==0) QMessageBox::information(this, "Saving succesful", "Dataset has been succesfully saved at" + CSVBrowseName);
@@ -481,7 +486,7 @@ int GuiCSV::SaveCSVDatasetBrowse(QString CSVBrowseName) /*SLOT*/
 			std::cout<<"| Generating Dataset csv file..."; // command line display
 	
 			QTextStream stream( &file );
-			stream << QString("subjId") << m_CSVseparator << QString("labelMapInput") << m_CSVseparator << QString("group")<< endl;
+			stream << QString("subjId") << m_CSVseparator << QString("labelMapInput") << m_CSVseparator << QString("group")<< endl;  //first line 
 		
 			for(int i=0; i < tableWidget->rowCount();i++) 
 			{	
@@ -515,7 +520,7 @@ void GuiCSV::LoadConfigSlot() /*SLOT*/
 
 int GuiCSV::LoadConfig(QString configFile) // returns -1 if fails, otherwise 0
 {
-	if(itksys::SystemTools::GetPermissions(configFile.toStdString().c_str(), ITKmode_F_OK)) // Test if the config file exists => unistd::access() returns 0 if F(file)_OK
+	if(itksys::SystemTools::GetPermissions(configFile.toStdString().c_str(), ITKmode_F_OK)) // Test if the config file exists => itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 	{
 		std::cout<<"| Loading Configuration file \'"<< configFile.toStdString() <<"\'..."; // command line display
 
@@ -531,7 +536,7 @@ int GuiCSV::LoadConfig(QString configFile) // returns -1 if fails, otherwise 0
 			int n=line.size();
 			line.remove(n-1,1);
 			QStringList list = line.split(" ");
-			
+			//Search al the path of the tool
 			if(!list.at(0).contains(QString("Set(measureThicknessFilterPath")))
 			{
 				if(!m_noGUI)
@@ -842,7 +847,7 @@ void GuiCSV::SaveConfig(QString ConfigBrowseName) /*SLOT*/
 
 			QTextStream stream( &file );
 
-			
+			//save all the path of the different tools in a batchmake script
 			stream << "Set(measureThicknessFilterPath " << measureThicknessFilterPath->text() <<")"<< endl;
 			stream << "Set(GenParaMeshCLPPath " << GenParaMeshCLPPath->text() <<")"<< endl;
 			stream << "Set(ParaToSPHARMMeshCLPPath " << ParaToSPHARMMeshCLPPath->text() <<")"<< endl;
@@ -972,8 +977,8 @@ std::cout<<"| Searching the softwares..."; // command line display
 	
 }
 
-void GuiCSV::BrowseSoft(int soft)  /*SLOT*/ //softwares: 
-{
+void GuiCSV::BrowseSoft(int soft)  /*SLOT*/  //softwares: 1=measureThicknessFilter, 2=GenParaMeshCLP, 3=ParaToSPHARMMeshCLP, 4=MeshPointIntensitySampling, 5=ShapeWorksRun, 6=ImageMath, 7=SegPostprocess,13=Python, 14= Rscript 16=BinaryToDistanceMap 
+{											
 	QString SoftBrowse;
 	
 	if(soft ==11 ) SoftBrowse = QFileDialog::getExistingDirectory(this);
@@ -1132,7 +1137,7 @@ dlg->setVisible(!dlg->isVisible()); // display the window
  //         WIDGET CHANGE SLOT          //
 /////////////////////////////////////////
 
-void GuiCSV::WidgetHasChangedParam() /*SLOT*/ //called when any widget is changed
+void GuiCSV::WidgetHasChangedParam() /*SLOT*/ //called when compute statics change
 {
 	if(StatisticBox->isChecked()) 
 	{
@@ -1196,7 +1201,7 @@ void GuiCSV::WidgetHasChangedParam() /*SLOT*/ //called when any widget is change
  //           CHECK IMAGE OK            //
 /////////////////////////////////////////
 
-int GuiCSV::checkImage(std::string Image) // returns 1 if not an image, 2 if not a dti, otherwise 0
+int GuiCSV::checkImage(std::string Image) // returns 1 if not an image, otherwise 0
 {
 	typedef itk::Image < double , 4 > ImageType; //itk type for image
 	typedef itk::ImageFileReader <ImageType> ReaderType; //itk reader class to open an image
@@ -1214,7 +1219,7 @@ int GuiCSV::checkImage(std::string Image) // returns 1 if not an image, 2 if not
 	}
 	return 0;
 }
-int GuiCSV::checkdataset()
+int GuiCSV::checkdataset() //verify if all the cases are fill , return 0 if its good 
 {	
 	int m=0,n=0;
 	for(int i=0; i < tableWidget->rowCount();i++) 
@@ -1250,7 +1255,7 @@ int GuiCSV::checkdataset()
 	int mn=m+n;
 	return mn;	
 }
-int GuiCSV ::checknumberofgroups()
+int GuiCSV ::checknumberofgroups() //verify the number of different groups, 
 {
 	
 	QTableWidgetItem* secondgroup=tableWidget->item(0,2) ;
@@ -1281,7 +1286,7 @@ int GuiCSV ::checknumberofgroups()
 		--datatable;
 		}	
 		if (comp==1  && m==0)
-		{	std::cout<<"2"<<std::endl;
+		{	
 			secondgroup = tableWidget->item(i,2);
 			m=1;
 			comp=0;
@@ -1289,7 +1294,7 @@ int GuiCSV ::checknumberofgroups()
 		if ( comp==1 && m==1)
 		{
 			out=1;	
-			std::cout<<"3"<<std::endl;
+			
 		}	
  
 
@@ -1358,7 +1363,7 @@ void GuiCSV::ScriptQProcessDone(int ExitCode) /*SLOT*/
 }
 ///////////////ExtractLabel
 
-void  GuiCSV:: ChangeValueParameters()
+void  GuiCSV:: ChangeValueParameters() //change the value of the parameters
 {
 	m_label=extractlabelspinbox->value();
 	m_idl=idlspinbox->value();
@@ -1426,22 +1431,22 @@ int GuiCSV::LaunchScriptWriter()
 	 	QMessageBox::critical(this, "Item Empty", "Please enter all the item for subject and Image and Group");
 		return -1;
 	}
-if(m_statistic==1)
-{
+  if(m_statistic==1)
+  {
 	if(checknumberofgroups()==1)
 	{
 	 	QMessageBox::critical(this, "Number of groups", "Two differents groups maximum");
 		return -1;
 	}				
-}
+  }
 	int ExitCode=0;
 	std::string program;
 
 	for(int i=0; i <tableWidget->rowCount() ;i++) 
 	{	
-		std::string CurrentCase = tableWidget->item(i,1)->text().toStdString();//.substr( tableWidget->item(i,2)->text().split(":").at(0).size()+2 );
+		std::string CurrentCase = tableWidget->item(i,1)->text().toStdString();//
 		
-		if( ! itksys::SystemTools::GetPermissions(CurrentCase.c_str(), ITKmode_F_OK)) // Test if the case files exist => unistd::access() returns 0 if F(file)_OK
+		if( ! itksys::SystemTools::GetPermissions(CurrentCase.c_str(), ITKmode_F_OK)) // Test if the case files exist =>itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 		{
 			std::string text = "This file does not exist :\n" + CurrentCase;
 			QMessageBox::critical(this, "Case does not exist", QString(text.c_str()) );
@@ -1458,19 +1463,19 @@ if(m_statistic==1)
 	}
 	
 /* Output */
-	m_OutputPath=OutputFolderPath->text();// ! itksys::SystemTools::GetPermissions(m_OutputPath.toStdString().c_str(), ITKmode_F_OK)
-	if( ! itksys::SystemTools::GetPermissions(m_OutputPath.toStdString().c_str(), ITKmode_F_OK) ) // Test if the folder exists => unistd::access() returns 0 if F(file)_OK
+	m_OutputPath=OutputFolderPath->text();// 
+	if( ! itksys::SystemTools::GetPermissions(m_OutputPath.toStdString().c_str(), ITKmode_F_OK) ) // Test if the folder exists => itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 	{
 		QMessageBox::critical(this, "No Output Folder", "The output folder does not exist");
 		return -1;
 	}
-	if( ! itksys::SystemTools::GetPermissions(m_OutputPath.toStdString().c_str(), ITKmode_W_OK) ) // Test if the program can write in the output folder => unistd::access() returns 0 if W(write)_OK
+	if( ! itksys::SystemTools::GetPermissions(m_OutputPath.toStdString().c_str(), ITKmode_W_OK) ) // Test if the program can write in the output folder => itksys::SystemTools::GetPermissions() returns true if ITKmode_W_OK
 	{
 		QMessageBox::critical(this, "Output Folder Unwritable", "Please give an output folder authorized in reading");
 		return -1;
 	}
 
-	if(! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() ).c_str(), ITKmode_F_OK)) // Test if the main folder does not exists => unistd::access() returns 0 if F(file)_OK
+	if(! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() ).c_str(), ITKmode_F_OK)) // Test if the main folder does not exists => itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 	{
 		std::cout<<"| Creating Main directory..."<<std::endl; // command line display
 		QProcess * mkdirMainProcess = new QProcess;
@@ -1479,7 +1484,7 @@ if(m_statistic==1)
 		ExitCode = mkdirMainProcess->execute( program.c_str() );
 	}
 
-	if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Processing").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
+	if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Processing").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 	{
 		std::cout<<"| Creating output directory..."<<std::endl; // command line display
 		QProcess * mkdirScriptProcess = new QProcess;
@@ -1489,7 +1494,7 @@ if(m_statistic==1)
 	}
 	if(m_statistic==1)
 	{
-		if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Statistical").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
+		if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Statistical").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 		{
 			std::cout<<"| Creating Statistical directory..."<<std::endl; // command line display
 			QProcess * mkdirScriptProcess = new QProcess;
@@ -1498,7 +1503,7 @@ if(m_statistic==1)
 			ExitCode = mkdirScriptProcess->execute( program.c_str() );
 		}
 	}
-	if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Script").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists => unistd::access() returns 0 if F(file)_OK
+	if( ! itksys::SystemTools::GetPermissions((m_OutputPath.toStdString() + "/Script").c_str(), ITKmode_F_OK) ) // Test if the script folder does not exists =>itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 	{
 		std::cout<<"| Creating Script directory..."<<std::endl; // command line display
 		QProcess * mkdirScriptProcess = new QProcess;
@@ -1507,7 +1512,7 @@ if(m_statistic==1)
 		ExitCode = mkdirScriptProcess->execute( program.c_str() );
 	}
 	m_FilesBmsPath=PathFilesBmsPath->text();
-	if(! itksys::SystemTools::GetPermissions(m_FilesBmsPath.toStdString().c_str(), ITKmode_F_OK) ) // Test if the folder exists => unistd::access() returns 0 if F(file)_OK
+	if(! itksys::SystemTools::GetPermissions(m_FilesBmsPath.toStdString().c_str(), ITKmode_F_OK) ) // Test if the folder exists => itksys::SystemTools::GetPermissions() returns true if ITKmode_F(file)_OK
 	{
 		QMessageBox::critical(this, "No Bms Folder", "The bms folder does not exist");
 		return -1;

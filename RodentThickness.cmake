@@ -60,37 +60,17 @@ include(SlicerMacroCheckExternalProjectDependency)
 set( proj ${LOCAL_PROJECT_NAME} )
 option(USE_SPHARM-PDM "Build SPHARM-PDM" ON)
 if(USE_SPHARM-PDM)
- #include(${CMAKE_CURRENT_LIST_DIR}/SuperBuild/External_Spharm-pdm.cmake)
+
  set(${LOCAL_PROJECT_NAME}_DEPENDENCIES spharm-pdm)
 endif()
 
 
- 
-#set(${LOCAL_PROJECT_NAME}_DEPENDENCIES rscript)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/SetExternalProjectOptions.cmake)
-#python test
+
 
 
 add_subdirectory(Applications)
-
-
-#======================================================================================
-#======================================================================================
-# Testing for 
-
-#  set(TestingSRCdirectory ${CMAKE_CURRENT_SOURCE_DIR}/Testing)
-#  set(TestingBINdirectory ${CMAKE_CURRENT_BINARY_DIR}/Testing)
-#  set(TestDataFolder ${TestingSRCdirectory}/Data)
-#  add_library(RodentThicknessLibrary STATIC ${RTsources}) # STATIC is also the default
-#  set_target_properties(RodentThicknessLibrary PROPERTIES COMPILE_FLAGS "-Dmain=ModuleEntryPoint")
-#  target_link_libraries(RodentThicknessLibrary ${QT_LIBRARIES} ${ITK_LIBRARIES} ${BatchMake_LIBRARIES})
-#  set_target_properties(RodentThicknessLibrary PROPERTIES LABELS RodentThickness)
- 
-  # Create Tests
-#  include(CTest)
-#  add_subdirectory( ${TestingSRCdirectory} ) # contains a CMakeLists.txt
-# include_directories( ${TestingSRCdirectory} ) # contains a CMakeLists.txt
 
 
 

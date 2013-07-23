@@ -14,13 +14,13 @@ find_program(pathexecpython
 #-----------------------------------------------------------------------------
 # Superbuild script
 #-----------------------------------------------------------------------------
-if(${LOCAL_PROJECT_NAME}_SUPERBUILD)
+if(${LOCAL_PROJECT_NAME}_SUPERBUILD)   # Default = Superbuild CMakeLists
   project(SuperBuild_${LOCAL_PROJECT_NAME})
   include("${CMAKE_CURRENT_SOURCE_DIR}/Superbuild.cmake")
   return()
 else()
   project(${LOCAL_PROJECT_NAME})
-  include("${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_PROJECT_NAME}.cmake")
+  include("${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_PROJECT_NAME}.cmake") # For the RodentThickness external project
   return()
 endif()
 

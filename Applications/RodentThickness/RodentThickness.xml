@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
   <category>Demonstration </category>
-  <title>Rodent Thickness Measurement and SPHARM </title>
-  <description>Thickness Measurement and SPHARM</description>
+  <title>RodentThickness</title>
+  <description>Rodent Cortical Thickness Analysis</description>
   <version>1.0 </version>
             
   <documentation-url></documentation-url>
@@ -13,7 +13,7 @@
   <acknowledgements></acknowledgements>
  
  <parameters>
-    <label>Thickness Measureent and Spharm</label>
+    <label>Input</label>
     <description>Input parameters</description>
     
       	<file fileExtensions="csv">
@@ -60,7 +60,7 @@
 	<integer>
 		<name>extractlabel</name>
 		<longflag>CortexLevel</longflag>
-		<description>Image Math : Cortex Level</description>
+		<description>Label Cortex Level</description>
 		<label>CortexLevel</label>
 		<default>1</default>
 	</integer>
@@ -68,7 +68,7 @@
     <integer>
       <name>dirichletLowId</name>
       <label>Dirichlet Low Id</label>
-      <longflag>--idl</longflag>
+      <longflag>idl</longflag>
       <description>Id number for the low Dirichlet boundary condition.</description>
       <default>4</default>
       <constraints>
@@ -81,7 +81,7 @@
     <integer>
       <name>dirichletHighId</name>
       <label>Dirichlet High Id</label>
-      <longflag>--idh</longflag>
+      <longflag>idh</longflag>
       <description>Id number for the high Dirichlet boundary condition.</description>
       <default>0</default>
       <constraints>

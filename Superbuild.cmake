@@ -9,7 +9,7 @@ enable_language(CXX)
 #-----------------------------------------------------------------------------
 enable_testing()
 include(CTest)
-
+set( BUILD_SHARED_LIBS OFF CACHE BOOL " Build shared librairies")
 #-----------------------------------------------------------------------------
 include(${CMAKE_CURRENT_SOURCE_DIR}/Common.cmake)
 #-----------------------------------------------------------------------------
@@ -34,7 +34,7 @@ if( RodentThickness_BUILD_SLICER_EXTENSION )
   set( USE_SYSTEM_BatchMake OFF)
   set( USE_SYSTEM_SlicerExecutionModel ON)
   set( USE_SYSTEM_Rscript OFF)
-  set( BUILD_SHARED_LIBS OFF )
+  
   set(EXTENSION_SUPERBUILD_BINARY_DIR ${${EXTENSION_NAME}_BINARY_DIR} )
   unsetForSlicer(NAMES CMAKE_MODULE_PATH CMAKE_C_COMPILER CMAKE_CXX_COMPILER ITK_DIR SlicerExecutionModel_DIR VTK_DIR QT_QMAKE_EXECUTABLE ITK_VERSION_MAJOR CMAKE_CXX_FLAGS CMAKE_C_FLAGS )
   find_package(Slicer REQUIRED)
@@ -110,6 +110,9 @@ option(USE_SYSTEM_VTK "Build using an externally defined version of VTK" OFF)
 option(USE_SYSTEM_BatchMake "Build using an externally defined version of BatchMake" OFF)
 option(USE_SYSTEM_Rscript "Build using an externally defined version of Rscript" OFF)
 
+Set(PYTHON_EXECUTABLE "" CACHE FILEPATH "python executable path")
+Set(PYTHON_LIBRARY "" CACHE FILEPATH "python library ")
+Set(PYTHON_INCLUDE_DIRS "" CACHE FILEPATH "python include directories ")
 #------------------------------------------------------------------------------
 # ${LOCAL_PROJECT_NAME} dependency list
 #------------------------------------------------------------------------------
@@ -119,9 +122,11 @@ include(SlicerMacroCheckExternalProjectDependency)
 
 
 set(ITK_EXTERNAL_NAME ITKv${ITK_VERSION_MAJOR})
-
-set(${LOCAL_PROJECT_NAME}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake)
-#set(${LOCAL_PROJECT_NAME}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake Rscript)
+if(UNIX)
+	set(${LOCAL_PROJECT_NAME}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake Rscript)
+else()
+	set(${LOCAL_PROJECT_NAME}_DEPENDENCIES ${ITK_EXTERNAL_NAME} SlicerExecutionModel VTK BatchMake)
+endif()
 if(BUILD_STYLE_UTILS)
   #list(APPEND ${LOCAL_PROJECT_NAME}_DEPENDENCIES Cppcheck KWStyle Uncrustify)
 endif()
@@ -143,6 +148,9 @@ ExternalProject_Add(${proj}
     ${CMAKE_OSX_EXTERNAL_PROJECT_ARGS}
     ${COMMON_EXTERNAL_PROJECT_ARGS}
     -D${LOCAL_PROJECT_NAME}_SUPERBUILD:BOOL=OFF
+    -D${PYTHON_EXECUTABLE}:PATH=${PYTHON_EXECUTABLE}
+    -D${PYTHON_LIBRARY}:PATH=${PYTHON_LIBRARY}
+    -D${PYTHON_INCLUDE_DIRS}:PATH=${PYTHON_INCLUDE_DIRS}
     -Dpathexecpython:PATH=${pathexecpython}
   INSTALL_COMMAND ""
   )
