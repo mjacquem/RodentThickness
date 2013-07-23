@@ -211,7 +211,7 @@ namespace {
       // PointType p = points->GetElement(i);
       double p[3];
       points->GetPoint(i, p);
-
+	
 			if (_inputAsPhysicalCoord) {
 				ImageType::PointType meshPoint;
 				meshPoint[0] = p[0];
@@ -220,7 +220,7 @@ namespace {
 
 				itk::ContinuousIndex<double, 3> meshIndex;
 				imagePtr->TransformPhysicalPointToContinuousIndex(meshPoint, meshIndex);
-
+				
 				pointIndex[0] = meshIndex[0];
 				pointIndex[1] = meshIndex[1];
 				pointIndex[2] = meshIndex[2];
@@ -229,7 +229,7 @@ namespace {
 					pointIndex[d] = (e[d] * p[d]) / spacing[d];
 				}
 			}
-
+	
       extractValue[i] = interpolator->EvaluateAtContinuousIndex(pointIndex);
       updatePoints(points, i, pointIndex, spacing, origin);
 
@@ -247,13 +247,17 @@ namespace {
           validPointIndex = validPointIndex && (pointIndex[d] > 0);
         }
         updatePoints(points, i, pointIndex, spacing, origin);
-
-        if (validPointIndex) {
+	
+        if (validPointIndex) {	
+	
           extractValue[i] = interpolator->EvaluateAtContinuousIndex(pointIndex); 
+	
           if (extractValue[i] <= lowThreshold) {
             cerr << "error at extracting closest point " << endl;
+	
           }
         } else {
+	
             extractValue[i] = 0;
             cerr << "invalid pointIndex (" << pointIndex[0] << ", " << pointIndex[1] << ", " << pointIndex[2] << ")" << endl;
         }
