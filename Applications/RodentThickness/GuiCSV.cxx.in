@@ -185,33 +185,43 @@ std::string CurrentPathExec= itksys::SystemTools::GetCurrentWorkingDirectory(); 
 m_FindProgramRTExecDirVec.push_back(RTExecutablePath); // FindProgram will search in the executable directory too
 
 
-QString RTexec = QString(${RTExecutablePath}) + QString("/Applications");
-std ::string RTexec1 = RTexec.toStdString();
-m_FindProgramRTExecDirVec.push_back(RTexec1);
 
-QString RTcurrentexec = QString(${CurrentPathExec}) + QString("/Applications");
-std ::string RTcurrentexec1 = RTcurrentexec.toStdString();
-m_FindProgramRTExecDirVec.push_back(RTcurrentexec1);
+std ::string RTexec = RTExecutablePath + "/Applications";
+m_FindProgramRTExecDirVec.push_back(RTexec);
 
-QString ScriptPython = QString("${CMAKE_CURRENT_SOURCE_DIR}") + QString("/Data");
-std ::string datafolderscript = ScriptPython.toStdString();
-QString ScriptPython1 = QString("${CMAKE_CURRENT_SOURCE_DIR}") + QString("/Applications/RodentThickness/Data");
-std ::string datafolderscript1 = ScriptPython1.toStdString();
+std ::string RTcurrentexec = CurrentPathExec + "/Applications";
+m_FindProgramRTExecDirVec.push_back(RTcurrentexec);
 
-m_FindProgramRTExecDirVec.push_back(datafolderscript);
-m_FindProgramRTExecDirVec.push_back(datafolderscript1);
-std :: string pyscript = datafolderscript +"/pythonscript/";
+
+
+std ::string Rscriptpath = RTExecutablePath + "/../Rscript-build/bin";
+m_FindProgramRTExecDirVec.push_back(Rscriptpath);
+
+std ::string Rscriptpathbis = CurrentPathExec + "/Rscript-build/bin";
+m_FindProgramRTExecDirVec.push_back(Rscriptpathbis);
+
+
+QString ScriptPython1 = QString("${CMAKE_CURRENT_SOURCE_DIR}") + QString("/Data");
+std ::string ScriptPython = ScriptPython1.toStdString();
+
+
+
+m_FindProgramRTExecDirVec.push_back(ScriptPython);
+
+std :: string pyscript = ScriptPython +"/pythonscript/";
 m_FindProgramRTExecDirVec.push_back(pyscript);
 std :: string pyscript1 = RTExecutablePath +"/pythonscript/";
 m_FindProgramRTExecDirVec.push_back(pyscript1);
 std :: string pyscript2 = RTExecutablePath +"/Data/pythonscript/";
 m_FindProgramRTExecDirVec.push_back(pyscript2);
-std :: string rscriptpath = datafolderscript +"/rscript/";
+std :: string rscriptpath = ScriptPython +"/rscript/";
 m_FindProgramRTExecDirVec.push_back(rscriptpath);
-std :: string rscriptpath1 = RTExecutablePath +"/rscript/";
-m_FindProgramRTExecDirVec.push_back(rscriptpath1);
+
 std :: string rscriptpath2 = RTExecutablePath +"/Data/rscript/";
 m_FindProgramRTExecDirVec.push_back(rscriptpath2);
+
+
+
 
 if( configfile.empty() )  ConfigDefault();  /* Initialize the options */
 
