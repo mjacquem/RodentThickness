@@ -20,28 +20,28 @@ void StatisticalpartRunner :: readFileCSV(std::string line, std::string &variabl
 {
 	int pos1=0, pos2=0, pos3=0, pos4=0, pos5=0, pos6=0, pos7=0, pos8=0;
 
-	pos1 = line.find('	',0);
+	pos1 = line.find(',',0);
 	variable1.assign(line,0,pos1);			
 				
- 	pos2 = line.find('	',pos1+1);
+ 	pos2 = line.find(',',pos1+1);
 	variable2.assign(line,pos1+1,pos2-pos1-1);		
 			
-	pos3 = line.find('	',pos2+1);
+	pos3 = line.find(',',pos2+1);
 	variable3.assign(line,pos2+1,pos3-pos2-1);		
 	
-	pos4 = line.find('	',pos3+1);
+	pos4 = line.find(',',pos3+1);
 	variable4.assign(line,pos3+1,pos4-pos3-1);	
 
-	pos5 = line.find('	',pos4+1);
+	pos5 = line.find(',',pos4+1);
 	variable5.assign(line,pos4+1,pos5-pos4-1);	
 
-	pos6 = line.find('	',pos5+1);
+	pos6 = line.find(',',pos5+1);
 	variable6.assign(line,pos5+1,pos6-pos5-1);	
 
-	pos7 = line.find('	',pos6+1);
+	pos7 = line.find(',',pos6+1);
 	variable7.assign(line,pos6+1,pos7-pos6-1);	
 
-	pos8 = line.find('	',pos7+1);
+	pos8 = line.find(',',pos7+1);
 	variable8.assign(line,pos7+1,pos8-pos7-1);				   
 }
 int StatisticalpartRunner :: GetNumberGroups(std::string file)

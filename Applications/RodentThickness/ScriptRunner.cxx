@@ -32,12 +32,13 @@ void ScriptRunner :: readFileCSV(std::string line, std::string &variable1, std::
 	variable3.assign(line,pos2+1,pos3-pos2-1);	
 
 }
-int ScriptRunner :: GetNumberGroups(std::string file) //count the number of groups
-{
-	std::ifstream groups(file.c_str(), std::ios::in);
+int ScriptRunner :: GetNumberGroups(std::string file) 
+{	
+std::ifstream groups(file.c_str(), std::ios::in);
+//count the number of groups
      	int c = 0;
     
-	  if (groups)
+	   if(groups)
 	    {
 		std::string s;
 		while ( getline(groups,s) ) c++;
@@ -49,8 +50,10 @@ int ScriptRunner :: GetNumberGroups(std::string file) //count the number of grou
 
 }
 int ScriptRunner :: GetGroups(std::string file, std :: vector<std :: string>  &groupIds , std :: vector<std :: string>  &subjgroups, std :: vector<std :: string>  &Groups) 
-{//search the different groups and define variable for batchamke script
+{
+
 std::ifstream groups(file.c_str(), std::ios::in);
+//search the different groups and define variable for batchamke script
     int first_line = 0;
     if (groups)
     {
@@ -149,11 +152,14 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 					
 					bm::ScriptParser m_Parser;
 					if(m_Parser.Execute(BatchMakeScriptFile)==false ) error=1;	//Run the batchmake script where ThicknessSpharm.bms (Data) is included 
+					
+					if(!itksys::SystemTools::GetPermissions((WorkDir+"/Processing/1.MeasurementandSPHARM/"+value1+".ip.SPHARM.vtk").c_str(), ITKmode_F_OK)) existingfile=0;
+				
+					if(!itksys::SystemTools::GetPermissions((WorkDir+"/Processing/1.MeasurementandSPHARM/"+value1+".subj.SPHARM.vtk").c_str(), ITKmode_F_OK)) existingfile=0;
+
 				}
 				i++;
-			if(!itksys::SystemTools::GetPermissions((WorkDir+"/Processing/1.MeasurementandSPHARM/"+value1+".ip.SPHARM.vtk").c_str(), ITKmode_F_OK)) existingfile=0;
-				
-			if(!itksys::SystemTools::GetPermissions((WorkDir+"/Processing/1.MeasurementandSPHARM/"+value1+".subj.SPHARM.vtk").c_str(), ITKmode_F_OK)) existingfile=0;
+
 		}
 		Sub.close();
 	} // fin du if (sub)
@@ -166,6 +172,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 
 if(error==0 && existingfile == 1)
 {
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////Pipeline2////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	std::string nameFile2;
 	nameFile2=dataset;	

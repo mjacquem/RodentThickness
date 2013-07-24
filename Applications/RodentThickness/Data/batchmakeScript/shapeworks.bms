@@ -7,7 +7,7 @@ WriteFile (${OutDirectoryshapeworks}/inputimage.txt '')
 WriteFile (${OutDirectoryshapeworks}/inputsurfacemodels.txt '')
 WriteFile (${OutDirectoryshapeworks}/outputCorrespondence.txt '')
 WriteFile (${OutDirectoryshapeworks}/outputWarped.txt  '')
-
+WriteFile (${WorkDir}/outputdataset.csv '')
 ForEach (subj ${subjects})
 	
 					AppendFile (${OutDirectoryshapeworks}/inputsurfacemodels.txt ${OutDirectoryMeasurementandSPHARM}/${subj}.ip.SPHARM.vtk\n)
