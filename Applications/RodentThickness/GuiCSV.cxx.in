@@ -181,15 +181,15 @@ QObject::connect(PythonPath, SIGNAL(editingFinished()), this, SLOT(testpythonver
 // set the path to the executable directory for FindProgram
 std::string RTExecutablePath= itksys::SystemTools::GetRealPath( itksys::SystemTools::GetFilenamePath(commandRan).c_str() ); // get the place where the running executable is
 std::string CurrentPathExec= itksys::SystemTools::GetCurrentWorkingDirectory(); // If called by itself ($ RodentThickness) = either in the PATH or in the current directory : will be found either way by find_program
-//m_FindProgramRTExecDirVec.push_back(CurrentPathExec);
+m_FindProgramRTExecDirVec.push_back(CurrentPathExec);
 m_FindProgramRTExecDirVec.push_back(RTExecutablePath); // FindProgram will search in the executable directory too
 
 
 
-std ::string RTexec = RTExecutablePath + "/Applications";
+std ::string RTexec = RTExecutablePath + "/Application";
 m_FindProgramRTExecDirVec.push_back(RTexec);
 
-std ::string RTcurrentexec = CurrentPathExec + "/Applications";
+std ::string RTcurrentexec = CurrentPathExec + "/Application";
 m_FindProgramRTExecDirVec.push_back(RTcurrentexec);
 
 
@@ -216,7 +216,8 @@ std :: string pyscript2 = RTExecutablePath +"/Data/pythonscript/";
 m_FindProgramRTExecDirVec.push_back(pyscript2);
 std :: string rscriptpath = ScriptPython +"/rscript/";
 m_FindProgramRTExecDirVec.push_back(rscriptpath);
-
+std :: string rscriptpath1 = RTExecutablePath +"/rscript/";
+m_FindProgramRTExecDirVec.push_back(rscriptpath1);
 std :: string rscriptpath2 = RTExecutablePath +"/Data/rscript/";
 m_FindProgramRTExecDirVec.push_back(rscriptpath2);
 
