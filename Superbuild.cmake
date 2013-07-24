@@ -110,9 +110,9 @@ option(USE_SYSTEM_VTK "Build using an externally defined version of VTK" OFF)
 option(USE_SYSTEM_BatchMake "Build using an externally defined version of BatchMake" OFF)
 option(USE_SYSTEM_Rscript "Build using an externally defined version of Rscript" OFF)
 
-Set(PYTHON_EXECUTABLE "" CACHE FILEPATH "python executable path")
-Set(PYTHON_LIBRARY "" CACHE FILEPATH "python library ")
-Set(PYTHON_INCLUDE_DIRS "" CACHE FILEPATH "python include directories ")
+#Set(PYTHON_EXECUTABLE "" CACHE FILEPATH "python executable path")
+#Set(PYTHON_LIBRARY "" CACHE FILEPATH "python library ")
+#Set(PYTHON_INCLUDE_DIRS "" CACHE FILEPATH "python include directories ")
 #------------------------------------------------------------------------------
 # ${LOCAL_PROJECT_NAME} dependency list
 #------------------------------------------------------------------------------
