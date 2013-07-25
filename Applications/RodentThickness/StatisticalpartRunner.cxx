@@ -1,9 +1,8 @@
 # include <iostream>
 
-
-#include <unistd.h> 
-
-
+#ifdef _unix || _linux
+#include <unistd.h>
+#endif
 
 
 #include "string"
