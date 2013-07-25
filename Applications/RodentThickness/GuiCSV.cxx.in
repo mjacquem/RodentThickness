@@ -224,17 +224,33 @@ m_FindProgramRTExecDirVec.push_back(rscriptpath2);
 
 
 
-if( configfile.empty() )  ConfigDefault();  /* Initialize the options */
+if( configfile.empty() ) 
+{
+	// Look for the config file in the executable directory
+	std::string SoftConfigPath= RTExecutablePath + "/RodentThicknessConfigfile.bms";
+	std::string CurrentPath = itksys::SystemTools::GetRealPath( itksys::SystemTools::GetCurrentWorkingDirectory().c_str() ); //GetRealPath() to remove symlinks
+	std::string SoftConfigPath1 = CurrentPath + "/RodentThicknessConfigfile.bms";
+	if( itksys::SystemTools::GetPermissions(SoftConfigPath.c_str(),ITKmode_F_OK) ) 
+	{
+		if( LoadConfig(QString( SoftConfigPath.c_str() )) == -1 ) 
+		{
+		m_ErrorDetectedInConstructor=true; // if file exists
+		}
+	}
+	else if( itksys::SystemTools::GetPermissions( SoftConfigPath1.c_str() , ITKmode_F_OK))
+	{// Look for the config file in the current directory
+		if( LoadConfig(QString( SoftConfigPath.c_str() )) == -1 ) 
+		{
+			m_ErrorDetectedInConstructor=true; // if file exists
+		}
+	}
+	else 
+	{
+		ConfigDefault();
+	}
+}
 
-// Look for the config file in the executable directory
-std::string SoftConfigPath= RTExecutablePath + "/RodentThicknessConfigfile.bms";
-if( itksys::SystemTools::GetPermissions(SoftConfigPath.c_str(),ITKmode_F_OK) ) if( LoadConfig(QString( SoftConfigPath.c_str() )) == -1 ) m_ErrorDetectedInConstructor=true; // if file exists
-
-// Look for the config file in the current directory
-std::string CurrentPath = itksys::SystemTools::GetRealPath( itksys::SystemTools::GetCurrentWorkingDirectory().c_str() ); //GetRealPath() to remove symlinks
-SoftConfigPath = CurrentPath + "/RodentThicknessConfigfile.bms";
-if( itksys::SystemTools::GetPermissions( SoftConfigPath.c_str() , ITKmode_F_OK) ) if( LoadConfig(QString( SoftConfigPath.c_str() )) == -1 ) m_ErrorDetectedInConstructor=true; // if file exists
-
+ /* Initialize the options */
 	 
 	// Read the csv file give by command line
 	if( !dataset.empty() ) 
@@ -838,7 +854,7 @@ int GuiCSV::LoadConfig(QString configFile) // returns -1 if fails, otherwise 0
 }
 void GuiCSV::SaveConfigSlot()
 {
-	QString ConfigBrowseName=QFileDialog::getSaveFileName(this, tr("Save Configuration File"),"RodentThicknessconfigfile.bms",tr("Bms File (*.bms)"));
+	QString ConfigBrowseName=QFileDialog::getSaveFileName(this, tr("Save Configuration File"),"RodentThicknessConfigfile.bms",tr("Bms File (*.bms)"));
 	if(!ConfigBrowseName.isEmpty())
 	{	
 	SaveConfig(ConfigBrowseName);
@@ -1734,7 +1750,7 @@ int GuiCSV::LaunchScriptWriter()
 		}
 	}
 	
-	m_outconfig=m_OutputPath + QString("/RodentThicknessconfigfile.bms");
+	m_outconfig=m_OutputPath + QString("/RodentThicknessConfigfile.bms");
 	m_outdataset=m_OutputPath + QString("/dataset.csv");
 	m_StatisticaldatasetPath=m_OutputPath + QString("/outputdataset.csv");
 	SaveConfig(m_outconfig);
