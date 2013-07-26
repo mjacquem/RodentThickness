@@ -184,6 +184,16 @@ std::string CurrentPathExec= itksys::SystemTools::GetCurrentWorkingDirectory(); 
 m_FindProgramRTExecDirVec.push_back(CurrentPathExec);
 m_FindProgramRTExecDirVec.push_back(RTExecutablePath); // FindProgram will search in the executable directory too
 
+#ifdef _unix || _linux
+std::string pathvar = getenv("LD_LIBRARY_PATH") ;
+pathvar = RTExecutablePath + "/lib :" +pathvar;
+setenv( "LD_LIBRARY_PATH" , pathvar.c_str() , 1 ) ;
+#elif __APPLE__
+std::string pathvar = getenv("DYLD_LIBRARY_PATH") ;
+pathvar = RTExecutablePath + "/lib :" +pathvar;
+setenv( "DYLD_LIBRARY_PATH" , pathvar.c_str() , 1 ) ;
+#elif _WIN32
+#endif
 
 
 std ::string RTexec = RTExecutablePath + "/Application";
@@ -1425,7 +1435,7 @@ int GuiCSV::Compute() /*SLOT*/
 		}
 		else if(tableWidget->rowCount()<6 && m_statistic==1) 
 		{
-			if(!m_noGUI) QMessageBox::critical(this, "No Cases", "Please give more six cases for statistical");
+			if(!m_noGUI) QMessageBox::critical(this, "No Cases", "Please give more six cases for statistical : 3 per group");
 			else std::cout<<"| No Cases: Please give more six cases for statistical"<<std::endl;
 		}
 		else // OK Case
