@@ -193,6 +193,12 @@ std ::string RTcurrentexec = CurrentPathExec + "/Application";
 m_FindProgramRTExecDirVec.push_back(RTcurrentexec);
 
 
+std ::string RTexecpython = RTExecutablePath + "/python/bin";
+m_FindProgramRTExecDirVec.push_back(RTexecpython);
+
+std ::string RTcurrentexecpython = CurrentPathExec + "/python/bin";
+m_FindProgramRTExecDirVec.push_back(RTcurrentexecpython);
+
 
 std ::string Rscriptpath = RTExecutablePath + "/../Rscript-build/bin";
 m_FindProgramRTExecDirVec.push_back(Rscriptpath);

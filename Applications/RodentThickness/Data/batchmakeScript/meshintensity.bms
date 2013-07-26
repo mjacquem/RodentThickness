@@ -6,10 +6,6 @@ Set(OutDirectoryshapeworks ${WorkDir}/Processing/2.shapeworks)
 
 
 
-
-
-
-
 Set (cmdline ${MeshPointIntensitySamplingPath} --workDir ${OutDirectorymeshintensity} --inputAsPhysicalCoord --distanceVector ${case1}.distanceVector.nrrd -i nn -a ${OutDirectorymeshintensity}/${case1}.txt -m ${OutDirectorymeshintensity}/${case1}.sampling.vtk ${OutDirectoryMeasurementandSPHARM}/${case1}_measurementoutput.nrrd ${OutDirectoryshapeworks}/${case1}.correspondence.vtk)    
 Run (output ${cmdline})
 

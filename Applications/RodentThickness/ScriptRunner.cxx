@@ -146,6 +146,7 @@ int ScriptRunner :: RunBatchmakeScript(std::string dataset,std::string configfil
 					file <<"set (extractlabel "<< extractlabel<<")"<<std::endl;
 					file <<"set (idl "<< idl<<")"<<std::endl;
 					file <<"set (idh "<< idh<<")"<<std::endl;
+					file <<"set (pathbms "<< PathBms <<")"<<std::endl;
 					file <<"include ("<<configfile<<")"<<std::endl;
 					file <<"include ("<<PathBms<<"/ThicknessSpharm.bms)"<<std::endl; 
 					file.close();

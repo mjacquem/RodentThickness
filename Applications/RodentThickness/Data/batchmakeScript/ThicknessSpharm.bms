@@ -25,7 +25,7 @@ Else(${ParaFileExists})
 EndIf (${ParaFileExists})
 
 
-Set (cmdline ${PythonPath} /work/mjacquem/GuiRodentThickness/Applications/RodentThickness/Data/pythonscript/VerifyEulerScript.py ${OutDirectoryMeasurementandSPHARM}/EulerFile/Euler_${case1}.txt)
+Set (cmdline ${PythonPath} ${pathbms}/../pythonscript/VerifyEulerScript.py ${OutDirectoryMeasurementandSPHARM}/EulerFile/Euler_${case1}.txt)
 Run(output ${cmdline} prog_error prog_exit_status)
 
 
