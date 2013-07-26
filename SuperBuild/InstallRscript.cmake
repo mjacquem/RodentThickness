@@ -6,15 +6,15 @@ endmacro( CheckExitCodeAndExitIfError )
 
  
 
-#if(WIN32)
-# Creating include and lib dirs
+if(WIN32)
+#Creating include and lib dirs
  # file(MAKE_DIRECTORY ${TOP_BINARY_DIR}/Rscript-install/include)
  # file(MAKE_DIRECTORY ${TOP_BINARY_DIR}/Rscript-install/lib)
 
-#elseif(APPLE)
+elseif(APPLE)
 
 
-#else()
+else()
  # Configure Step
   message("[] Configuring Rscript...")
   execute_process(COMMAND sh ${TOP_BINARY_DIR}/Rscript/configure --with-readline=no WORKING_DIRECTORY ${TOP_BINARY_DIR}/Rscript-build RESULT_VARIABLE ExitCode)
@@ -30,4 +30,4 @@ endmacro( CheckExitCodeAndExitIfError )
   execute_process(COMMAND make install WORKING_DIRECTORY ${TOP_BINARY_DIR}/Rscript-build RESULT_VARIABLE ExitCode)
   CheckExitCodeAndExitIfError()
 
-#endif()
+endif()
