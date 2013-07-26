@@ -147,7 +147,7 @@ def run(shapeWorksCmd,inputImages,inputPoints):
 
 def executePreProcessing(opts, args, inputImages, preprocessedImages):
   for (imgIn, imgOut) in zip(inputImages, preprocessedImages):
-    execute("%sImageMath %s -type short -changeSp 1.25,1.25,1.25 -outfile %s" % (imageMathPath, imgIn, imgOut))
+    execute("%s %s -type short -changeSp 1.25,1.25,1.25 -outfile %s" % (opts.pathImageMath, imgIn, imgOut))
     execute("%s --binaryInput %s --smoothing 1.25 --output %s" % (opts.pathBinaryToDistanceMap, imgOut, imgOut))
 
 def executePostProcessing(opts, args, inputSurfaces,inputImages):
